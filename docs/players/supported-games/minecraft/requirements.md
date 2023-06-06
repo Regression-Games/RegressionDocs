@@ -1,8 +1,8 @@
 ---
-sidebar_label: 'Requirements'
+sidebar_label: 'Setup and Requirements'
 ---
 
-# Requirements to Play Minecraft on Regression Games
+# Minecraft Setup and Requirements
 
 In order to begin building AIs for Minecraft, you'll need a [Regression Games account](https://play.regression.gg),
 a valid [Minecraft account](https://www.minecraft.net/en-us/login) and a copy of [Minecraft: Java Edition](https://www.minecraft.net/en-us/store/minecraft-java-bedrock-edition-pc).
