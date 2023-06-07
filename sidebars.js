@@ -46,10 +46,13 @@ const sidebars = {
       label: 'Creating AIs',
       items: [
         'players/creating-bots/overview',
-        'players/creating-bots/starter-templates',
         'players/creating-bots/blockly',
         'players/creating-bots/agent-builder',
-        'players/creating-bots/updating-your-ai'
+        {
+          type: 'category',
+          label: 'Writing Your Own Code',
+          items: ['players/creating-bots/coding/creating-a-project', 'players/creating-bots/coding/updating-your-ai', 'players/creating-bots/coding/upload-zip']
+        }
       ]
     },
     'players/faq'
