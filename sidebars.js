@@ -41,6 +41,17 @@ const sidebars = {
         },
       ]
     },
+    {
+      type: 'category',
+      label: 'Creating AIs',
+      items: [
+        'players/creating-bots/overview',
+        'players/creating-bots/starter-templates',
+        'players/creating-bots/blockly',
+        'players/creating-bots/agent-builder',
+        'players/creating-bots/updating-your-ai'
+      ]
+    },
     'players/faq'
   ],
 
