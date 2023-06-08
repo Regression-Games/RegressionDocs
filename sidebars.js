@@ -51,7 +51,7 @@ const sidebars = {
         {
           type: 'category',
           label: 'Writing Your Own Code',
-          items: ['players/creating-bots/coding/creating-a-project', 'players/creating-bots/coding/updating-your-ai', 'players/creating-bots/coding/upload-zip']
+          items: ['players/creating-bots/coding/updating-your-ai', 'players/creating-bots/coding/upload-zip']
         }
       ]
     },

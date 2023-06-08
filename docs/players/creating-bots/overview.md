@@ -31,7 +31,7 @@ When you confirm your selection, Regression Games will open a new tab in your br
 This repository will represent the AI you're about to create, and Regression Games will access this repository whenever you queue your new AI for a match.
 Give it a name, continue, and wait for GitHub to finish creating it.
 
-![Clone Template](./img/clone-template.png)
+![Clone Template](./img/github/clone-template.png)
 
 ### Granting Access to Repository Contents
 
@@ -46,7 +46,7 @@ If you want to explicitly restrict Regression Games to relevant repositories, th
 Choose one of these options then click "Install."
 
 ![Grant GitHub Access](./img/install-github-app.png)
-![Select GitHub Repositories](./img/github-select-repositories.png)
+![Select GitHub Repositories](./img/github/select-repositories.png)
 
 ### Finish Setup
 
