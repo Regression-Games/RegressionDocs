@@ -16,12 +16,11 @@ The majority of our development tools rely on access to GitHub and therefore wil
 However, we do offer alternatives to users who prefer not to use GitHub such as [uploading your AI as a .zip file](TODO-REG-1023:-Add-section-and-link-here).
 For this method, you can skip right to our sections on [writing your own AI code](TODO-REG-1035:-Add-section-and-link-here) and [uploading it to our platform](TODO-REG-1023:-Add-section-and-link-here).
 
-## Creating a new AI
+## Creating a New AI
 
 ### Creating a GitHub Repository
 
-AIs are created and managed within the [Bot Manager](https://play.regression.gg/bots).
-Create a new AI under "Bot Manager" and select one of the creation options.
+AIs are created and managed within the [Bot Manager](https://play.regression.gg/bots). Click the "Create Bot" button and select one of several creation options.
 For the purpose of this demonstration, we'll keep the default option selected, but the process will be nearly identical for most options in this list.
 
 ![Create new AI](./img/create-bot-button.png)
@@ -36,22 +35,22 @@ Give it a name, continue, and wait for GitHub to finish creating it.
 ### Granting Access to Repository Contents
 
 Regression Games values the security and comfort of our users.
-We can see which repositories you have access to, but we can't read contents from or write to any repositories under your GitHub account by default.
+We can see which repositories you have access to, but we can't read contents from or write contents to any repositories under your GitHub account by default.
 Instead, you'll need to tell us which ones we're allowed to access.
-To do this, return to the Regression Games tab in your browser and follow the green link under "Git Settings" section.
+To do this, return to the Regression Games tab in your browser and follow the green link under "Git Settings".
 This will take you back to GitHub to authorize the Regression Games app on your GitHub Account.
 
 If you don't want to repeat this step for every AI you create, you can select the "All repositories" option.
 If you want to explicitly restrict Regression Games to relevant repositories, then find your new repository under "Only select repositories."
-Choose one of these options then click "Install."
+Choose either of these options then click "Install."
 
 ![Grant GitHub Access](./img/install-github-app.png)
 ![Select GitHub Repositories](./img/github/select-repositories.png)
 
 ### Finish Setup
 
-Back in the Regression Games tab in your browser, refresh the repository search, find your new AI repository, and select it.
-Lastly, name your AI - this is the name other players will see in-game. You can also give it an option description to help identify it from other AIs you create.
+Back in the Regression Games tab in your browser, refresh the repositories list, find your new AI repository, and select it.
+Lastly, name your AI - this is the name other players will see in-game. You can also give it an optional description to help identify it from other AIs you'll create.
 Finally, click the "Create Bot" button.
 
 ![Refresh Repositories](./img/refresh-repositories.png)

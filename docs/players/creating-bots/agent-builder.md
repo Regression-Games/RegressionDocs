@@ -7,9 +7,10 @@ sidebar_label: 'Using the Agent-Builder'
 
 Regression Games' Agent-Builder is an easy-to-use visual editor for constructing AI behavior trees.
 Our editor utilizes large language models like [OpenAI's GPT-4](https://openai.com/blog/chatgpt) to write code for you.
-This makes our Agent-Builder an excellent tool for those new to Regression Games' libraries, or even programming itself!
+This makes our Agent-Builder an excellent tool for those new to our AI libraries, or even to programming itself!
 
 *Please note that this tool is early in development and is likely to contain bugs.*
+*You can report bugs and request additional features for the Agent-Builder [here](https://regression-games.sleekplan.app/feedback).*
 
 ## What Is a Behavior Tree?
 
@@ -32,9 +33,9 @@ Its job is simply to execute whatever node is below it in the tree and return it
 It executes its child nodes one at a time, and if any of them fail then the Sequence Node immediately fails.
 - **Selector Node**: This node also has one or more children, but acts as an OR.
 It executes each of its children and if one of them succeeds, then the Selector Node immediately succeeds.
-- **Action Node**: This node is a terminal node, meaning it cannot have any children of its own.
+- **Action Node**: This node is a leaf node, meaning it cannot have any children of its own.
 Instead, it represents an action for the AI to take such as moving in a certain direction or interacting with an object in its environment.
-- **Condition Node**: This node is also a terminal node. This node evaluates whether certain conditions have been satisfied.
+- **Condition Node**: This node is also a leaf node. It evaluates whether certain conditions have been satisfied.
 - **Decorator Node**: There are several kinds of Decorator Nodes, each of which can have only one child. This node modifies its child's state in some way.
 For example, an "Inverter" Decorator will succeed if its child fails, and vice versa.
 
@@ -66,7 +67,7 @@ You can repeat this process for any node that is allowed to have children.
 
 Clicking on a node opens a panel to the right side of your screen.
 This panel contains information about the selected node including a description of the node's type and a label, as well as a button to delete the node from the tree.
-It's a good idea to set labels on your nodes to keep track of what you want each node or branch to do.
+It's a good idea to set labels to keep track of what you want each node or branch to do.
 If the selected node is a leaf node, such as an action or condition, the panel will also contain fields used for code generation.
 
 ![Open the Node Panel](./img/agent-builder/edit-node.png)
@@ -101,7 +102,7 @@ Save your tree early and often! Any changes made to your AI will be lost if you 
 ## Editing an AI using Agent-Builder
 
 If you've used the Agent-Builder to create an AI before, you can locate that AI in the Bot Manager and open the Agent-Builder interface.
-Once the interface is visible, tell Regression Games to load your tree from GitHub. You should now see your tree and make edits to its nodes.
+Once the interface is visible, tell Regression Games to load your tree from GitHub. You should now see your tree and be able to edit its nodes.
 Don't forget to save when you're done!
 
 ![Open Agent Builder](./img/agent-builder/open-agent-builder.png)
@@ -125,5 +126,5 @@ and a series of typescript files generated from the config that are used to run 
 ```
 
 You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies.
-However, changes made to files other than the `agentBuilderWorkspace.json` **will be overwritten the next time you save this tree from the Agent-Builder interface.**
+However, changes made to files other than the `agentBuilderWorkspace.json` **will be overwritten if you save this tree again from the Agent-Builder interface.**
 See the [Writing Your Own Code section](TODO-REG-1023) for more information.
