@@ -1,16 +1,16 @@
 ---
-sidebar_label: 'Using the Agent-Builder'
+sidebar_label: 'Using the Agent Builder'
 ---
 
 
-# Creating AIs Using the Agent-Builder
+# Creating AIs Using the Agent Builder
 
-Regression Games' Agent-Builder is an easy-to-use visual editor for constructing AI behavior trees.
+Regression Games' Agent Builder is an easy-to-use visual editor for constructing AI behavior trees.
 Our editor utilizes large language models like [OpenAI's GPT-4](https://openai.com/blog/chatgpt) to write code for you.
-This makes our Agent-Builder an excellent tool for those new to our AI libraries, or even to programming itself!
+This makes our Agent Builder an excellent tool for those new to our AI libraries, or even to programming itself!
 
 *Please note that this tool is early in development and is likely to contain bugs.*
-*You can report bugs and request additional features for the Agent-Builder [here](https://regression-games.sleekplan.app/feedback).*
+*You can report bugs and request additional features for the Agent Builder [here](https://regression-games.sleekplan.app/feedback).*
 
 ## What Is a Behavior Tree?
 
@@ -41,17 +41,17 @@ For example, an "Inverter" Decorator will succeed if its child fails, and vice v
 
 For a deeper dive into behavior trees, their different nodes, and practical examples of using them in video games, [follow this link](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
 
-## Getting Started with Agent-Builder
+## Getting Started with Agent Builder
 
-Create a new AI from the Bot Manager and select Agent-Builder from the list of creation options
+Create a new AI from the Bot Manager and select Agent Builder from the list of creation options
 (see this section's [overview](./overview.md) for a walkthrough of AI creation).
 
 ![Create new AI](./img/create-bot-button.png)
-![Use Agent-Builder](./img/agent-builder/create-with-agent-builder.png)
+![Use Agent Builder](./img/agent-builder/create-with-agent-builder.png)
 
 ### Creating Nodes
 
-Once you've created your AI, you'll be redirected to the Agent-Builder interface.
+Once you've created your AI, you'll be redirected to the Agent Builder interface.
 We'll start you out with a root node and a sequence node to form the basis of your tree.
 
 ![Default Tree](./img/agent-builder/default-tree.png)
@@ -84,7 +84,7 @@ If this happens, you can make changes to your prompt and re-submit it for new ou
 
 #### Typescript
 
-Agent-Builder currently only supports Typescript. If you'd like to see support for other languages, let us know [here](https://regression-games.sleekplan.app/feedback).
+Agent Builder currently only supports Typescript. If you'd like to see support for other languages, let us know [here](https://regression-games.sleekplan.app/feedback).
 
 The below sample uses the [rg-bot library for Minecraft](TODO-REG-1026) to make the AI wander in a random direction.
 This is a good example of well-formatted output.
@@ -95,13 +95,13 @@ The `getData` and `setData` methods can be used to easily share data between nod
 
 ### Saving Your Tree
 
-Save your tree early and often! Any changes made to your AI will be lost if you leave the Agent-Builder without saving.
+Save your tree early and often! Any changes made to your AI will be lost if you leave the Agent Builder without saving.
 
 ![Save Your Tree](./img/agent-builder/save-tree.png)
 
-## Editing an AI using Agent-Builder
+## Editing an AI using Agent Builder
 
-If you've used the Agent-Builder to create an AI before, you can locate that AI in the Bot Manager and open the Agent-Builder interface.
+If you've used the Agent Builder to create an AI before, you can locate that AI in the Bot Manager and open the Agent Builder interface.
 Once the interface is visible, tell Regression Games to load your tree from GitHub. You should now see your tree and be able to edit its nodes.
 Don't forget to save when you're done!
 
@@ -126,5 +126,5 @@ and a series of typescript files generated from the config that are used to run 
 ```
 
 You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies.
-However, changes made to files other than the `agentBuilderWorkspace.json` **will be overwritten if you save this tree again from the Agent-Builder interface.**
+However, changes made to files other than the `agentBuilderWorkspace.json` **will be overwritten if you save this tree again from the Agent Builder interface.**
 See the [Writing Your Own Code section](TODO-REG-1023) for more information.
