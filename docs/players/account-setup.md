@@ -14,3 +14,7 @@ If you'd rather manage files on your own, [you can upload an AI as a .zip file](
 
 Next, you'll be prompted for a Minecraft username (see our Minecraft requirements and setup [here](supported-games/minecraft/requirements)).
 The Minecraft username associated to your Regression Games account must match the one displayed in your Minecraft Client.
+
+Regression Games' available games and modes involve using AI to control in-game characters and interact with gameplay elements and mechanics.
+Before you hop into a game, you'll need to create an AI. 
+[See this section on creating AIs](./creating-bots/overview.md) using Regression Games' various tools and libraries. 
