@@ -1,0 +1,513 @@
+---
+sidebar_label: 'Creating Bots'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Creating Bots
+
+Regression Games bots are flexible and highly customizable.
+Bots can simulate player behavior, act as NPCs, interact with menus and UIs, validate gameplay, and more.
+
+Bots run in the Regression Games runtime and connect to your game via socket connections initiated from your Unity integration.
+Bots will receive the current game state every tick until they disconnect.
+Our Javascript APIs allow bots to consume the game state in order to make decisions and interact with game elements.
+
+## Spawn Configurations
+
+### `isSpawnable();`
+
+Specifies whether this bot should be represented by a visible component in the game.
+Bots that simulate players or NPCs are generally spawnable, 
+while bots that interact with menus, represent environmental hazards, observe the game state without interaction, etc. are not.  
+
+#### Arguments
+None
+
+#### Return Value
+boolean (Default `true`)
+
+#### Examples
+
+```javascript
+isSpawnable() {
+    return false;
+}
+```
+
+### `getCharacterConfig();`
+
+For spawnable bots. Provides an object containing character configurations to help seat your bot as the appropriate class/prefab/etc.
+This is a freeform object to be interpreted by your game's implementation of the `RGBotSpawnManager.SeatPlayer` and `RGSpawnManager.SpawnBot` interfaces.
+
+#### Arguments
+None
+
+#### Return Value
+string
+
+#### Examples
+
+<Tabs>
+<TabItem value="character_config_simple" label="Simple definition" default>
+
+```javascript
+getCharacterConfig() {
+    return {
+        "type" : "Mage"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="character_type_freeform" label="Complex definition" default>
+
+```javascript
+getCharacterConfig() {
+    return {
+        "class": "Warrior",
+        "subClass": "Reaver",
+        "startingEquipment": {
+            "mainHand": "Sword",
+            "offHand": "Sword"
+        },
+        "spawn": "BlueTower",
+        "maxHP": "50"
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+## Lifecycle Configurations
+
+### `getBotLifeCycle();`
+
+Bots can be either `managed` or `persistent`.
+A `managed` bot will automatically disconnect when the game-scene is destroyed (???).
+A `persistent` bot must either terminate itself when its tasks are complete or be terminated manually.
+
+#### Arguments
+None
+
+#### Return Value
+One of `"MANAGED"` or `"PERSISTENT"`.
+
+#### Examples
+<Tabs>
+<TabItem value="managed_bot" label="Managed" default>
+
+```javascript
+getBotLifeCycle() {
+    return 'MANAGED'
+}
+```
+
+</TabItem>
+<TabItem value="persistent_bot" label="Persistent" default>
+
+```javascript
+getBotLifeCycle() {
+    return 'PERSISTENT'
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### `isComplete();`
+
+Allows a bot to disconnect itself from the game before the Unity integration signals bots to disconnect.
+
+#### Arguments
+None
+
+#### Return Value
+boolean
+
+#### Examples
+
+```javascript
+let tasksComplete = false;
+isComplete() {
+    return tasksComplete;
+}
+```
+
+
+## Describing Bot Behaviors
+
+Regression Games' Javascript API interacts with the game state, allows a bot to invoke behaviors defined as `RGActions`,
+and records the result of each command to visualize the bot's decison-making at each tick.
+
+### `getState(id: number = null);`
+
+Returns a complete state object including the current state of all registered entities
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`id` | `number` | `null` | Return state information for a specific state entity
+
+#### Return Value
+Returns information about the current state
+
+#### Examples
+
+```javascript
+
+// get all information about the current state
+const fullState = rg.getState();
+
+// get the current state of a known entity
+const mascot = await rg.findEntity("Williward");
+...
+const objectState = rg.getState(mascot.id); 
+
+```
+
+### `getBot();`
+
+Returns the current state information for this bot.  
+Synonymous with `rg.getState(rg.playedId)`
+
+#### Arguments
+None
+
+#### Return Value
+Returns the current state information for this bot
+
+#### Examples
+
+```javascript
+
+const myBot = rg.getBot();
+
+```
+
+### `complete()`;
+
+Flags the current bot as complete (see [isComplete](./creating-bots#iscomplete))
+
+#### Arguments
+None
+
+#### Return Value
+No return value
+
+#### Examples
+
+```javascript
+
+rg.complete();
+
+```
+
+### `performAction(actionName: string, args: object | null);`
+
+Queues an action that the bot should perform. Action names are freeform strings and must correspond to the name of one of your defined `RGActions`.
+Actions do not necessarily start executing the same tick that they were queued.  
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`actionName` | `string` | | The name of an action, as defined by its corresponding `RGAction`
+`args` | `object` | | Any arguments that should be passed to the `RGAction`
+
+#### Return Value
+No return value
+
+#### Examples
+
+<Tabs>
+<TabItem value="performAction_simple" label="Open a Door" default>
+
+```javascript
+
+const door = await rg.findEntity("Door");
+rg.performAction("OpenDoor", { targetId: door.id });
+
+```
+
+</TabItem>
+<TabItem value="performAction_arguments" label="Equip a sword">
+
+```javascript
+
+const bot = rg.getBot();
+if(!await rg.entityHasAttribute(bot, "equippedItem", "sword")) {
+    rg.performAction("EquipItem", { 
+        targetId: bot.id,
+        itemName: "sword",
+        slot: "mainHand" 
+    });
+}
+
+```
+</TabItem>
+</Tabs>
+
+### `findEntity(objectType: string);`
+
+Find an entity with the given Object Type in the game state.
+This method should be used when only one entity is expected to have the given Object Type,
+or when any entity with this Object Type will satisfy the scenario.
+For more control over finding specific entities in the game state, see [getState](./creating-bots#getstate) and [findNearestEntity](./creating-bots#findnearestentity).
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`objectType` | `string` | | The objectType to search for, as defined by the entity's corresponding `RGState`
+
+#### Return Value
+Promise&lt;object | null&gt;
+
+#### Examples
+
+
+```javascript
+
+const door = await rg.findEntity("Door");
+const humanPlayer = await rg.findEntity("HumanPlayer");
+const areaBoss = await rg.findEntity("Boss");
+
+```
+
+### `findNearestEntity(objectType: string, position: object = null, filterFunc: function = (entity) => true)`
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`objectType` | `string` | | 
+`position` | `object` | bot's current position | The position to measure distance from
+`filterFunc` | `function` | (entity) => true | Optionally filter entities to find 
+
+#### Return Value
+Promise&lt;object | null&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="findNearestEntity_default" label="No Filter" default>
+
+```javascript
+
+const williward = await rg.findNearestEntity("Williward");
+const enemyNearestToWilliward = await rg.findNearestEntity("Enemy", williward.position);
+
+```
+
+</TabItem>
+<TabItem value="findNearestEntity_filtered" label="Filter">
+
+```javascript
+
+const patrolPoint = await rg.findEntity("PatrolPoint");
+const guardOnPatrol = await rg.findNearestEntity("Guard", patrolPoint.position, (entity) => { return !entity.isAsleep });
+
+```
+
+</TabItem>
+</Tabs>
+
+### `entityExists(entity: object | number | string);`
+
+Return whether the given entity exists.
+The `entity` argument can be a reference to a previously-existing entity, its id, or an Object Type.
+If this is an Object Type, will return true if _any_ entities with this ObjectType exist. 
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`entity` | `object` &#124; `number` &#124; `string` | | The entity, its id, or an Object Type. If this is an Object Type, will return true if _any_ entities with this ObjectType exist. 
+
+#### Return Value
+Promise&lt;boolean&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="entityExists_entity" label="Entity" default>
+
+```javascript
+
+const entity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityExists(entity);
+
+```
+
+</TabItem>
+<TabItem value="entityExists_id" label="Entity ID">
+
+```javascript
+
+const entity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityExists(entity.id);
+
+```
+
+</TabItem>
+<TabItem value="entityExists_objectType" label="Object Type">
+
+```javascript
+
+const exists = await rg.entityExists("Williward");
+
+```
+
+</TabItem>
+</Tabs>
+
+### `entityDoesNotExist(entity: object | number | string);`
+
+Return whether the given entity does not exist.
+The `entity` argument can be a reference to a previously-existing entity, its id, or an Object Type.
+If this is an Object Type, will return true if _no_ entities with this ObjectType exist. 
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`entity` | `object` &#124; `number` &#124; `string` | | The entity, its id, or an Object Type. If this is an Object Type, will return true if _no_ entities with this ObjectType exist. 
+
+#### Return Value
+Promise&lt;boolean&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="entityDoesNotExist_entity" label="Entity" default>
+
+```javascript
+
+const staleEntity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityDoesNotExist(staleEntity);
+
+```
+
+</TabItem>
+<TabItem value="entityDoesNotExist_id" label="Entity ID">
+
+```javascript
+
+const staleEntity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityDoesNotExist(staleEntity.id);
+
+```
+
+</TabItem>
+<TabItem value="entityDoesNotExist_objectType" label="Object Type">
+
+```javascript
+
+const exists = await rg.entityDoesNotExist("Williward");
+
+```
+
+</TabItem>
+</Tabs>
+
+
+### `entityHasAttribute(targetEntity: object, stateAttribute: string | string[], expectedValue: any);`
+
+Return whether the entity in the game state has the expected value for one of its attributes.
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`targetEntity` | object | | The entity
+`stateAttribute` | string &#124; string[] | | The name of the attribute key, or an array of keys for nested attributes
+`expectedValue` | any | | The expected value for the entity's state attribute
+
+#### Return Value
+Promise&lt;boolean&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="entityHasAttribute_entity" label="Attribute" default>
+
+```javascript
+
+const entity = await rg.findEntity("Williward");
+if(await rg.entityHasAttribute(entity, "color", "teal")) {
+    console.log("Williward is looking good!")
+}
+
+```
+
+</TabItem>
+<TabItem value="entityHasAttribute_id" label="Nested Attribute">
+
+```javascript
+
+const entity = await rg.findEntity("Boss");
+if(await rg.entityHasAttribute(entity, ["healthObject", "currentHealth"], 1000)) {
+    console.log("The boss is at full health")
+}
+
+```
+</TabItem>
+</Tabs>
+
+
+
+## Validating Bot Behaviors
+
+
+
+
+### `setDefaultTimeout(timeout: number);`
+
+Sets a default timeout in milliseconds. The validator will retry until a condition succeeds.
+If this timeout is hit first, then the validator will report a failure. 
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`timeout` | `number` | | The new default timeout
+
+#### Return Value
+No return value
+
+#### Examples
+
+```javascript
+
+const myBot = rg.getBot();
+
+```
+
+### `async waitForScene(sceneName: string);`
+
+Wait until the current scene name matches the expected value.
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`sceneName` | `string` | | The name of the scene to wait for
+
+#### Return Value
+Promise&lt;void&gt;
+
+#### Examples
+
+```javascript
+
+await rg.waitForScene("StartupScreen");
+await rg.waitForScene("UpdaterSplash");
+await rg.waitForScene("MainMenu")
+
+```
+
+
+
+
+
