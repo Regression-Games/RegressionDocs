@@ -1,8 +1,8 @@
 ---
-sidebar_label: 'Full Tutorial'
+sidebar_label: 'Building your first bot'
 ---
 
-# Sample Game Tutorial
+# Building your first bot
 
 :::caution
 
@@ -19,7 +19,7 @@ power ups (the blue spheres). We will cover:
 - How to add various state and actions scripts to your game for bots to understand
 - Build your first bot
 
-![A Unity scene with a cube and a sphere](tutorial_0_start.png)
+![A Unity scene with a cube and a sphere](first_bot_tutorial_images/tutorial_0_start.png)
 
 ## Download the sample scene
 
@@ -32,7 +32,7 @@ one for controlling the character, and one for controlling the power up logic.
 Our package is available via GitHub [here](google.com). Clone or download the repository, and import the package by clicking **Add package
 from disk** in the **Package Manager** window. 
 
-![Screenshot of the package imported into the project](tutorial_1_package.png)
+![Screenshot of the package imported into the project](first_bot_tutorial_images/tutorial_1_package.png)
 
 ## Log into Regression Games
 
@@ -40,7 +40,7 @@ After importing the Regression Games package, you can access the settings pane t
 This will allow your project to access and start your bots. Access this setting page by going to **Edit** >
 **Project Settings** > **Regression Games**.
 
-![Screenshot of the settings page.](tutorial_2_settings.png)
+![Screenshot of the settings page.](first_bot_tutorial_images/tutorial_2_settings.png)
 
 ## Add the RGOverlayCanvas
 
@@ -50,13 +50,13 @@ in your scene. This is extremely useful when initially creating and debugging yo
 You can find this prefab by searching in the project file window for `RGOverlayCanvas` within the Packages filter,
 or by navigating to the **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** folder.
 
-![Screenshot of the search pane for the RGOverlayCanvas.](tutorial_3_RGOverlay1.png)
+![Screenshot of the search pane for the RGOverlayCanvas.](first_bot_tutorial_images/tutorial_3_RGOverlay1.png)
 
 Drag this overlay onto your scene. Once you have this overlay available, you can click play to see this in action! A
 Regression Games logo will appear at the bottom of your screen. Click this button to see a dropdown for your bots. You
 likely will not have any bots yet - that's alright, we will make one soon!
 
-![Screenshot of the RGOverlayCanvas.](tutorial_4_RGOverlay2.png)
+![Screenshot of the RGOverlayCanvas.](first_bot_tutorial_images/tutorial_4_RGOverlay2.png)
 
 :::info
 
@@ -116,7 +116,7 @@ Once this component is implemented, create an empty object within the scene, and
 create another empty object and position it within the scene above the platform, and drag that game object into the **Bot Spawn Point** entry. Finally, find the **Player** prefab provided by the sample project (located within **Assets** > **Prefabs**), and
 drag this into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene!
 
-![Screenshot of the RGOverlayCanvas.](tutorial_5_spawner.png)
+![Screenshot of the RGOverlayCanvas.](first_bot_tutorial_images/tutorial_5_spawner.png)
 
 ## Add state information to relevant GameObjects
 
@@ -132,7 +132,7 @@ In this scene, we open the `Player` and `PowerUp` prefabs, and add a component, 
 component is added to the prefab, change the `Object Type` to `PowerUp` for the PowerUp, and change it to `Player`
 for the player. Make sure to save these prefabs!
 
-![Screenshot of the prefab with a RG State script.](tutorial_6_prefab.png)
+![Screenshot of the prefab with a RG State script.](first_bot_tutorial_images/tutorial_6_prefab.png)
 
 That's all you need to do for your bot to see the state of the game!
 

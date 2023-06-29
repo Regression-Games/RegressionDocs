@@ -52,7 +52,12 @@ const sidebars = {
         {
           type: 'category',
           label: 'Unity SDK',
-          items: ['studios/unity/unity-sdk/overview', 'studios/unity/unity-sdk/tutorial', 'studios/unity/unity-sdk/setup-and-integration', 'studios/unity/unity-sdk/in-editor-replay'],
+          items: ['studios/unity/unity-sdk/overview', 'studios/unity/unity-sdk/setup-and-integration', 'studios/unity/unity-sdk/in-editor-replay'],
+        },
+        {
+          type: 'category',
+          label: 'Unity Tutorials and Guides',
+          items: ['studios/unity/tutorials/tutorial'],
         }
       ]
     },
