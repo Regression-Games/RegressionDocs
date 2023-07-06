@@ -314,6 +314,23 @@ async function getInteractableButton(buttonName) {
 </Tabs>
 
 
+## Variables
+
+### `playerId`
+
+The ID of this Bot in the game state.
+
+### `name`
+
+The given name of the connected Bot
+
+### `characterType`
+
+A freeform string defining this Bot's character configuration. See [isSpawnable()](./configuration#isSpawnable) and [getCharacterConfig()](./configuration#getCharacterConfig)
+
+
+## Methods
+
 ### `getState(id: number = null);`
 
 Returns a complete state object including the current state of all registered entities
@@ -357,7 +374,7 @@ const myBot = rg.getBot();
 
 ### `complete()`;
 
-Flags the current Bot as complete (see [isComplete](./configuration#iscomplete))
+Flags the current Bot as complete (see [isComplete()](./configuration#isComplete))
 
 #### Arguments
 None
@@ -416,7 +433,7 @@ if(!await rg.entityHasAttribute(bot, "equippedItem", "sword")) {
 Find an entity with the given Object Type in the game state.
 This method should be used when only one entity with the given Object Type is expected to exist in the state,
 or when any entity with this Object Type will satisfy the scenario.
-For more control over finding specific entities in the game state, see [getState](./dynamic-bots#getstate) and [findNearestEntity](./dynamic-bots#findnearestentity).
+For more control over finding specific entities in the game state, see [getState](./dynamic-bots#getState) and [findNearestEntity](./dynamic-bots#findNearestEntity).
 
 #### Arguments
 Argument Name | Type | Default | Description
@@ -436,6 +453,8 @@ const areaBoss = await rg.findEntity("Boss");
 ```
 
 ### `findNearestEntity(objectType: string | null, position: object = null, filterFunc: function = (entity) => true);`
+
+Finds the closest entity to the given position.
 
 #### Arguments
 Argument Name | Type | Default | Description
