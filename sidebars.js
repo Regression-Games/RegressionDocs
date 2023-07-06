@@ -75,7 +75,7 @@ const sidebars = {
               label: 'Creating Bots',
               items: [
                 'studios/unity/unity-sdk/creating-bots/configuration',
-                'studios/unity/unity-sdk/creating-bots/dynamic-bots',
+                'studios/unity/unity-sdk/creating-bots/playtest-bots',
                 'studios/unity/unity-sdk/creating-bots/validation-bots'
               ]
             }

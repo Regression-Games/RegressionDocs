@@ -7,7 +7,7 @@ import TabItem from '@theme/TabItem';
 
 # Defining Bots for Validation Testing
 
-Regression Games Bots support an `automatedTestMode` which can be used to test game components and behaviors 
+Regression Games Bots support an `automatedTestMode` which can be used to test GameObject behaviors 
 and validate changes in the game state in response to character actions. To enable this mode, add the following line to your Bot configuration:
 
 ```javascript
@@ -16,7 +16,7 @@ rg.automatedTestMode = true;
 
 :::tip
 This mode is useful for automated testing where commands must be issued in a deterministic order, 
-and where the game state must meet the explicit expectations of one command before the next commend is executed or else the scenario will fail.
+and where the game state must meet the explicit expectations of one command before the next command is executed or else the scenario will fail.
 :::
 
 :::caution
@@ -24,28 +24,27 @@ This mode should not be used for Bots intended to make dynamic decisions based o
 where a falsey result from a command should not cause the entire scenario to fail. 
 :::
 
-This mode shares all of the APIs of [Dynamic Bots](./dynamic-bots), with two important distinctions:
+This mode shares all of the APIs of [PlayTest Bots](./playtest-bots), with two important distinctions:
 1. Bot logic is implemented within a `configureBot` method rather than `runTurn`. 
 `configureBot` is invoked once after the Bot connects and will run to completion rather than being invoked repeatedly over the lifetime of the Bot. 
 2. Commands act as assertions. When a command is executed, it automatically waits and retries until the game state meets expectations. 
 If an expectation hasn't been met before a default timeout then the command, and by extension the scenario, will fail.
-For example, the command `rg.findEntity("MyEntity")` for a Dynamic Bot will return the matching entity or null based on the current tick's game state,
+For example, the command `rg.findEntity("MyEntity")` for a PlayTest Bot will return the matching entity or null based on the current tick's game state,
 but the same command in `automatedTestMode` will check the state across several tick intervals until a matching entity is found, or else the command will fail.
 
 <Tabs>
 <TabItem value="configureBot_abilityBot" label="Cycle through castable abilities" default>
 
 ```javascript
-import { CharInfo } from "../bossroom";
-
-let charType = 0; // Healer
 let isFinished = false;
 
 /**
  * Defines the type of character that the game should use for this Bot.
  */
-export function getCharacterType() {
-    return CharInfo.type[charType]; 
+export function getCharacterConfig() {
+    return {
+        characterClass: "HEALER"
+    }
 }
 
 /**
@@ -73,26 +72,21 @@ export async function configureBot(rg) {
     rg.automatedTestMode = true;
 
     // validate that we're in the game
-    await rg.waitForScene("BossRoom");
+    await rg.waitForScene("Dungeon");
 
     // find the closest human player and use a heal ability on them
     let target = await rg.findNearestEntity("HumanPlayer");
     await rg.entityExists(target);
 
-    let skillId = CharInfo.abilities[charType][1]
-    rg.performAction("PerformSkill", {
-        skillId: skillId,
+    rg.performAction("Heal", {
         targetId: target.id,
-        xPosition: target.position.x,
-        yPosition: target.position.y,
-        zPosition: target.position.z
+        position: target.position
     })
 
     // validate that the heal recovers from cooldown
-    await rg.entityHasAttribute(rg.getBot(), ["isOnCooldown", `ability${skillId}Available`], true); 
+    await rg.entityHasAttribute(rg.getBot(), ["abilityAvailable", "Heal"], true); 
 
-
-    // find the closest enemy and use the basic attack until it dies
+    // find the closest enemy and use a basic attack until it dies.
     // measure from the position of a known imp, 
     // so the character doesn't try to attack through a wall
     target = await rg.findNearestEntity("Imp", { x: -3.95, y: 0.0, z: -15.5 });
@@ -100,28 +94,24 @@ export async function configureBot(rg) {
     await rg.entityHasAttribute(target, "health", 15);
 
     // approach the entity
-    rg.performAction("FollowObject", {
+    rg.performAction("ApproachObject", {
         targetId: target.id,
         range: 5,
     });
 
     // queue three attacks
     // each one should do 5 damage
-    skillId = CharInfo.abilities[charType][0];
     const args = {
-        skillId: skillId,
         targetId: target.id,
-        xPosition: target.position.x,
-        yPosition: target.position.y,
-        zPosition: target.position.z
+        xPosition: target.position,
     }
-    rg.performAction("PerformSkill", args)
+    rg.performAction("BasicAttack", args)
     await rg.entityHasAttribute(target, "health", 10);
 
-    rg.performAction("PerformSkill", args)
+    rg.performAction("BasicAttack", args)
     await rg.entityHasAttribute(target, "health", 5);
 
-    rg.performAction("PerformSkill", args)
+    rg.performAction("BasicAttack", args)
     await rg.entityDoesNotExist(target);
 
     isFinished = true;
@@ -133,18 +123,15 @@ export async function configureBot(rg) {
 <TabItem value="runTurn_menuBot" label="Click buttons to start the game">
 
 ```javascript
-import { CharInfo } from "../bossroom";
-
 let isFinished = false;
 
 /**
  * Defines the type of character that the game should use for this Bot.
  */
 export function getCharacterType() {
-    // fixed to rogue character, 
-    // but the character type doesn't influence this scenario
-    // because this Bot is not spawnable.
-    return CharInfo.type[1]; 
+    return {
+        characterClass: null
+    }
 }
 
 /**
@@ -172,7 +159,8 @@ export function isComplete() {
 }
 
 /**
- * Start running my test scenario
+ * Clicks buttons to get us from the Main Menu into the dungeon.
+ * Once we enter the dungeon, this Bot has completed its tasks.
  */
 export async function configureBot(rg) {
 
@@ -194,47 +182,22 @@ export async function configureBot(rg) {
     await rg.entityHasAttribute(startWithRGButton, "interactable", true);
     rg.performAction("ClickButton", {targetId: startWithRGButton.id});
 
-    const rgHostButton = await rg.findEntity("RGHostButton");
-    await rg.entityHasAttribute(rgHostButton, "interactable", true);
-    rg.performAction("ClickButton", {targetId: rgHostButton.id});
+    // now we should be on a loading screen
+    await rg.waitForScene("LoadingScreen");
 
-
-    // now we should be at character select
-    await rg.entityDoesNotExist(profileMenuButton);
-    await rg.entityDoesNotExist(selectProfileButton);
-    await rg.entityDoesNotExist(startWithRGButton);
-    await rg.entityDoesNotExist(rgHostButton);
-    await rg.waitForScene("CharSelect");
-
-    // select a character and get to the game screen
-    const seat7Button = await rg.findEntity("Seat7Button");
-    await rg.entityHasAttribute(seat7Button, "interactable", true);
-    rg.performAction("ClickButton", {targetId: seat7Button.id});
+    // select a character then enter the dungeon
+    const selectHealerButton = await rg.findEntity("SelectHealerButton");
+    await rg.entityHasAttribute(selectHealerButton, "interactable", true);
+    rg.performAction("ClickButton", {targetId: selectHealerButton.id});
 
     const readyButton = await rg.findEntity("ReadyButton");
     await rg.entityHasAttribute(readyButton, "interactable", true);
     rg.performAction("ClickButton", {targetId: readyButton.id});
 
-
     // we should be in the dungeon now
-    await rg.entityDoesNotExist(seat7Button);
+    await rg.entityDoesNotExist(selectHealerButton);
     await rg.entityDoesNotExist(readyButton);
-    await rg.waitForScene("BossRoom");
-
-    // dismiss the help dialogs so we can start playing
-    const cheatsCancelButton = await rg.findEntity("CheatsCancelButton");
-    await rg.entityHasAttribute(cheatsCancelButton, "interactable", true);
-    rg.performAction("ClickButton", {targetId: cheatsCancelButton.id});
-
-    const gameHUDStartButton = await rg.findEntity("GameHUDStartButton");
-    await rg.entityHasAttribute(gameHUDStartButton, "interactable", true);
-    rg.performAction("ClickButton", {targetId: gameHUDStartButton.id});
-
-    // HUD should have been dismissed, 
-    // which means our buttons should also no longer be on the screen
-    await rg.entityDoesNotExist(cheatsCancelButton);
-    await rg.entityDoesNotExist(gameHUDStartButton);
-
+    await rg.waitForScene("Dungeon");
 
     // we're done!
     isFinished = true;
@@ -246,7 +209,7 @@ export async function configureBot(rg) {
 
 ## Methods
 
-These methods are in addition to the APIs defined in the [previous section](./dynamic-bots#variables).
+These methods are in addition to the APIs defined in the [previous section](./playtest-bots#variables).
 
 ### `setDefaultTimeout(timeout: number);`
 

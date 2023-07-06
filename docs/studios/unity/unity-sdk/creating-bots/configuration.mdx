@@ -5,7 +5,7 @@ sidebar_label: 'Configuration'
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Bot Configuration
+# Configuration
 
 Regression Games Bots are flexible and highly customizable.
 Bots can simulate players, function as NPCs, interact with menus and UIs, validate gameplay, and more.
@@ -13,13 +13,31 @@ Bots run in the Regression Games runtime and connect to your game via socket con
 Each Bot receives the current game state at a regular interval and uses our Javascript API to analyze the state, 
 make decisions, and interact with game elements.
 
+## Project Setup
+
+A Bot project is structured as an npm package.
+
+First, install [Node.js](https://nodejs.org/en/download) version 16.18 or above (which can be checked by running `node -v`). 
+You can use [nvm](https://github.com/nvm-sh/nvm) for managing multiple Node versions installed on a single machine. 
+
+To create your project and install node dependencies, create a new directory and navigate to it, then run the following commands:
+
+```
+npm init -y
+npm i @types/node node-fetch rg-match-info
+```
+
+Finally, create an `index.js` file at your project root. 
+This is where you'll implement methods to define the Bot and its behaviors as described in the following sections.  
+
+## Bot Configuration
+
 The first step to writing your Javascript Bot is configuring the Bot instance.
 Implement the following methods to define how your Unity Integration should spawn and terminate this Bot.  
 
-
 ### `isSpawnable();`
 
-Specifies whether this Bot should be represented by a visible component in the game.
+Specifies whether this Bot should be represented by a visible GameObject.
 Bots that simulate players or NPCs are generally spawnable, while Bots that interact with menus, 
 represent environmental hazards, observe the game state without interaction, etc. are not.
 
@@ -48,7 +66,7 @@ This is a freeform object to be interpreted by your game's implementation of the
 None
 
 #### Return Value
-string
+Javascript Object
 
 #### Examples
 

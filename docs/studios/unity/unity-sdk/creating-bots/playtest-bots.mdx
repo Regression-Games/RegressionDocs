@@ -1,20 +1,23 @@
 ---
-sidebar_label: 'Dynamic Bots'
+sidebar_label: 'PlayTest Bots'
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Defining Dynamic Bots
+# Defining Bots for PlayTesting
 
 Your Unity integration collects state information about game objects and notifies the Bot runtime with the updated state at a fixed tick interval.
 Whenever the Bot runtime receives an update, Regression Games calls the `runTurn` method. This is the entrypoint into your Bot logic for each tick.        
 
-The following API is used to evaluate the current game state within `runTurn` and queue behaviors you've defined as `RGActions`.
-Methods that filter state objects and check conditions also record results which can be loaded into the Unity Bot replay to help visualize the Bot's decison-making at each tick.  
+The following API is accessible through an `rgObject` passed to the `runTurn` method, and is used to evaluate the current game state and queue behaviors you've defined as `RGActions`.
+In-game movements and `RGActions` are automatically recorded during each session. 
+These logs can be loaded into the Unity Bot Replay utility which allows you to re-watch the session and debug Bot behaviors tick-by-tick. 
+API methods that filter state objects and check conditions record additional decision results which are displayed side-by-side with the Bots' actions. 
+This helps debug your Bot by displaying which decisons the Bot made before performing specific behaviors each tick.  
 
 :::tip
-Dynamic Bots are useful for simulating autonomous characters whose actions will change depending on conditions in the game state.
+PlayTest Bots are useful for simulating autonomous characters whose actions will change depending on conditions in the game state.
 :::
 
 :::caution
@@ -26,62 +29,58 @@ This contrasts with [Validation Bots](./validation-bots), which can delay execut
 <TabItem value="runTurn_coopBot" label="Follow and support a human player as an NPC" default>
 
 ```javascript
-import { CharInfo } from "../bossroom";
-
-let charType = 3; // Archer
-
 /**
- * Defines the type of character that the game should use for this Bot (in this case an Archer)
+ * Defines the spawn characteristics for this Bot
  */
-export function getCharacterType() {
-    return CharInfo.type[charType];
+export function getCharacterConfig() {
+    return {
+        characterClass: "WARRIOR";
+    }
 }
 
 /**
  * Outline of our Bot algorithm. For every tick:
- *  - If the Bot is standing on a floor switch, do nothing
+ *  - If the Bot is standing on a switch that is holding a door open, then do nothing
+ *  - If the switch is within a range of 30 units from the Bot, move onto the switch
  *  - If the Bot is not near the player, move within range of the player
  *  - If an enemy is within a certain distance of a player, attack that enemy
- *  - If the switch is within a range of 30 units from the Bot, move onto the switch
  */
 export async function runTurn(rg) {
 
-    if(rg.getState().sceneName !== "BossRoom") return;
+    if(rg.getState().sceneName !== "Dungeon") return;
 
     const currentPosition = rg.getBot().position;
 
-    // if the Bot is standing on a switch, then do nothing
+    // if the Bot is standing on a switch that is holding a door open, then do nothing
     const floorSwitch = await rg.findEntity("FloorSwitch");
     if(floorSwitch && await rg.entityHasAttribute(floorSwitch, "isOn", true)) return;
 
-     // if the switch is within range of 30 units from the Bot, then move onto it
+    // if the switch is within range of 30 units from the Bot, then move onto it
     if(floorSwitch && rg.MathFunctions.distanceSq(currentPosition, floorSwitch.position) < 30) {
-        rg.performAction("FollowObject", {
+        rg.performAction("ApproachObject", {
             targetId: floorSwitch.id,
             range: 0.1
         });
         return;
     }
 
-  // if the Bot is not near the human player, then move within range of that player
+    // if the Bot is not near the human player, then move within range of that player
     const humanPlayer = await rg.findEntity("HumanPlayer");
     if(humanPlayer && rg.MathFunctions.distanceSq(currentPosition, humanPlayer.position) > 10 ) {
-        rg.performAction("FollowObject", {
+        rg.performAction("ApproachObject", {
             targetId: humanPlayer.id,
             range: 2
         });
         return;
     }
 
-  // Otherwise, attack a nearby enemy if there is one
+    // Otherwise, attack a nearby enemy if there is one
     const enemy = await rg.findNearestEntity(null, currentPosition, (entity) => { return entity.team === 1 && !entity.broken});
     if(enemy && enemy.health > 0) {
         rg.performAction("PerformSkill", {
             skillId: 1,
             targetId: enemy.id,
-            xPosition: enemy.position.x,
-            yPosition: enemy.position.y,
-            zPosition: enemy.position.z
+            position: enemy.position,
         });
     }
 }
@@ -90,23 +89,22 @@ export async function runTurn(rg) {
 <TabItem value="runTurn_abilityBot" label="Cycle through castable abilities">
 
 ```javascript
-import { CharInfo } from "../bossroom";
-
-let charType = Math.round(Math.random() * 1000000) % 4;
-
 /**
  * Defines the type of character that the game should use for this Bot
  */
-export function getCharacterType() {
-    return CharInfo.type[charType];
+export function getCharacterConfig() {
+    return {
+        characterClass: "ARCHER"
+    }
 }
 
 /**
  * Entrypoint into the Bot logic
  */
 export async function runTurn(rg) {
-    // only activate abilities if we're on the game scene
-    if (rg.getState().sceneName !== "BossRoom") return;
+
+    // only activate abilities if we're ready to play
+    if (rg.getState().sceneName !== "Dungeon") return;
 
     // select 1 ability per update
     await selectAbility(rg);
@@ -115,24 +113,12 @@ export async function runTurn(rg) {
 /**
  * Returns the ID of the next ability in our rotation
  */
-function getNextAbility() {
-    const abilities = CharInfo.abilities[charType];
+function getNextAbility(rg) {
+    const abilities = rg.getBot().abilities;
     const abilityIndex = CURRENT_ABILITY % abilities.length;
     return abilities[abilityIndex];
 }
 
-/**
- * Returns a number corresponding to who this ability needs to target
- * -1 -> No target
- *  0 -> Targets an Ally
- *  1 -> Targets an Enemy
- *  2 -> AOE
- */
-function getTargetType() {
-    const abilities = CharInfo.abilities[charType];
-    const abilityIndex = CURRENT_ABILITY % abilities.length;
-    return CharInfo.abilityTargets[charType][abilityIndex];
-}
 
 let CURRENT_ABILITY = 0;
 
@@ -141,40 +127,39 @@ let CURRENT_ABILITY = 0;
  */
 async function selectAbility(rg) {
 
-    const ability = getNextAbility();
-    if(!rg.entityHasAttribute(rg.getBot(), ["isOnCooldown", `ability${ability}Available`], true)) {
+    const ability = getNextAbility(rg);
+    if(!rg.entityHasAttribute(rg.getBot(), ["abilityAvailable", `${ability.name}`], true)) {
         // this ability is still on cooldown
         return;
     }
 
-    const targetType = getTargetType();
+    const targetType = ability.targetType;
     let currentTarget;
 
-    if (targetType === -1) 
+    if (targetType === "None") 
     {
         // No target needed
         currentTarget = null;
     } 
-    else if (targetType === 1) {
-        // The ability requires an enemy -> find the nearest one.
-        const randomEnemy = await rg.findNearestEntity(null, null, (entity) => { return entity.team === 1 && !entity.broken } )
-        if (randomEnemy) {
-            currentTarget = randomEnemy;
-        } else {
+    else if (targetType === "Enemy") {
+        currentTarget = await rg.findNearestEntity(null, null, (entity) => { return entity.hostile && !entity.incapacitated } )
+        if(!currentTarget) {
+            // can't cast this without a valid target
             return;
         }
     } 
-    else {
-        // Otherwise, this ability either targets an ally or needs an aoe position - select the closest ally
-        currentTarget = await rg.findNearestEntity(null, null, (entity) => { return entity.team === 0 });
+    else if (targetType === "Ally") {
+        currentTarget = await rg.findNearestEntity(null, null, (entity) => { return !entity.hostile });
+        if(!currentTarget) {
+            // can't cast this without a valid target
+            return;
+        }
     }
   
     rg.performAction("PerformSkill", {
         skillId: ability,
         targetId: currentTarget?.id,
-        xPosition: currentTarget?.position?.x,
-        yPosition: currentTarget?.position?.y,
-        zPosition: currentTarget?.position?.z
+        position: currentTarget?.position,
     });
 
     CURRENT_ABILITY++;
@@ -186,13 +171,13 @@ async function selectAbility(rg) {
 <TabItem value="runTurn_menuBot" label="Click buttons to start the game">
 
 ```javascript
-import { CharInfo } from "../bossroom";
-
 /**
  * Defines the type of character that the game should use for this Bot.
  */
-export function getCharacterType() {
-    return CharInfo.type[1]; // fixed to rogue character
+export function getCharacterConfig() {
+    return {
+        characterClass: null,
+    }
 }
 
 /**
@@ -222,83 +207,44 @@ export function isComplete() {
 
 // flags for clicking the 6 buttons we need to click to start the game
 let stateFlags = {
-    "RGHostButton": false,
-    "StartWithRGButton": false,
+    "ProfileMenuButton": false
     "SelectProfileButton": false,
-    "ProfileMenuButton": false,
-    "ReadyButton": false,
-    "Seat7Button": false,
+    "StartWithRGButton": false,
 }
 
 let isFinished = false;
 let playedGame = false;
 
+/** 
+ * Click buttons to get us from the Main Menu into the dungeon.
+ * Once we enter the dungeon, this Bot has completed its tasks.
+ */
 export async function runTurn(rg) {
 
-    const currentScene = rg.getState().sceneName;
-    if(playedGame && currentScene !== "BossRoom") {
-        // we played and finished the match
+    if(rg.getState().sceneName === "MainMenu") {
+        const profileMenuButton = await getInteractableButton("ProfileMenuButton");
+        if (profileMenuButton && !stateFlags["ProfileMenuButton"]) {
+            rg.performAction("ClickButton", {targetId: profileMenuButton.id});
+            stateFlags["ProfileMenuButton"] = true
+            return;
+        }
+
+        const selectProfileButton = await getInteractableButton("SelectProfileButton");
+        if (selectProfileButton && stateFlags["ProfileMenuButton"] && !stateFlags["SelectProfileButton"]) {
+            rg.performAction("ClickButton", {targetId: selectProfileButton.id});
+            stateFlags["SelectProfileButton"] = true
+            return;
+        }
+
+        const startButton = await getInteractableButton("StartWithRGButton");
+        if (startButton && stateFlags["SelectProfileButton"] && !stateFlags["StartWithRGButton"]) {
+            rg.performAction("ClickButton", {targetId: startButton.id});
+            stateFlags["StartWithRGButton"] = true
+            return;
+        }
+    } else {
         isFinished = true;
-        return;
     }
-
-    switch (currentScene) {
-        case "MainMenu":
-            const hostButton = await getInteractableButton("RGHostButton");
-            if (hostButton && stateFlags["StartWithRGButton"] && !stateFlags["RGHostButton"]) {
-                rg.performAction("ClickButton", {targetId: hostButton.id});
-                stateFlags["RGHostButton"] = true
-            }
-
-            const startButton = await getInteractableButton("StartWithRGButton");
-            if (startButton && stateFlags["SelectProfileButton"] && !stateFlags["StartWithRGButton"]) {
-                rg.performAction("ClickButton", {targetId: startButton.id});
-                stateFlags["StartWithRGButton"] = true
-            }
-
-            const selectProfileButton = await getInteractableButton("SelectProfileButton");
-            if (selectProfileButton && stateFlags["ProfileMenuButton"] && !stateFlags["SelectProfileButton"]) {
-                rg.performAction("ClickButton", {targetId: selectProfileButton.id});
-                stateFlags["SelectProfileButton"] = true
-            }
-
-            const profileMenuButton = await getInteractableButton("ProfileMenuButton");
-            if (profileMenuButton && !stateFlags["ProfileMenuButton"]) {
-                rg.performAction("ClickButton", {targetId: profileMenuButton.id});
-                stateFlags["ProfileMenuButton"] = true
-            }
-            break;
-        case "CharSelect":
-            const readyButton = await getInteractableButton("ReadyButton");
-            if (readyButton && stateFlags["Seat7Button"] && !stateFlags["ReadyButton"]) {
-                rg.performAction("ClickButton", {targetId: readyButton.id});
-                stateFlags["ReadyButton"] = true
-            }
-
-            const seat7Button = await getInteractableButton("Seat7Button");
-            if (seat7Button && !stateFlags["Seat7Button"]) {
-                rg.performAction("ClickButton", {targetId: seat7Button.id});
-                stateFlags["Seat7Button"] = true
-            }
-            break;
-        case "BossRoom":
-            playedGame = true;
-            const GameHUDStartButton = await getInteractableButton("GameHUDStartButton");
-            if (GameHUDStartButton && stateFlags["CheatsCancelButton"] && !stateFlags["GameHUDStartButton"]) {
-                rg.performAction("ClickButton", {targetId: GameHUDStartButton.id});
-                stateFlags["GameHUDStartButton"] = true
-            }
-
-            const CheatsCancelButton = await getInteractableButton("CheatsCancelButton");
-            if (CheatsCancelButton && !stateFlags["CheatsCancelButton"]) {
-                rg.performAction("ClickButton", {targetId: CheatsCancelButton.id});
-                stateFlags["CheatsCancelButton"] = true
-            }
-            break;
-        default:
-            isFinished = true;
-    }
-
 }
 
 async function getInteractableButton(buttonName) {
@@ -324,9 +270,9 @@ The ID of this Bot in the game state.
 
 The given name of the connected Bot
 
-### `characterType`
+### `characterConfig`
 
-A freeform string defining this Bot's character configuration. See [isSpawnable()](./configuration#isSpawnable) and [getCharacterConfig()](./configuration#getCharacterConfig)
+A freeform Javascript object defining this Bot's character configuration. See [isSpawnable()](./configuration#isSpawnable) and [getCharacterConfig()](./configuration#getCharacterConfig)
 
 
 ## Methods
@@ -433,7 +379,7 @@ if(!await rg.entityHasAttribute(bot, "equippedItem", "sword")) {
 Find an entity with the given Object Type in the game state.
 This method should be used when only one entity with the given Object Type is expected to exist in the state,
 or when any entity with this Object Type will satisfy the scenario.
-For more control over finding specific entities in the game state, see [getState](./dynamic-bots#getState) and [findNearestEntity](./dynamic-bots#findNearestEntity).
+For more control over finding specific entities in the game state, see [getState](./playtest-bots#getState) and [findNearestEntity](./playtest-bots#findNearestEntity).
 
 #### Arguments
 Argument Name | Type | Default | Description
