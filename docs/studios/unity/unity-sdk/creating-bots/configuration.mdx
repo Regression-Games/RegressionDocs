@@ -1,0 +1,140 @@
+---
+sidebar_label: 'Configuration'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Bot Configuration
+
+Regression Games Bots are flexible and highly customizable.
+Bots can simulate players, function as NPCs, interact with menus and UIs, validate gameplay, and more.
+Bots run in the Regression Games runtime and connect to your game via socket connections initiated from your Unity integration.
+Each Bot receives the current game state at a regular interval and uses our Javascript API to analyze the state, 
+make decisions, and interact with game elements.
+
+The first step to writing your Javascript Bot is configuring the Bot instance.
+Implement the following methods to define how your Unity Integration should spawn and terminate this Bot.  
+
+
+### `isSpawnable();`
+
+Specifies whether this Bot should be represented by a visible component in the game.
+Bots that simulate players or NPCs are generally spawnable, while Bots that interact with menus, 
+represent environmental hazards, observe the game state without interaction, etc. are not.
+
+#### Arguments
+None
+
+#### Return Value
+boolean (Default `true`)
+
+#### Examples
+
+```javascript
+isSpawnable() {
+    return false;
+}
+```
+
+
+### `getCharacterConfig();`
+
+For spawnable Bots. 
+Provides an object containing character configurations to help seat your Bot as the appropriate class/prefab/etc.
+This is a freeform object to be interpreted by your game's implementation of the `RGBotSpawnManager.SeatPlayer` and `RGSpawnManager.SpawnBot` interfaces.
+
+#### Arguments
+None
+
+#### Return Value
+string
+
+#### Examples
+
+<Tabs>
+<TabItem value="character_config_simple" label="Simple definition" default>
+
+```javascript
+getCharacterConfig() {
+    return {
+        "type" : "Mage"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="character_type_freeform" label="Complex definition" default>
+
+```javascript
+getCharacterConfig() {
+    return {
+        "class": "Warrior",
+        "subClass": "Reaver",
+        "startingEquipment": {
+            "mainHand": "Sword",
+            "offHand": "Sword"
+        },
+        "spawn": "BlueTower",
+        "maxHP": "50"
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### `getBotLifeCycle();`
+
+Bots can be either `managed` or `persistent`.
+A `managed` Bot will automatically disconnect when the game-scene is destroyed (???).
+A `persistent` Bot must either terminate itself when its tasks are complete or be terminated manually from the RG Overlay.
+
+#### Arguments
+None
+
+#### Return Value
+One of `"MANAGED"` or `"PERSISTENT"`.
+
+#### Examples
+<Tabs>
+<TabItem value="managed_bot" label="Managed" default>
+
+```javascript
+getBotLifeCycle() {
+    return 'MANAGED'
+}
+```
+
+</TabItem>
+<TabItem value="persistent_bot" label="Persistent" default>
+
+```javascript
+getBotLifeCycle() {
+    return 'PERSISTENT'
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### `isComplete();`
+
+Allows a Bot to disconnect itself from the game before the Unity integration would normally signal Bots to disconnect.
+
+#### Arguments
+None
+
+#### Return Value
+boolean
+
+#### Examples
+
+```javascript
+let tasksComplete = false;
+isComplete() {
+    return tasksComplete;
+}
+```

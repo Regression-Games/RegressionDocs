@@ -71,7 +71,15 @@ const sidebars = {
             'studios/unity/unity-sdk/setup-and-integration', 
             'studios/unity/unity-sdk/in-editor-replay',
             'studios/unity/unity-sdk/RGBotSpawnManager',
-            'studios/unity/unity-sdk/creating-bots'
+            {
+              type: 'category',
+              label: 'Creating Bots',
+              items: [
+                'studios/unity/unity-sdk/creating-bots/configuration',
+                'studios/unity/unity-sdk/creating-bots/dynamic-bots',
+                'studios/unity/unity-sdk/creating-bots/validation-bots'
+              ]
+            }
           ],
         },
         {
