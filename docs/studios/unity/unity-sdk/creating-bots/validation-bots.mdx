@@ -27,6 +27,7 @@ where a falsey result from a command should not cause the entire scenario to fai
 This mode shares all of the APIs of [PlayTest Bots](./playtest-bots), with two important distinctions:
 1. Bot logic is implemented within a `configureBot` method rather than `runTurn`. 
 `configureBot` is invoked once after the Bot connects and will run to completion rather than being invoked repeatedly over the lifetime of the Bot. 
+Like `runTurn`, `configureBot` accepts an `rg` object for access to the Regression Games API.
 2. Commands act as assertions. When a command is executed, it automatically waits and retries until the game state meets expectations. 
 If an expectation hasn't been met before a default timeout then the command, and by extension the scenario, will fail.
 For example, the command `rg.findEntity("MyEntity")` for a PlayTest Bot will return the matching entity or null based on the current tick's game state,

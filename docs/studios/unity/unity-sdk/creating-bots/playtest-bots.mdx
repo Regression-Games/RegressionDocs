@@ -10,7 +10,7 @@ import TabItem from '@theme/TabItem';
 Your Unity integration collects state information about game objects and notifies the Bot runtime with the updated state at a fixed tick interval.
 Whenever the Bot runtime receives an update, Regression Games calls the `runTurn` method. This is the entrypoint into your Bot logic for each tick.        
 
-The following API is accessible through an `rgObject` passed to the `runTurn` method, and is used to evaluate the current game state and queue behaviors you've defined as `RGActions`.
+The following API is accessible through an `rg` object passed to the `runTurn` method, and is used to evaluate the current game state and queue behaviors you've defined as `RGActions`.
 In-game movements and `RGActions` are automatically recorded during each session. 
 These logs can be loaded into the Unity Bot Replay utility which allows you to re-watch the session and debug Bot behaviors tick-by-tick. 
 API methods that filter state objects and check conditions record additional decision results which are displayed side-by-side with the Bots' actions. 
