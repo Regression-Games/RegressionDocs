@@ -70,7 +70,6 @@ const sidebars = {
             'studios/unity/unity-sdk/overview', 
             'studios/unity/unity-sdk/setup-and-integration', 
             'studios/unity/unity-sdk/in-editor-replay',
-            'studios/unity/unity-sdk/RGBotSpawnManager',
             {
               type: 'category',
               label: 'Creating Bots',
@@ -80,12 +79,7 @@ const sidebars = {
                 'studios/unity/unity-sdk/creating-bots/validation-bots'
               ]
             }
-          ],
-        },
-        {
-          type: 'category',
-          label: 'Unity Tutorials and Guides',
-          items: ['studios/unity/tutorials/tutorial'],
+          ]
         }
       ]
     },
