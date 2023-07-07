@@ -205,9 +205,9 @@ export function isComplete() {
 
 // flags for clicking the 6 buttons we need to click to start the game
 let stateFlags = {
-    "ProfileMenuButton": false
-    "SelectProfileButton": false,
-    "StartWithRGButton": false,
+    "SelectGameModeButton": false
+    "ChooseArcherButton": false,
+    "StartGameButton": false,
 }
 
 let isFinished = false;
@@ -220,24 +220,24 @@ let playedGame = false;
 export async function runTurn(rg) {
 
     if(rg.getState().sceneName === "MainMenu") {
-        const profileMenuButton = await getInteractableButton("ProfileMenuButton");
-        if (profileMenuButton && !stateFlags["ProfileMenuButton"]) {
-            rg.performAction("ClickButton", {targetId: profileMenuButton.id});
-            stateFlags["ProfileMenuButton"] = true
+        const selectGameModeButton = await getInteractableButton("SelectGameModeButton");
+        if (selectGameModeButton && !stateFlags["SelectGameModeButton"]) {
+            rg.performAction("ClickButton", {targetId: selectGameModeButton.id});
+            stateFlags["SelectGameModeButton"] = true
             return;
         }
 
-        const selectProfileButton = await getInteractableButton("SelectProfileButton");
-        if (selectProfileButton && stateFlags["ProfileMenuButton"] && !stateFlags["SelectProfileButton"]) {
-            rg.performAction("ClickButton", {targetId: selectProfileButton.id});
-            stateFlags["SelectProfileButton"] = true
+        const chooseArcherButton = await getInteractableButton("ChooseArcherButton");
+        if (chooseArcherButton && stateFlags["SelectGameModeButton"] && !stateFlags["ChooseArcherButton"]) {
+            rg.performAction("ClickButton", {targetId: chooseArcherButton.id});
+            stateFlags["ChooseArcherButton"] = true
             return;
         }
 
-        const startButton = await getInteractableButton("StartWithRGButton");
-        if (startButton && stateFlags["SelectProfileButton"] && !stateFlags["StartWithRGButton"]) {
-            rg.performAction("ClickButton", {targetId: startButton.id});
-            stateFlags["StartWithRGButton"] = true
+        const startGameButton = await getInteractableButton("StartGameButton");
+        if (startButton && stateFlags["ChooseArcherButton"] && !stateFlags["StartGameButton"]) {
+            rg.performAction("ClickButton", {targetId: startGameButton.id});
+            stateFlags["StartGameButton"] = true
             return;
         }
     } else {
