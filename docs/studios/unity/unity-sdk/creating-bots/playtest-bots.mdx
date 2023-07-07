@@ -398,11 +398,12 @@ const areaBoss = await rg.findEntity("Boss");
 ### `findNearestEntity(objectType: string | null, position: object = null, filterFunc: function = (entity) => true);`
 
 Finds the closest entity to the given position.
+The filter function is applied to all entities matching the given objectType (if one is defined) before evaluating entity positions.
 
 #### Arguments
 Argument Name | Type | Default | Description
 ---|---|---|---|
-`objectType` | `string` &#124; `null` | | Optionally filter entities by type 
+`objectType` | `string` &#124; `null` | | Optionally filter entities by Object Type
 `position` | `object` | The Bot's current position | The position to measure distance from
 `filterFunc` | `function` | (entity) => true | Optionally filter entities to find 
 
