@@ -8,11 +8,16 @@ import TabItem from '@theme/TabItem';
 # Defining Bots for Validation Testing
 
 Regression Games Bots support an `automatedTestMode` which can be used to test GameObject behaviors 
-and validate changes in the game state in response to character actions. To enable this mode, add the following line to your Bot configuration:
+and validate changes in the game state in response to character actions. 
 
-```javascript
-rg.automatedTestMode = true;
-```
+This mode shares all of the APIs of [PlayTest Bots](./playtest-bots), with two important distinctions:
+1. Bot logic is implemented within a `configureBot` method rather than `runTurn`. 
+`configureBot` is invoked once after the Bot connects and will run to completion rather than being invoked repeatedly over the lifetime of the Bot. 
+Like `runTurn`, `configureBot` accepts an `rg` object for access to the Regression Games API.
+2. Commands act as assertions. When a command is executed, it automatically waits and retries until the game state meets expectations. 
+If an expectation hasn't been met before a default timeout then the command, and by extension the scenario, will fail.
+For example, the command `rg.findEntity("MyEntity")` for a PlayTest Bot will return the matching entity or null based on the current tick's game state,
+but the same command in `automatedTestMode` will check the state across several tick intervals until a matching entity is found, or else the command will fail.
 
 :::tip
 This mode is useful for automated testing where commands must be issued in a deterministic order, 
@@ -24,14 +29,16 @@ This mode should not be used for Bots intended to make dynamic decisions based o
 where a falsey result from a command should not cause the entire scenario to fail. 
 :::
 
-This mode shares all of the APIs of [PlayTest Bots](./playtest-bots), with two important distinctions:
-1. Bot logic is implemented within a `configureBot` method rather than `runTurn`. 
-`configureBot` is invoked once after the Bot connects and will run to completion rather than being invoked repeatedly over the lifetime of the Bot. 
-Like `runTurn`, `configureBot` accepts an `rg` object for access to the Regression Games API.
-2. Commands act as assertions. When a command is executed, it automatically waits and retries until the game state meets expectations. 
-If an expectation hasn't been met before a default timeout then the command, and by extension the scenario, will fail.
-For example, the command `rg.findEntity("MyEntity")` for a PlayTest Bot will return the matching entity or null based on the current tick's game state,
-but the same command in `automatedTestMode` will check the state across several tick intervals until a matching entity is found, or else the command will fail.
+
+To enable this mode, add the following line at the start of your `configureBot` implementation:
+
+```javascript
+export async function configureBot() {
+    rg.automatedTestMode = true;
+    // your validation code here
+}
+```
+
 
 <Tabs>
 <TabItem value="configureBot_abilityBot" label="Cycle through castable abilities" default>
@@ -44,7 +51,7 @@ let isFinished = false;
  */
 export function getCharacterConfig() {
     return {
-        characterClass: "HEALER"
+        characterRole: "HEALER"
     }
 }
 
@@ -88,9 +95,8 @@ export async function configureBot(rg) {
     await rg.entityHasAttribute(rg.getBot(), ["abilityAvailable", "Heal"], true); 
 
     // find the closest enemy and use a basic attack until it dies.
-    // measure from the position of a known imp, 
-    // so the character doesn't try to attack through a wall
-    target = await rg.findNearestEntity("Imp", { x: -3.95, y: 0.0, z: -15.5 });
+    // measure from the position of a known gameObject
+    target = await rg.findNearestEntity("Imp", await findEntity("Checkpoint").position);
     await rg.entityExists(target);
     await rg.entityHasAttribute(target, "health", 15);
 
@@ -130,9 +136,7 @@ let isFinished = false;
  * Defines the type of character that the game should use for this Bot.
  */
 export function getCharacterType() {
-    return {
-        characterClass: null
-    }
+    return {}
 }
 
 /**
@@ -214,8 +218,9 @@ These methods are in addition to the APIs defined in the [previous section](./pl
 
 ### `setDefaultTimeout(timeout: number);`
 
-Sets a default timeout in milliseconds. The validator will retry until a condition succeeds.
-If this timeout is hit first, then the validator will report a failure. 
+Sets the default timeout in milliseconds. 
+This is the amount of time a command is allowed to wait/retry before the command fails.
+This timeout should take into consideration how often your Unity Integration is configured to send the game state.  
 
 #### Arguments
 Argument Name | Type | Default | Description

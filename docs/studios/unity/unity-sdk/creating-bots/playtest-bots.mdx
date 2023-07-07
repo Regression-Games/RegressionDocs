@@ -13,8 +13,8 @@ Whenever the Bot runtime receives an update, Regression Games calls the `runTurn
 The following API is accessible through an `rg` object passed to the `runTurn` method, and is used to evaluate the current game state and queue behaviors you've defined as `RGActions`.
 In-game movements and `RGActions` are automatically recorded during each session. 
 These logs can be loaded into the Unity Bot Replay utility which allows you to re-watch the session and debug Bot behaviors tick-by-tick. 
-API methods that filter state objects and check conditions record additional decision results which are displayed side-by-side with the Bots' actions. 
-This helps debug your Bot by displaying which decisons the Bot made before performing specific behaviors each tick.  
+API methods that filter state objects and check conditions will record additional decision results. 
+These are displayed side-by-side with Bot actions in the Replay utility to help debug your Bot by showing which decisons led to resulting behaviors.  
 
 :::tip
 PlayTest Bots are useful for simulating autonomous characters whose actions will change depending on conditions in the game state.
@@ -34,14 +34,14 @@ This contrasts with [Validation Bots](./validation-bots), which can delay execut
  */
 export function getCharacterConfig() {
     return {
-        characterClass: "WARRIOR";
+        characterRole: "WARRIOR";
     }
 }
 
 /**
  * Outline of our Bot algorithm. For every tick:
  *  - If the Bot is standing on a switch that is holding a door open, then do nothing
- *  - If the switch is within a range of 30 units from the Bot, move onto the switch
+ *  - If the switch is within a range of sqrt(30) units from the Bot, move onto the switch
  *  - If the Bot is not near the player, move within range of the player
  *  - If an enemy is within a certain distance of a player, attack that enemy
  */
@@ -55,7 +55,7 @@ export async function runTurn(rg) {
     const floorSwitch = await rg.findEntity("FloorSwitch");
     if(floorSwitch && await rg.entityHasAttribute(floorSwitch, "isOn", true)) return;
 
-    // if the switch is within range of 30 units from the Bot, then move onto it
+    // if the switch is within range of sqrt(30) units from the Bot, then move onto it
     if(floorSwitch && rg.MathFunctions.distanceSq(currentPosition, floorSwitch.position) < 30) {
         rg.performAction("ApproachObject", {
             targetId: floorSwitch.id,
@@ -94,7 +94,7 @@ export async function runTurn(rg) {
  */
 export function getCharacterConfig() {
     return {
-        characterClass: "ARCHER"
+        characterRole: "ARCHER"
     }
 }
 
@@ -175,9 +175,7 @@ async function selectAbility(rg) {
  * Defines the type of character that the game should use for this Bot.
  */
 export function getCharacterConfig() {
-    return {
-        characterClass: null,
-    }
+    return {}
 }
 
 /**
@@ -365,7 +363,6 @@ rg.performAction("OpenDoor", { targetId: door.id });
 const bot = rg.getBot();
 if(!await rg.entityHasAttribute(bot, "equippedItem", "sword")) {
     rg.performAction("EquipItem", { 
-        targetId: bot.id,
         itemName: "sword",
         slot: "mainHand" 
     });

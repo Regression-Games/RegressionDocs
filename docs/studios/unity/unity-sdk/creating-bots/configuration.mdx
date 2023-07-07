@@ -17,7 +17,7 @@ make decisions, and interact with game elements.
 
 A Bot project is structured as an npm package.
 
-First, install [Node.js](https://nodejs.org/en/download) version 16.18 or above (which can be checked by running `node -v`). 
+First, install [Node.js](https://nodejs.org/en/download) version 16.x (which can be checked by running `node -v`). 
 You can use [nvm](https://github.com/nvm-sh/nvm) for managing multiple Node versions installed on a single machine. 
 
 To create your project and install node dependencies, create a new directory and navigate to it, then run the following commands:
@@ -51,7 +51,7 @@ boolean (Default `true`)
 
 ```javascript
 isSpawnable() {
-    return false;
+    return true;
 }
 ```
 
@@ -105,9 +105,9 @@ getCharacterConfig() {
 
 ### `getBotLifeCycle();`
 
-Bots can be either `managed` or `persistent`.
-A `managed` Bot will automatically disconnect when the game-scene is destroyed (???).
-A `persistent` Bot must either terminate itself when its tasks are complete or be terminated manually from the RG Overlay.
+Bots can be either `MANAGED` or `PERSISTENT`.
+A `MANAGED` Bot will automatically disconnect when `RGBotServerListener.GetInstance()?.StopGame()` is called from the Unity Integration.
+A `PERSISTENT` Bot must either terminate itself (see [isComplete](./configuration#isComplete)) when its tasks are complete or be terminated manually from the RG Overlay.
 
 #### Arguments
 None
@@ -141,6 +141,8 @@ getBotLifeCycle() {
 ### `isComplete();`
 
 Allows a Bot to disconnect itself from the game before the Unity integration would normally signal Bots to disconnect.
+Returning `true` from this method will stop Bot execution and send a teardown notification to your game for this Bot.
+This is particularly useful for [Validation Bots](./validation-bots), which execute a specific set of commands and then are considered to have 'completed' their tasks.
 
 #### Arguments
 None
