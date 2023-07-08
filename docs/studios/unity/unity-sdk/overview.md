@@ -10,10 +10,10 @@ Regression Games is building a bot platform where studios can **build and deploy
 
 ## Current Stage of the Product
 
-The current state of this product should be classified as a **pre-alpha** release. We are actively talking with studios and game developers to discover the best features and use cases to tackle, and changes are happening frequently. That being said, we do have
+The current state of this product should be classified as a **release preview**. We are actively talking with studios and game developers to discover the best features and use cases to tackle, and changes are happening frequently. That being said, we do have
 a set of initial features and documentation that you can try now - we would absolutely love to get your [feedback](https://regression-games.sleekplan.app/feedback).
 
-The team has focused on the foundation of useful use cases and initial infrastructure to get bots to connect to Unity. The bulk
+The team has focused on the foundation of supporting use cases and initial infrastructure to get bots to connect to Unity. The bulk
 of our value will come from the interfaces to build bots, the scale of our infrastructure, the speed of integration, and the products
 built around these bots. These are the features we are currently focusing on.
 

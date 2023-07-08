@@ -56,7 +56,9 @@ const sidebars = {
             'studios/unity/unity-sdk/overview', 
             'studios/unity/unity-sdk/setup-and-integration', 
             'studios/unity/unity-sdk/in-editor-replay',
-            'studios/unity/unity-sdk/RGBotSpawnManager'],
+            'studios/unity/unity-sdk/RGBotSpawnManager',
+            'studios/unity/unity-sdk/BotInformation'
+          ],
         },
         {
           type: 'category',
