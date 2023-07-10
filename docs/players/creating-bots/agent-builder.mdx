@@ -10,8 +10,10 @@ Regression Games' Agent Builder is an easy-to-use visual editor for constructing
 Our editor utilizes large language models like [OpenAI's GPT-4](https://openai.com/blog/chatgpt) to write code for you.
 This makes our Agent Builder an excellent tool for those new to our AI libraries, or even to programming itself!
 
-*Please note that this tool is early in development and is likely to contain bugs.*
-*You can report bugs and request additional features for the Agent Builder [here](https://regression-games.sleekplan.app/feedback).*
+:::note
+This tool is early in development - it is prone to change and may contain bugs.
+Please report issues and feature requests for the Agent Builder [here](https://regression-games.sleekplan.app/feedback).
+:::
 
 ## What Is a Behavior Tree?
 
@@ -40,7 +42,7 @@ Instead, it represents an action for the AI to take such as moving in a certain 
 - **Decorator Node**: There are several kinds of Decorator Nodes, each of which can have only one child. This node modifies its child's state in some way.
 For example, an "Inverter" Decorator will succeed if its child fails, and vice versa.
 
-For a deeper dive into behavior trees, their different nodes, and practical examples of using them in video games, [follow this link](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
+For a deeper dive into behavior trees, their nodes, and practical examples of their usage in video games, [follow this link](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
 
 ## Getting Started with Agent Builder
 
@@ -51,13 +53,13 @@ Create a new AI from the Bot Manager and select Agent Builder from the list of c
 
 ### Creating Nodes
 
-Once you've created your AI, you'll be redirected to the Agent Builder interface.
+Once you've created a project for your AI, you'll be redirected to the Agent Builder interface.
 We'll start you out with a root node and a sequence node to form the basis of your tree.
 
 ![Default Tree](./img/agent-builder/default-tree.png)
 
-To start building your tree, click the connector at the bottom of the sequence node and drag.
-When you release, you'll be presented with different types of nodes that can be added to the sequence.
+To begin building your tree, click the connector at the bottom of the sequence node and drag.
+When you release, you'll be presented with different types of nodes that can be added to this sequence.
 For this demonstration, we'll create an action node.
 You can repeat this process for any node that is allowed to have children.
 
@@ -68,30 +70,77 @@ You can repeat this process for any node that is allowed to have children.
 Clicking on a node opens a panel to the right side of your screen.
 This panel contains information about the selected node including a description of the node's type and a label, as well as a button to delete the node from the tree.
 It's a good idea to set labels to keep track of what you want each node or branch to do.
-If the selected node is a leaf node, such as an action or condition, the panel will also contain fields used for code generation.
+If the selected node is a leaf node, such as an action or condition, then the panel will also contain fields used for defining the node's behavior via code.
 
 ![Open the Node Panel](./img/agent-builder/edit-node.png)
 
-### Generating Code
+### Adding Code
+
+
+:::note
+All samples in this section are written in Typescript, which is the only language currently supported by the Agent Builder.
+If you'd like to see support for other languages, let us know [here](https://regression-games.sleekplan.app/feedback).
+:::
 
 The nodes in your tree won't be useful until you give them some logic to execute.
-Click on a leaf node to open the side-panel and describe what you want this node to do in the "GPT Prompt" field.
-When you're satisfied with your prompt, click the "Generate Code" button to watch code appear in the editor.
+Click on a leaf node to open the side-panel. You'll see the following stub provided in the editor:
 
-We provide additional context to GPT so that it can use our APIs but it may produce output that doesn't follow our expected format,
+```javascript
+class LeafNode extends TreeNode {
+    public override async execute(): Promise<NodeStatus> {
+        return NodeStatus.SUCCESS;
+    }
+}
+```
+:::info
+All of your node's code must be defined within the `LeafNode` class, and the `execute` method must be defined as your entrypoint into the node. 
+You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
+:::
+
+You can either manually fill in code using the editor (see [Writing Your Own Code](./coding/updating-your-ai)), or you can have GPT do the heavy lifting for you.
+To generate code using GPT, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button. 
+The editor will be disabled as code appears, and you can modify the output once it's finished.
+We supplement your prompt with additional context about our APIs but GPT may produce output that doesn't follow our expected format,
 or code that functions differently in-game than your prompt intends.
-If this happens, you can make changes to your prompt and re-submit it for new output, or you can manually edit the output yourself in the editor.
+If this happens, you may need to alter your prompt and re-submit it for new output, or fix output manually.
 
-#### Typescript
+:::caution
+Generating Code will overwrite anything currently in the editor. It's a good idea to save your tree before trying out new prompts.
+:::
 
-Agent Builder currently only supports Typescript. If you'd like to see support for other languages, let us know [here](https://regression-games.sleekplan.app/feedback).
+You may notice that the generated code uses the `getData` and `setData` methods. 
+These can be used to share data between nodes, and it's a good practice to specify a type with `getData` to take advantage of the editor's Intellisense.
+For example:
 
-The below sample uses the [rg-bot library for Minecraft](TODO-REG-1026) to make the AI wander in a random direction.
-This is a good example of well-formatted output.
-The output must only contain valid code and must implement a method with the signature `public override async execute(): Promise<NodeStatus>` which acts as our entrypoint into the node.
-The `getData` and `setData` methods can be used to easily share data between nodes.
+```typescript
+// "bot" is available to you by default
+const bot = this.getData<RGBot>("bot");
+
+// you can also define and retrieve your own key-value pairs
+this.setData("myString", "Hello World");
+const myString = this.getData<string>("myString");
+
+this.setData("myBool", true);
+const myBool = this.getData<boolean>("myBool");
+```
+
+The below sample uses the [rg-bot library for Minecraft](TODO-REG-1026) to make the AI wander in a random direction. 
+It demonstrates usage of these methods and how to properly format your code.
 
 ![Generate Code](./img/agent-builder/generate-code.png)
+
+
+### Validating Code
+
+The embedded code editor offers standard syntax highlighting and Intellisense features for Regressions Games APIs. 
+To take this a step further, GPT can analyze code from the editor and provide suggestions for fixing syntax errors, bugs, and inefficiencies.
+Clicking the "Validate Code" button will cause a text box to appear with GPT's analysis results.
+
+![Validate Code](./img/agent-builder/validate-code.png)
+
+You can close these results at any time, and reopen them by clicking the clipboard icon.
+
+![ReOpen Validation Results](./img/agent-builder/reopen-validation-results.png)
 
 ### Saving Your Tree
 
