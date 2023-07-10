@@ -32,41 +32,57 @@ This is where you'll implement methods to define the Bot and its behaviors as de
 
 ## Bot Configuration
 
-The first step to writing your Javascript Bot is configuring the Bot instance.
-Implement the following methods to define how your Unity Integration should spawn and terminate this Bot.  
+Your Unity Integration is flexible in terms of how your GameObjects are set up, spawned into the scene, and torn down.
+The first step to writing your Javascript Bot is defining important information on your Bot Instance for these processes.
 
-### `isSpawnable();`
+The `configureBot(rg)` method accepts an `rg` object which is provided by Regression Games.
+This object exposes configuration options (defined in the sections below) and methods for definind Bot behaviors and validations.
+The `configureBot` method is optional, but must be exported from your `index.js` file in order for Regression Games to access custom configurations.
+
+```javascript
+export function configureBot(rg) {
+    rg.isSpawnable = true;
+    rg.characterConfig = {
+        "role": "enemy",
+        "species": "red_imp",
+        "immunities": ["fire"]
+    };
+    rg.lifecycle = "MANAGED";
+}
+```
+
+### `isSpawnable`
 
 Specifies whether this Bot should be represented by a visible GameObject.
 Bots that simulate players or NPCs are generally spawnable, while Bots that interact with menus, 
 represent environmental hazards, observe the game state without interaction, etc. are not.
 
-#### Arguments
-None
+#### Type
+boolean
 
-#### Return Value
-boolean (Default `true`)
+#### Default Value
+`true`
 
 #### Examples
 
 ```javascript
-isSpawnable() {
-    return true;
+export function configureBot(rg) {
+    rg.isSpawnable = true;
 }
 ```
 
 
-### `getCharacterConfig();`
+### `characterConfig`
 
 For spawnable Bots. 
-Provides an object containing character configurations to help seat your Bot as the appropriate class/prefab/etc.
+An object containing character configurations to help seat your Bot as the appropriate class/prefab/etc.
 This is a freeform object to be interpreted by your game's implementation of the `RGBotSpawnManager.SeatPlayer` and `RGSpawnManager.SpawnBot` interfaces.
 
-#### Arguments
-None
-
-#### Return Value
+#### Type
 Javascript Object
+
+#### Default Value
+`null`
 
 #### Examples
 
@@ -74,10 +90,10 @@ Javascript Object
 <TabItem value="character_config_simple" label="Simple definition" default>
 
 ```javascript
-getCharacterConfig() {
-    return {
+export function configureBot(rg) {
+    rg.characterConfig = {
         "type" : "Mage"
-    }
+    };
 }
 ```
 
@@ -85,17 +101,17 @@ getCharacterConfig() {
 <TabItem value="character_type_freeform" label="Complex definition" default>
 
 ```javascript
-getCharacterConfig() {
-    return {
-        "class": "Warrior",
-        "subClass": "Reaver",
+export function configureBot(rg) {
+    rg.characterConfig = {
+        "role": "Warrior",
+        "specialization": "Reaver",
         "startingEquipment": {
             "mainHand": "Sword",
             "offHand": "Sword"
         },
         "spawn": "BlueTower",
         "maxHP": "50"
-    }
+    };
 }
 ```
 
@@ -103,25 +119,25 @@ getCharacterConfig() {
 </Tabs>
 
 
-### `getBotLifeCycle();`
+### `lifecycle`
 
 Bots can be either `MANAGED` or `PERSISTENT`.
 A `MANAGED` Bot will automatically disconnect when `RGBotServerListener.GetInstance()?.StopGame()` is called from the Unity Integration.
-A `PERSISTENT` Bot must either terminate itself (see [isComplete](./configuration#isComplete)) when its tasks are complete or be terminated manually from the RG Overlay.
+A `PERSISTENT` Bot must either terminate itself (see [complete()](./playtest-bots#complete)) when its tasks are complete or be terminated manually from the RG Overlay.
 
-#### Arguments
-None
+#### Type
+`string`
 
-#### Return Value
-One of `"MANAGED"` or `"PERSISTENT"`.
+#### Default Value
+"MANAGED"
 
 #### Examples
 <Tabs>
 <TabItem value="managed_bot" label="Managed" default>
 
 ```javascript
-getBotLifeCycle() {
-    return 'MANAGED'
+export function configureBot(rg) {
+    rg.lifecycle = "MANAGED";
 }
 ```
 
@@ -129,32 +145,10 @@ getBotLifeCycle() {
 <TabItem value="persistent_bot" label="Persistent" default>
 
 ```javascript
-getBotLifeCycle() {
-    return 'PERSISTENT'
+export function configureBot(rg) {
+    rg.lifecycle = "PERSISTENT";
 }
 ```
 
 </TabItem>
 </Tabs>
-
-
-### `isComplete();`
-
-Allows a Bot to disconnect itself from the game before the Unity integration would normally signal Bots to disconnect.
-Returning `true` from this method will stop Bot execution and send a teardown notification to your game for this Bot.
-This is particularly useful for [Validation Bots](./validation-bots), which execute a specific set of commands and then are considered to have 'completed' their tasks.
-
-#### Arguments
-None
-
-#### Return Value
-boolean
-
-#### Examples
-
-```javascript
-let tasksComplete = false;
-isComplete() {
-    return tasksComplete;
-}
-```

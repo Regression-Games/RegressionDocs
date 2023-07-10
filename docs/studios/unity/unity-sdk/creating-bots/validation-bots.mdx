@@ -7,78 +7,41 @@ import TabItem from '@theme/TabItem';
 
 # Defining Bots for Validation Testing
 
-Regression Games Bots support an `automatedTestMode` which can be used to test GameObject behaviors 
-and validate changes in the game state in response to character actions. 
+Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
+The game state can be monitored to test the impacts of GameObject behaviors on other GameObjects.
 
-This mode shares all of the APIs of [PlayTest Bots](./playtest-bots), with two important distinctions:
-1. Bot logic is implemented within a `configureBot` method rather than `runTurn`. 
-`configureBot` is invoked once after the Bot connects and will run to completion rather than being invoked repeatedly over the lifetime of the Bot. 
-Like `runTurn`, `configureBot` accepts an `rg` object for access to the Regression Games API.
-2. Commands act as assertions. When a command is executed, it automatically waits and retries until the game state meets expectations. 
-If an expectation hasn't been met before a default timeout then the command, and by extension the scenario, will fail.
-For example, the command `rg.findEntity("MyEntity")` for a PlayTest Bot will return the matching entity or null based on the current tick's game state,
-but the same command in `automatedTestMode` will check the state across several tick intervals until a matching entity is found, or else the command will fail.
+Validation Bots share the same APIs as [PlayTest Bots](./playtest-bots), with two important distinctions:
+1. Bot logic is implemented within a `startScenario(rg)` method rather than `processTick(rg)`. 
+`startScenario` is invoked once after the Bot connects and will run to completion rather than being invoked repeatedly over the lifetime of the Bot. 
+Like `processTick`, the `rg` object passed to `startScenario` exposes the Regression Games API.
+2. Commands act as assertions. When a command is executed, it automatically waits and retries until the game state meets its expectations. 
+If an expectation hasn't been met before a timeout is reached, then the command (and by extension the scenario) will fail.
+For example, running the command `rg.findEntity("MyEntity")` for a PlayTest Bot will return the matching entity or null based on the current tick's game state,
+but running the same command for a Validation Bot will check the state across several tick intervals until a matching entity is found, or else the command will fail.
 
 :::tip
-This mode is useful for automated testing where commands must be issued in a deterministic order, 
+This mode is useful for validation testing, where commands must be issued in a deterministic order 
 and where the game state must meet the explicit expectations of one command before the next command is executed or else the scenario will fail.
 :::
 
 :::caution
 This mode should not be used for Bots intended to make dynamic decisions based on the current game state, 
-where a falsey result from a command should not cause the entire scenario to fail. 
+where a falsey result from a command should not cause the scenario to fail. 
 :::
 
-
-To enable this mode, add the following line at the start of your `configureBot` implementation:
-
-```javascript
-export async function configureBot() {
-    rg.automatedTestMode = true;
-    // your validation code here
-}
-```
-
-
 <Tabs>
-<TabItem value="configureBot_abilityBot" label="Cycle through castable abilities" default>
+<TabItem value="startScenario_abilityBot" label="Cycle through castable abilities" default>
 
 ```javascript
-let isFinished = false;
-
-/**
- * Defines the type of character that the game should use for this Bot.
- */
-export function getCharacterConfig() {
-    return {
-        characterRole: "HEALER"
-    }
+export function configureBot(rg) {
+    rg.lifecycle = "PERSISTENT";
+    rg.characterConfig = {
+        role: "HEALER"
+    };
 }
 
-/**
- * One of ...
- * MANAGED - Server disconnects/ends Bot on match/game-scene teardown
- * PERSISTENT - Bot is responsible for disconnecting / ending itself
- */
-export function getBotLifecycle() {
-    return 'PERSISTENT';
-}
-
-/**
- * @returns {boolean} true if I'm an in-game character, or false if I'm an invisible navigator/observer/etc.
- */
-export function isSpawnable() {
-    return true;
-}
-
-export function isComplete() {
-    return isFinished;
-}
-
-export async function configureBot(rg) {
+export async function startScenario(rg) {
     
-    rg.automatedTestMode = true;
-
     // validate that we're in the game
     await rg.waitForScene("Dungeon");
 
@@ -121,55 +84,25 @@ export async function configureBot(rg) {
     rg.performAction("BasicAttack", args)
     await rg.entityDoesNotExist(target);
 
-    isFinished = true;
+    rg.complete();
 }
 ```
 
 </TabItem>
-
 <TabItem value="runTurn_menuBot" label="Click buttons to start the game">
 
 ```javascript
-let isFinished = false;
-
-/**
- * Defines the type of character that the game should use for this Bot.
- */
-export function getCharacterType() {
-    return {}
-}
-
-/**
- * One of ...
- * MANAGED - Server disconnects/ends Bot on match/game-scene teardown
- * PERSISTENT - Bot is responsible for disconnecting / ending itself
- */
-export function getBotLifecycle() {
-    return 'PERSISTENT';
-}
-
-/**
- * @returns {boolean} true if I'm an in-game character, or false if I'm an invisible navigator/observer/etc.
- */
-export function isSpawnable() {
-    return false;
-}
-
-/**
- * Let server know if I have finished my processing
- * @returns {boolean} true if done processing and ready to be torn down
- */
-export function isComplete() {
-    return isFinished;
+export function configureBot(rg) {
+    rg.isSpawnable = false;
+    rg.lifecycle = "PERSISTENT";
+    rg.characterConfig = {};
 }
 
 /**
  * Clicks buttons to get us from the Main Menu into the dungeon.
  * Once we enter the dungeon, this Bot has completed its tasks.
  */
-export async function configureBot(rg) {
-
-    rg.automatedTestMode = true;
+export async function startScenario(rg) {
 
     // validate we're on the main menu
     await rg.waitForScene("MainMenu");
@@ -205,7 +138,7 @@ export async function configureBot(rg) {
     await rg.waitForScene("Dungeon");
 
     // we're done!
-    isFinished = true;
+    rg.complete();
 }
 ```
 
@@ -214,18 +147,17 @@ export async function configureBot(rg) {
 
 ## Methods
 
-These methods are in addition to the APIs defined in the [previous section](./playtest-bots#variables).
+These methods are in addition to the APIs defined in the [PlayTest Bots section](./playtest-bots#variables).
 
-### `setDefaultTimeout(timeout: number);`
+### `setCommandTimeout(timeout: number);`
 
-Sets the default timeout in milliseconds. 
-This is the amount of time a command is allowed to wait/retry before the command fails.
-This timeout should take into consideration how often your Unity Integration is configured to send the game state.  
+Sets the amount of time in milliseconds a command is allowed to wait/retry before it fails. 
+This timeout should take into consideration how often your Unity Integration is configured to send the game state.
 
 #### Arguments
 Argument Name | Type | Default | Description
 ---|---|---|---|
-`timeout` | `number` | | The new default timeout
+`timeout` | `number` | | The new command timeout in milliseconds
 
 #### Return Value
 No return value
@@ -233,8 +165,27 @@ No return value
 #### Examples
 
 ```javascript
-const myBot = rg.getBot();
+rg.setCommandTimeout(5000);
 ```
+
+### `setCommandRetryRate(retryRate: number);`
+
+Sets how long in milliseconds a command should wait before retrying following a failure.
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`retryRate` | `number` | | The new command retry rate in milliseconds
+
+#### Return Value
+No return value
+
+#### Examples
+
+```javascript
+rg.setCommandRetryRate(200);
+```
+
 
 ### `async waitForScene(sceneName: string);`
 

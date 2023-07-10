@@ -7,35 +7,32 @@ import TabItem from '@theme/TabItem';
 
 # Defining Bots for PlayTesting
 
-Your Unity integration collects state information about game objects and notifies the Bot runtime with the updated state at a fixed tick interval.
-Whenever the Bot runtime receives an update, Regression Games calls the `runTurn` method. This is the entrypoint into your Bot logic for each tick.        
+Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
+Whenever the Bot runtime receives an update, Regression Games calls the `processTick(rg)` method.
+This is Regression Games' entrypoint into your Bot logic, where you will define how your Bot makes decisions and reacts to the current game state.
+`processTick` must be implemented and exported from your `index.js` file.
 
-The following API is accessible through an `rg` object passed to the `runTurn` method, and is used to evaluate the current game state and queue behaviors you've defined as `RGActions`.
+The `rg` object passed to `processTick` exposes the Regression Games API which contains methods for evaluating the game state and queueing behaviors that you've defined as `RGActions`.
+This API is defined in the sections below.
+
 In-game movements and `RGActions` are automatically recorded during each session. 
 These logs can be loaded into the Unity Bot Replay utility which allows you to re-watch the session and debug Bot behaviors tick-by-tick. 
 API methods that filter state objects and check conditions will record additional decision results. 
 These are displayed side-by-side with Bot actions in the Replay utility to help debug your Bot by showing which decisons led to resulting behaviors.  
 
-:::tip
-PlayTest Bots are useful for simulating autonomous characters whose actions will change depending on conditions in the game state.
-:::
-
 :::caution
-Commands within `runTurn` interact with the game state represented by the current tick only.
-This contrasts with [Validation Bots](./validation-bots), which can delay execution of commands for several ticks until expected prerequisites have been met. 
+Commands within `processTick` interact with the game state represented by the current tick only.
+This contrasts with [Validation Bots](./validation-bots), which can delay execution of commands for several ticks until expected conditions are met. 
 :::
 
 <Tabs>
 <TabItem value="runTurn_coopBot" label="Follow and support a human player as an NPC" default>
 
 ```javascript
-/**
- * Defines the spawn characteristics for this Bot
- */
-export function getCharacterConfig() {
-    return {
-        characterRole: "WARRIOR";
-    }
+export function configureBot(rg) {
+    rg.characterConfig = {
+        role: "WARRIOR"
+    };
 }
 
 /**
@@ -45,7 +42,7 @@ export function getCharacterConfig() {
  *  - If the Bot is not near the player, move within range of the player
  *  - If an enemy is within a certain distance of a player, attack that enemy
  */
-export async function runTurn(rg) {
+export async function processTick(rg) {
 
     if(rg.getState().sceneName !== "Dungeon") return;
 
@@ -89,19 +86,16 @@ export async function runTurn(rg) {
 <TabItem value="runTurn_abilityBot" label="Cycle through castable abilities">
 
 ```javascript
-/**
- * Defines the type of character that the game should use for this Bot
- */
-export function getCharacterConfig() {
-    return {
-        characterRole: "ARCHER"
-    }
+export function configureBot(rg) {
+    rg.characterConfig = {
+        role: "ARCHER"
+    };
 }
 
 /**
  * Entrypoint into the Bot logic
  */
-export async function runTurn(rg) {
+export async function processTick(rg) {
 
     // only activate abilities if we're ready to play
     if (rg.getState().sceneName !== "Dungeon") return;
@@ -171,37 +165,10 @@ async function selectAbility(rg) {
 <TabItem value="runTurn_menuBot" label="Click buttons to start the game">
 
 ```javascript
-/**
- * Defines the type of character that the game should use for this Bot.
- */
-export function getCharacterConfig() {
-    return {}
+export function configureBot(rg) {
+    rg.isSpawnable = false;
+    rg.lifecycle = "PERSISTENT";
 }
-
-/**
- * One of ...
- * MANAGED - Server disconnects/ends Bot on match/game-scene teardown
- * PERSISTENT - Bot is responsible for disconnecting / ending itself
- */
-export function getBotLifecycle() {
-    return 'PERSISTENT';
-}
-
-/**
- * @returns {boolean} true if I'm an in-game character, or false if I'm an invisible navigator/observer/etc.
- */
-export function isSpawnable() {
-    return false;
-}
-
-/**
- * Let server know if i have finished my processing
- * @returns {boolean} true if done processing and ready to be torn down
- */
-export function isComplete() {
-    return isFinished;
-}
-
 
 // flags for clicking the 6 buttons we need to click to start the game
 let stateFlags = {
@@ -209,9 +176,6 @@ let stateFlags = {
     "ChooseArcherButton": false,
     "StartGameButton": false,
 }
-
-let isFinished = false;
-let playedGame = false;
 
 /** 
  * Click buttons to get us from the Main Menu into the dungeon.
@@ -241,7 +205,7 @@ export async function runTurn(rg) {
             return;
         }
     } else {
-        isFinished = true;
+        rg.complete();
     }
 }
 
@@ -262,15 +226,11 @@ async function getInteractableButton(buttonName) {
 
 ### `playerId`
 
-The ID of this Bot in the game state.
+The ID of this Bot in the game state. Readonly.
 
 ### `name`
 
-The given name of the connected Bot
-
-### `characterConfig`
-
-A freeform Javascript object defining this Bot's character configuration. See [isSpawnable()](./configuration#isSpawnable) and [getCharacterConfig()](./configuration#getCharacterConfig)
+The given name of the connected Bot. Readonly.
 
 
 ## Methods
@@ -318,7 +278,10 @@ const myBot = rg.getBot();
 
 ### `complete()`;
 
-Flags the current Bot as complete (see [isComplete()](./configuration#isComplete))
+Flags the current Bot as complete, which will stop Bot execution and send a teardown notification to your game for this Bot.
+This is particularly useful for [PERSISTENT Bots](./configuration#lifecycle) which must be stopped explicitly, 
+and for [Validation Bots](./validation-bots) which execute a specific set of commands and then are considered to have 'completed' their tasks 
+regardless of whether the Unity Integration itself has signalled Bots to disconnect.
 
 #### Arguments
 None
