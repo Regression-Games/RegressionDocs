@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
 Whenever the Bot runtime receives an update, Regression Games calls the `processTick(rg)` method.
-This is Regression Games' entrypoint into your Bot logic, where you will define how your Bot makes decisions and reacts to the current game state.
+This is Regression Games' entrypoint into your Bot logic, where you will describe how your Bot makes decisions and reacts to the current game state.
 `processTick` must be implemented and exported from your `index.js` file.
 
 The `rg` object passed to `processTick` exposes the Regression Games API which contains methods for evaluating the game state and queueing behaviors that you've defined as `RGActions`.
@@ -28,7 +28,7 @@ This contrasts with [Validation Bots](./validation-bots), which can delay execut
 <Tabs>
 <TabItem value="runTurn_coopBot" label="Follow and support a human player as an NPC" default>
 
-```javascript
+```javascript title="index.js"
 export function configureBot(rg) {
     rg.characterConfig = {
         role: "WARRIOR"
@@ -85,7 +85,7 @@ export async function processTick(rg) {
 </TabItem>
 <TabItem value="runTurn_abilityBot" label="Cycle through castable abilities">
 
-```javascript
+```javascript title="index.js"
 export function configureBot(rg) {
     rg.characterConfig = {
         role: "ARCHER"
@@ -164,7 +164,7 @@ async function selectAbility(rg) {
 
 <TabItem value="runTurn_menuBot" label="Click buttons to start the game">
 
-```javascript
+```javascript title="index.js"
 export function configureBot(rg) {
     rg.isSpawnable = false;
     rg.lifecycle = "PERSISTENT";
@@ -230,19 +230,19 @@ The ID of this Bot in the game state. Readonly.
 
 ### `name`
 
-The given name of the connected Bot. Readonly.
+The name of the connected Bot. Readonly.
 
 
 ## Methods
 
 ### `getState(id: number = null);`
 
-Returns a complete state object including the current state of all registered entities
+Returns the complete state object including the current state of all registered entities
 
 #### Arguments
 Argument Name | Type | Default | Description
 ---|---|---|---|
-`id` | `number` | `null` | Return state information for a specific state entity
+`id` | `number` | `null` | Return state information for a specific entity
 
 #### Return Value
 Returns information about the current state
@@ -262,7 +262,7 @@ const objectState = rg.getState(mascot.id);
 ### `getBot();`
 
 Returns the current state information for this Bot.  
-Synonymous with `rg.getState(rg.playedId)`
+Synonymous with [`rg.getState(rg.playerId)`](./playtest-bots#getstateid-number--null)
 
 #### Arguments
 None
@@ -278,7 +278,7 @@ const myBot = rg.getBot();
 
 ### `complete()`;
 
-Flags the current Bot as complete, which will stop Bot execution and send a teardown notification to your game for this Bot.
+Flags the current Bot as complete, which will stop Bot execution and send a teardown notification to your game for this Bot.  
 This is particularly useful for [PERSISTENT Bots](./configuration#lifecycle) which must be stopped explicitly, 
 and for [Validation Bots](./validation-bots) which execute a specific set of commands and then are considered to have 'completed' their tasks 
 regardless of whether the Unity Integration itself has signalled Bots to disconnect.
@@ -298,7 +298,11 @@ rg.complete();
 ### `performAction(actionName: string, args: object | null);`
 
 Queues an action that the Bot should perform. Action names are freeform strings and must correspond to the name of one of your defined `RGActions`.
-Actions do not necessarily start executing the same tick that they were queued.  
+Multiple actions may be queued per tick.
+
+:::info
+Actions do not necessarily start executing the same tick that they were queued.
+:::
 
 #### Arguments
 Argument Name | Type | Default | Description
@@ -339,7 +343,8 @@ if(!await rg.entityHasAttribute(bot, "equippedItem", "sword")) {
 Find an entity with the given Object Type in the game state.
 This method should be used when only one entity with the given Object Type is expected to exist in the state,
 or when any entity with this Object Type will satisfy the scenario.
-For more control over finding specific entities in the game state, see [getState](./playtest-bots#getState) and [findNearestEntity](./playtest-bots#findNearestEntity).
+For more control over finding specific entities in the game state, see [getState](./playtest-bots#getstateid-number--null)
+and [findNearestEntity](./playtest-bots#findnearestentityobjecttype-string--null-position-object--null-filterfunc-function--entity--true).
 
 #### Arguments
 Argument Name | Type | Default | Description
@@ -384,7 +389,7 @@ const enemyNearestToWilliward = await rg.findNearestEntity("Enemy", williward.po
 ```
 
 </TabItem>
-<TabItem value="findNearestEntity_filtered" label="Filter">
+<TabItem value="findNearestEntity_filtered" label="Apply a Filter">
 
 ```javascript
 const patrolPoint = await rg.findEntity("PatrolPoint");
@@ -397,8 +402,8 @@ const guardOnPatrol = await rg.findNearestEntity("Guard", patrolPoint.position, 
 ### `entityExists(entity: object | number | string);`
 
 Return whether the given entity exists.
-The `entity` argument can be a reference to a previously-existing entity, its id, or an Object Type.
-If this is an Object Type, will return true if _any_ entities with this ObjectType exist. 
+The `entity` argument can be a reference to an entity, its id, or an Object Type.
+If this is an Object Type, this method will return true if _any_ entities with this ObjectType exist. 
 
 #### Arguments
 Argument Name | Type | Default | Description
@@ -441,8 +446,8 @@ const exists = await rg.entityExists("Williward");
 ### `entityDoesNotExist(entity: object | number | string);`
 
 Return whether the given entity does not exist.
-The `entity` argument can be a reference to a previously-existing entity, its id, or an Object Type.
-If this is an Object Type, will return true if _no_ entities with this ObjectType exist. 
+The `entity` argument can be a reference to an entity, its id, or an Object Type.
+If this is an Object Type, this method will return true if _no_ entities with this ObjectType exist. 
 
 #### Arguments
 Argument Name | Type | Default | Description

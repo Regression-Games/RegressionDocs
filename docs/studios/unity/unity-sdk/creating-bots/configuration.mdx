@@ -32,20 +32,20 @@ This is where you'll implement methods to define the Bot and its behaviors as de
 
 ## Bot Configuration
 
-Your Unity Integration is flexible in terms of how your GameObjects are set up, spawned into the scene, and torn down.
-The first step to writing your Javascript Bot is defining important information on your Bot Instance for these processes.
+Your Unity Integration allows flexibility in how your GameObjects are set up, spawned into the scene, and torn down.
+The first step to writing your Javascript Bot is defining how these processes should handle this Bot.
 
 The `configureBot(rg)` method accepts an `rg` object which is provided by Regression Games.
-This object exposes configuration options (defined in the sections below) and methods for definind Bot behaviors and validations.
+This object exposes configuration options (defined in the sections below) and methods for describing Bot behaviors and validations.
 The `configureBot` method is optional, but must be exported from your `index.js` file in order for Regression Games to access custom configurations.
 
-```javascript
+```javascript title="index.js"
 export function configureBot(rg) {
     rg.isSpawnable = true;
     rg.characterConfig = {
         "role": "enemy",
         "species": "red_imp",
-        "immunities": ["fire"]
+        "immunities": ["fire"],
     };
     rg.lifecycle = "MANAGED";
 }
@@ -58,14 +58,14 @@ Bots that simulate players or NPCs are generally spawnable, while Bots that inte
 represent environmental hazards, observe the game state without interaction, etc. are not.
 
 #### Type
-boolean
+`boolean`
 
 #### Default Value
 `true`
 
 #### Examples
 
-```javascript
+```javascript 
 export function configureBot(rg) {
     rg.isSpawnable = true;
 }
@@ -79,7 +79,7 @@ An object containing character configurations to help seat your Bot as the appro
 This is a freeform object to be interpreted by your game's implementation of the `RGBotSpawnManager.SeatPlayer` and `RGSpawnManager.SpawnBot` interfaces.
 
 #### Type
-Javascript Object
+`object`
 
 #### Default Value
 `null`
@@ -124,12 +124,13 @@ export function configureBot(rg) {
 Bots can be either `MANAGED` or `PERSISTENT`.
 A `MANAGED` Bot will automatically disconnect when `RGBotServerListener.GetInstance()?.StopGame()` is called from the Unity Integration.
 A `PERSISTENT` Bot must either terminate itself (see [complete()](./playtest-bots#complete)) when its tasks are complete or be terminated manually from the RG Overlay.
+This allows `PERSISTENT` bots to stay active across multiple scenes/sessions. 
 
 #### Type
 `string`
 
 #### Default Value
-"MANAGED"
+`"MANAGED"`
 
 #### Examples
 <Tabs>

@@ -151,7 +151,7 @@ These methods are in addition to the APIs defined in the [PlayTest Bots section]
 
 ### `setCommandTimeout(timeout: number);`
 
-Sets the amount of time in milliseconds a command is allowed to wait/retry before it fails. 
+Sets the total time in milliseconds a command is allowed to sped waiting/retrying before it fails. 
 This timeout should take into consideration how often your Unity Integration is configured to send the game state.
 
 #### Arguments
@@ -187,7 +187,7 @@ rg.setCommandRetryRate(200);
 ```
 
 
-### `async waitForScene(sceneName: string);`
+### `waitForScene(sceneName: string);`
 
 Wait until the current scene name matches the expected value.
 
