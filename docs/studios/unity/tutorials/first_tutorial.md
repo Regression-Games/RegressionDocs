@@ -140,4 +140,4 @@ That's all you need to do for your bot to see the state of the game!
 
 
 
-## Wiring it all together!
+## Activate and start Regression Games in your game loop

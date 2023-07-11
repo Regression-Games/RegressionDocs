@@ -49,11 +49,11 @@ const sidebars = {
       type: 'category',
       label: 'Unity',
       items: [
+        'studios/unity/unity-sdk/overview', 
         {
           type: 'category',
-          label: 'Unity SDK',
+          label: 'Unity SDK Reference',
           items: [
-            'studios/unity/unity-sdk/overview', 
             'studios/unity/unity-sdk/setup-and-integration', 
             'studios/unity/unity-sdk/in-editor-replay',
             'studios/unity/unity-sdk/RGBotSpawnManager',
@@ -62,8 +62,8 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Unity Tutorials and Guides',
-          items: ['studios/unity/tutorials/tutorial'],
+          label: 'Tutorials and Guides',
+          items: ['studios/unity/tutorials/first_tutorial'],
         }
       ]
     },
