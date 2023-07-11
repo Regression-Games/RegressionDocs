@@ -66,7 +66,20 @@ const sidebars = {
         {
           type: 'category',
           label: 'Unity SDK',
-          items: ['studios/unity/unity-sdk/overview', 'studios/unity/unity-sdk/setup-and-integration', 'studios/unity/unity-sdk/in-editor-replay'],
+          items: [
+            'studios/unity/unity-sdk/overview', 
+            'studios/unity/unity-sdk/setup-and-integration', 
+            'studios/unity/unity-sdk/in-editor-replay',
+            {
+              type: 'category',
+              label: 'Creating Bots',
+              items: [
+                'studios/unity/unity-sdk/creating-bots/configuration',
+                'studios/unity/unity-sdk/creating-bots/playtest-bots',
+                'studios/unity/unity-sdk/creating-bots/validation-bots'
+              ]
+            }
+          ]
         }
       ]
     },
