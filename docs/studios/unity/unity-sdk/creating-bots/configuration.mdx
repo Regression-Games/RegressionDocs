@@ -1,0 +1,155 @@
+---
+sidebar_label: 'Configuration'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Configuration
+
+Regression Games Bots are flexible and highly customizable.
+Bots can simulate players, function as NPCs, interact with menus and UIs, validate gameplay, and more.
+Bots run in the Regression Games runtime and connect to your game via socket connections initiated from your Unity integration.
+Each Bot receives the current game state at a regular interval and uses our Javascript API to analyze the state, 
+make decisions, and interact with game elements.
+
+## Project Setup
+
+A Bot project is structured as an npm package.
+
+First, install [Node.js](https://nodejs.org/en/download) version 16.x (which can be checked by running `node -v`). 
+You can use [nvm](https://github.com/nvm-sh/nvm) for managing multiple Node versions installed on a single machine. 
+
+To create your project and install node dependencies, create a new directory and navigate to it, then run the following commands:
+
+```
+npm init -y
+npm i @types/node node-fetch rg-match-info
+```
+
+Finally, create an `index.js` file at your project root. 
+This is where you'll implement methods to define the Bot and its behaviors as described in the following sections.  
+
+## Bot Configuration
+
+Your Unity Integration allows flexibility in how your GameObjects are set up, spawned into the scene, and torn down.
+The first step to writing your Javascript Bot is defining how these processes should handle this Bot.
+
+The `configureBot(rg)` method accepts an `rg` object which is provided by Regression Games.
+This object exposes configuration options (defined in the sections below) and methods for describing Bot behaviors and validations.
+The `configureBot` method is optional, but must be exported from your `index.js` file in order for Regression Games to access custom configurations.
+
+```javascript title="index.js"
+export function configureBot(rg) {
+    rg.isSpawnable = true;
+    rg.characterConfig = {
+        "role": "enemy",
+        "species": "red_imp",
+        "immunities": ["fire"],
+    };
+    rg.lifecycle = "MANAGED";
+}
+```
+
+### `isSpawnable`
+
+Specifies whether this Bot should be represented by a visible GameObject.
+Bots that simulate players or NPCs are generally spawnable, while Bots that interact with menus, 
+represent environmental hazards, observe the game state without interaction, etc. are not.
+
+#### Type
+`boolean`
+
+#### Default Value
+`true`
+
+#### Examples
+
+```javascript 
+export function configureBot(rg) {
+    rg.isSpawnable = true;
+}
+```
+
+
+### `characterConfig`
+
+For spawnable Bots. 
+An object containing character configurations to help seat your Bot as the appropriate class/prefab/etc.
+This is a freeform object to be interpreted by your game's implementation of the `RGBotSpawnManager.SeatPlayer` and `RGSpawnManager.SpawnBot` interfaces.
+
+#### Type
+`object`
+
+#### Default Value
+`null`
+
+#### Examples
+
+<Tabs>
+<TabItem value="character_config_simple" label="Simple definition" default>
+
+```javascript
+export function configureBot(rg) {
+    rg.characterConfig = {
+        "type" : "Mage"
+    };
+}
+```
+
+</TabItem>
+<TabItem value="character_type_freeform" label="Complex definition" default>
+
+```javascript
+export function configureBot(rg) {
+    rg.characterConfig = {
+        "role": "Warrior",
+        "specialization": "Reaver",
+        "startingEquipment": {
+            "mainHand": "Sword",
+            "offHand": "Sword"
+        },
+        "spawn": "BlueTower",
+        "maxHP": "50"
+    };
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### `lifecycle`
+
+Bots can be either `MANAGED` or `PERSISTENT`.
+A `MANAGED` Bot will automatically disconnect when `RGBotServerListener.GetInstance()?.StopGame()` is called from the Unity Integration.
+A `PERSISTENT` Bot must either terminate itself (see [complete()](./playtest-bots#complete)) when its tasks are complete or be terminated manually from the RG Overlay.
+This allows `PERSISTENT` bots to stay active across multiple scenes/sessions. 
+
+#### Type
+`string`
+
+#### Default Value
+`"MANAGED"`
+
+#### Examples
+<Tabs>
+<TabItem value="managed_bot" label="Managed" default>
+
+```javascript
+export function configureBot(rg) {
+    rg.lifecycle = "MANAGED";
+}
+```
+
+</TabItem>
+<TabItem value="persistent_bot" label="Persistent" default>
+
+```javascript
+export function configureBot(rg) {
+    rg.lifecycle = "PERSISTENT";
+}
+```
+
+</TabItem>
+</Tabs>
