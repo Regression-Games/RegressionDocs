@@ -7,9 +7,9 @@ import CodeSnippets from './_ide-setup-code-snippets.mdx';
 # Development Dependencies & Requirements
 
 Regression Games AIs are typically saved and managed as GitHub Repositories. 
-You can read more about how to set up a new AI project and how GitHub is involved [here](../starter-templates).
+You can read more about how to clone starter templates for your AIs using GitHub [here](../starter-templates).
 
-In this section, we'll walk you through creating code for a newly-created AI - this guide focuses on writing the AI yourself,
+In this section, we'll walk you through requirements for developing your AIs - this guide focuses on writing the AI yourself,
 but you can alternatively use one of our creation tools such as [Blockly](../blockly) or [Agent Builder](../agent-builder) to generate code for you.
 
 ## Choosing an IDE
@@ -25,17 +25,17 @@ If you're opting out of using GitHub with Regression Games, then skip right to t
 
 ### Codespaces
 
-[Codespaces](https://github.com/features/codespaces) is the fastest way to get started with AI developemnt for Regression Games.
+[Codespaces](https://github.com/features/codespaces) is the fastest way to get started with AI development for Regression Games.
 Codespaces is a cloud IDE offered by GitHub and Microsoft, based on VSCode. 
 It allows you to edit your GitHub repositories straight from the GitHub website with just a few clicks and with minimal setup.
 
 :::caution 
 Please be mindful of the [usage limits for Codespaces](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces) 
-on free GitHub accounts (~60 hrs free per months).
+on free GitHub accounts (~60 hrs free per month).
 :::
 
 First, log into your GitHub account and navigate to your AI's repository. 
-If you need help finding your repository, you can log into Regression Games and find a link to your AI's repository through the Bot Manager.
+If you need help locating it, you can log into Regression Games and find a link to your AI's repository through the Bot Manager.
 Click the "Code" button and then the "Codespaces" tab. 
 From here, click the "Create codespace on main" button to be redirected to an editor in your browser.
 This is where you'll write your AI's code and push it to your GitHub repository.
@@ -47,10 +47,11 @@ This is where you'll write your AI's code and push it to your GitHub repository.
 Next, we'll demonstrate how to save changes in Codespaces.
 
 <CodeSnippets />
-Click the Source Control button in the left-hand pane (or open Source Control using the shortcut `Ctrl`+`Shift`+`G`). 
+
+Click the Source Control button in the left-hand pane (or use the shortcut `Ctrl+Shift+G`). 
 Here you'll be able to see which files you've changed, and inspect those changes line-by-line.
 Enter a message to describe your changes (e.g. "This bot now says hello") and click "Commit". 
-There may be messages about adding unstaged changes - you can click **always** for this.
+You may see a message about adding unstaged changes - you can click **always** for this.
 
 ![Codespaces Commit](../img/ide/codespaces-commit.png)
 
@@ -60,8 +61,8 @@ You may see another dialog about where these changes are being saved - you can c
 
 ![Codespaces Sync](../img/ide/codespaces-sync.png)
 
-That's it! If you were to queue into a match, you should see your AI load and follow its new logic. 
-If you're in a match while perform updates like these, you should see your AI disconnect for a brief moment and then reconnect, 
+That's it! If you queue into a match, you should see your AI load and follow its new logic. 
+If you're in a match while performing updates like these, you should see your AI disconnect for a brief moment and then reconnect, 
 at which point it will follow its new logic.
 
 ### Replit
@@ -115,7 +116,7 @@ Paste this into Replit.
 ![Replit JSON Info](../img/ide/replit-json-info.png)
 
 You may notice that the "GITHUB_TOKEN" secret isn't filled in. 
-First, you'll need to generate a personal access token, 
+For this, you'll need to generate a personal access token.
 
 1. Open a new browser window, go to https://github.com/settings/tokens/new and sign into your GitHub account.
 2. Enter a name for the token (ex. "RGToken" or "ReplitToken")
@@ -126,16 +127,16 @@ First, you'll need to generate a personal access token,
 ![Replit GitHub Token](../img/ide/replit-github-token.png)
 
 Once your token has been created, copy it and replace the placeholder text in Replit with your new token.
-
-You're all set up! 
+You're all set up! Let's make sure that you can save correctly. 
 
 <CodeSnippets />
+
 Simply click the "Run" button at the top of the Repl. The first run may take a bit of time, and you may need to click it twice.
 When you're asked for a commit message, enter something that describes your changes. 
 In this case, you can enter something like “Initial code”.
 When you hit enter, you should see the console print some information about uploading this code to git. 
 
-:::caution
+:::tip
 Whenever you click “Run” remember to enter a message (or leave the message blank) and hit enter. 
 Otherwise, your code won't upload.
 :::
@@ -146,10 +147,10 @@ If our recommended online IDEs don't suit your development needs, then you'll ne
 ([VSCode](https://code.visualstudio.com/), [WebStorm](https://www.jetbrains.com/webstorm/), [PyCharm](https://www.jetbrains.com/pycharm/), etc.)
 as well as [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-Clone your repository from GitHub with "`git clone https://github.com/<Your Repo>`".
+Clone your repository from GitHub with `git clone https://github.com/<Your Repo>`.
 If you need help locating the correct path, you can log into Regression Games and find a link to your AI's repository through the Bot Manager.
 
-For JavaScript and TypeScript AIs, you'll need to install [Node.js](https://nodejs.org/en/download) version 16.x (which can be checked by running `node -v`). 
+For JavaScript and TypeScript AIs, you'll also need to install [Node.js](https://nodejs.org/en/download) version 16.x (which can be checked by running `node -v`). 
 You can use [nvm](https://github.com/nvm-sh/nvm) for managing multiple Node versions installed on a single machine. 
 Navigate to the project's root directory and install project dependencies with `npm install`.
 
@@ -158,7 +159,6 @@ Now you can open your project in an IDE and start writing code for your AI.
 #### Developing AIs without Git
 
 If you're not using Git to manage your AI project and therefor haven't cloned one of our starter templates, then you'll need to set up the project yourself.
-
 Create a new directory and navigate to it from the terminal. Use `npm` to initialize the project and install dependencies:
 
 ```
