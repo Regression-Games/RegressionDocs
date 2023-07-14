@@ -7,10 +7,11 @@ import CodeSnippets from './_ide-setup-code-snippets.mdx';
 # Development Dependencies & Requirements
 
 Regression Games AIs are typically saved and managed as GitHub Repositories. 
-You can read more about how to clone starter templates for your AIs using GitHub [here](../starter-templates).
+You can read more about how to clone starter templates for your AIs using GitHub in our [Starter Templates Walkthrough](../starter-templates).
 
-In this section, we'll walk you through requirements for developing your AIs - this guide focuses on writing the AI yourself,
-but you can alternatively use one of our creation tools such as [Blockly](../blockly) or [Agent Builder](../agent-builder) to generate code for you.
+In this section, we'll walk you through requirements for developing your AIs. 
+This guide focuses on writing the AI yourself, but you can alternatively use one of our creation tools 
+such as [Blockly](../blockly) or [Agent Builder](../agent-builder) to generate code for you.
 
 ## Choosing an IDE
 
@@ -27,7 +28,7 @@ If you're opting out of using GitHub with Regression Games, then skip right to t
 
 [Codespaces](https://github.com/features/codespaces) is the fastest way to get started with AI development for Regression Games.
 Codespaces is a cloud IDE offered by GitHub and Microsoft, based on VSCode. 
-It allows you to edit your GitHub repositories straight from the GitHub website with just a few clicks and with minimal setup.
+It allows you to edit your GitHub repositories straight from the GitHub website with minimal setup - it takes just a few clicks.
 
 :::caution 
 Please be mindful of the [usage limits for Codespaces](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces) 
@@ -36,7 +37,7 @@ on free GitHub accounts (~60 hrs free per month).
 
 First, log into your GitHub account and navigate to your AI's repository. 
 If you need help locating it, you can log into Regression Games and find a link to your AI's repository through the Bot Manager.
-Click the "Code" button and then the "Codespaces" tab. 
+Click the "Code" button on your repository's GitHub page and then the "Codespaces" tab. 
 From here, click the "Create codespace on main" button to be redirected to an editor in your browser.
 This is where you'll write your AI's code and push it to your GitHub repository.
 
@@ -79,7 +80,7 @@ Otherwise, you can make your repository public at the bottom of the repository's
 ![Replit Import](../img/ide/replit-privacy.png)
 :::
 
-Once you're logged in, click the "Create Repl" button and then "Import from GitHub".
+Once you're logged into Replit, click the "Create Repl" button and then "Import from GitHub".
 
 ![Replit Create](../img/ide/replit-create.png)
 
@@ -116,11 +117,11 @@ Paste this into Replit.
 ![Replit JSON Info](../img/ide/replit-json-info.png)
 
 You may notice that the "GITHUB_TOKEN" secret isn't filled in. 
-For this, you'll need to generate a personal access token.
+For this, you'll need to generate a personal access token in GitHub.
 
 1. Open a new browser window, go to https://github.com/settings/tokens/new and sign into your GitHub account.
 2. Enter a name for the token (ex. "RGToken" or "ReplitToken")
-3. Set the expiration to "No Expiration"
+3. We recommend setting a reasonable expiration, such as 1 year, to secure your repositories
 4. Select all permissions under "repo"
 5. Click "Generate token"
 
@@ -147,7 +148,9 @@ If our recommended online IDEs don't suit your development needs, then you'll ne
 ([VSCode](https://code.visualstudio.com/), [WebStorm](https://www.jetbrains.com/webstorm/), [PyCharm](https://www.jetbrains.com/pycharm/), etc.)
 as well as [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-Clone your repository from GitHub with `git clone https://github.com/<Your Repo>`.
+Clone your repository from GitHub with `git clone git@github.com:<Your Repo>.git` 
+(recommended but requires you to add [an ssh key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account))
+or `git clone https://github.com/<Your Repo>.git`.
 If you need help locating the correct path, you can log into Regression Games and find a link to your AI's repository through the Bot Manager.
 
 For JavaScript and TypeScript AIs, you'll also need to install [Node.js](https://nodejs.org/en/download) version 16.x (which can be checked by running `node -v`). 
@@ -158,7 +161,12 @@ Now you can open your project in an IDE and start writing code for your AI.
 
 #### Developing AIs without Git
 
-If you're not using Git to manage your AI project and therefor haven't cloned one of our starter templates, then you'll need to set up the project yourself.
+You can use one of our starter templates to kick off your AI project even if you're not using Git to manage it.
+Visit the [Regression Games GitHub page](https://github.com/Regression-Games?q=Template&type=all&language=&sort=) 
+for a variety of starter templates to choose from. Once you select one, click the "Code" button on that template's repository page and then click "Download ZIP". 
+Extract the contents of the downloaded .zip, open the project in your IDE of choice, and you're ready to write some code.
+
+Alternatively, you can set up your own project from scratch.
 Create a new directory and navigate to it from the terminal. Use `npm` to initialize the project and install dependencies:
 
 ```
