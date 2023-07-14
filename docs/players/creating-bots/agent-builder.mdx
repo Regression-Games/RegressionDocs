@@ -46,15 +46,23 @@ For a deeper dive into behavior trees, their nodes, and practical examples of th
 
 ## Getting Started with Agent Builder
 
-Create a new AI from the Bot Manager and select Agent Builder from the list of creation options
+Create a new AI from the Bot Manager and select `Agent Builder` from the list of creation options
 (see the section on [Cloning a Starter Template](./starter-templates) to complete this step).
 
 <CreateBotImages />
 
-### Creating Nodes
+## Loading Your Tree
 
-Once you've created a project for your AI, you'll be redirected to the Agent Builder interface.
-We'll start you out with a root node and a sequence node to form the basis of your tree.
+If you've used the Agent Builder to create an AI before, you can locate that AI in the Bot Manager and open the Agent Builder interface.
+Once the interface is visible, tell Regression Games to load your tree from GitHub. You should now see your tree and be able to edit its nodes.
+Don't forget to save when you're done!
+
+![Open Agent Builder](./img/agent-builder/open-agent-builder.png)
+![Load Your Tree](./img/agent-builder/load-tree.png)
+
+## Adding Nodes
+
+Whenever you create a fresh Agent Builder project for your AI, we'll start you out with a root node and a sequence node to form the basis of your tree.
 
 ![Default Tree](./img/agent-builder/default-tree.png)
 
@@ -76,7 +84,6 @@ If the selected node is a leaf node, such as an action or condition, then the pa
 
 ### Adding Code
 
-
 :::note
 All samples in this section are written in Typescript, which is the only language currently supported by the Agent Builder.
 If you'd like to see support for other languages, let us know [here](https://regression-games.sleekplan.app/feedback).
@@ -92,6 +99,7 @@ class LeafNode extends TreeNode {
     }
 }
 ```
+
 :::info
 All of your node's code must be defined within the `LeafNode` class, and the `execute` method must be defined as your entrypoint into the node. 
 You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
@@ -129,7 +137,6 @@ It demonstrates usage of these methods and how to properly format your code.
 
 ![Generate Code](./img/agent-builder/generate-code.png)
 
-
 ### Validating Code
 
 The embedded code editor offers standard syntax highlighting and Intellisense features for Regressions Games APIs. 
@@ -142,20 +149,11 @@ You can close these results at any time, and reopen them by clicking the clipboa
 
 ![ReOpen Validation Results](./img/agent-builder/reopen-validation-results.png)
 
-### Saving Your Tree
+## Saving Your Tree
 
 Save your tree early and often! Any changes made to your AI will be lost if you leave the Agent Builder without saving.
 
 ![Save Your Tree](./img/agent-builder/save-tree.png)
-
-## Editing an AI using Agent Builder
-
-If you've used the Agent Builder to create an AI before, you can locate that AI in the Bot Manager and open the Agent Builder interface.
-Once the interface is visible, tell Regression Games to load your tree from GitHub. You should now see your tree and be able to edit its nodes.
-Don't forget to save when you're done!
-
-![Open Agent Builder](./img/agent-builder/open-agent-builder.png)
-![Load Your Tree](./img/agent-builder/load-tree.png)
 
 ## Editing an AI's source code
 
@@ -174,7 +172,8 @@ and a series of typescript files generated from the config that are used to run 
 └── .gitignore
 ```
 
-You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies. See the [Writing Your Own Code section](TODO-REG-1023) for more information.
+You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies. 
+See the [Writing Your Own Code section](./coding/dev-requirements) for more information.
 
 :::danger 
 Changes made to files other than the `agentBuilderWorkspace.json` will be overwritten when you save the tree from the Agent Builder interface.

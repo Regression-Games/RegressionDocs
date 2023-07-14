@@ -1,0 +1,83 @@
+---
+sidebar_label: 'Using the Blockly Editor'
+---
+
+import CreateBotImages from './_create_bot_images.md'
+
+# Creating Bots Using Blockly
+
+Regression Games' [Blockly](https://github.com/google/blockly) integration is an easy-to-use visual editor 
+where you construct AI logic using interlocking, graphical blocks that represent common code concepts 
+(like variables, logical expressions, loops, etc.).
+This is an excellent tool for players who are new to our AI libraries, or even to programming itself!
+
+:::note
+This tool is early in development - it is prone to change and may contain bugs.
+Please report issues and feature requests for the Blockly editor [here](https://regression-games.sleekplan.app/feedback).
+:::
+
+## Getting Started with Blockly
+
+Create a new AI from the Bot Manager and select `Blockly` from the list of creation options
+(see the section on [Cloning a Starter Template](./starter-templates) to complete this step).
+
+<CreateBotImages />
+
+## Loading Your Workspace
+
+If you've used the Blockly editor to create an AI before, you can locate that AI in the Bot Manager and click on it to open the editor.
+The editor should automatically load your workspace from GitHub, but it's always a good idea to click the "Load from GitHub" button to make sure!
+
+![TODO: Image - Load Your Workspace]
+
+## Adding Blocks
+
+Once you've created a project for your AI, you can access the Blockly editor by viewing your bot's details from the Bot Manager.
+We'll start you out with some basic logic that makes the AI wander around randomly and record how many times it's died.
+
+![Default Blockly Logic](./img/blockly/template.png)
+
+To begin building out your logic, click one of the tabs from the left-hand menu to expand a tray containing available Blocks.
+You can add a Block from the menu to your logic by clicking and dragging it into the workspace. 
+The tray will automatically close whenever you add a Block to the workspace, so you'll need to open it again to repeat this process. 
+
+![Available Blocks](./img/blockly/add-blocks.png)
+
+Some Blocks have built-in dropdowns or text inputs that you can interact with the change the Block's behavior.
+Hovering over a Block will display a tooltip describing its current behavior.
+
+![Block Options and Tooltips](./img/blockly/block-options.png)
+
+## Deleting Blocks
+
+// TODO
+
+
+## Saving Your Workspace
+
+Save your workspace early and often! Any changes made to your AI will be lost if you leave the Blockly editor without saving.
+
+![TODO: Image - Save Your Workspace]
+
+## Editing an AI's Source Code
+
+Whenever you save your current Blocks, the following files are pushed to GitHub:
+* A config file named `blocklyWorkspace.json` which defines the Blocks in your logic
+* An `index.js` file containing JavaScript code generated from your Blocks. This is used to run your AI in-game.
+
+```
+├── blocklyWorkspace.json
+├── index.js
+├── package.json
+└── .gitignore
+```
+
+You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies. 
+See the [Writing Your Own Code section](./coding/dev-requirements) for more information.
+
+:::danger 
+Changes made to files other than the `blocklyWorkspace.json` will be overwritten when you save your Blocks from the Blockly editor.
+If you plan to modify files manually, it's a good idea to create a new GitHub repository to prevent losing your work.
+:::
+
+
