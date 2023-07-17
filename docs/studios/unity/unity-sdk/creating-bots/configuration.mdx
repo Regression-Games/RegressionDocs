@@ -10,7 +10,7 @@ import TabItem from '@theme/TabItem';
 Regression Games Bots are flexible and highly customizable.
 Bots can simulate players, function as NPCs, interact with menus and UIs, validate gameplay, and more.
 Bots run in the Regression Games runtime and connect to your game via socket connections initiated from your Unity integration.
-Each Bot receives the current game state at a regular interval and uses our Javascript API to analyze the state, 
+Each Bot receives the current game state at a regular interval and uses our JavaScript API to analyze the state, 
 make decisions, and interact with game elements.
 
 ## Project Setup
@@ -33,7 +33,7 @@ This is where you'll implement methods to define the Bot and its behaviors as de
 ## Bot Configuration
 
 Your Unity Integration allows flexibility in how your GameObjects are set up, spawned into the scene, and torn down.
-The first step to writing your Javascript Bot is defining how these processes should handle this Bot.
+The first step to writing your JavaScript Bot is defining how these processes should handle this Bot.
 
 The `configureBot(rg)` method accepts an `rg` object which is provided by Regression Games.
 This object exposes configuration options (defined in the sections below) and methods for describing Bot behaviors and validations.
