@@ -20,30 +20,37 @@ If you're pushing your project to GitHub, then you can navigate to your reposito
 
 ![Download ZIP from GitHub](../img/github/download-zip.png)
 
-If you're managing your project locally, then navigate outside of the project's top-level folder and compress that folder into a ZIP.
+If you're managing your project locally, then compress the project into a ZIP yourself.
+
+:::info
+Exclude the `node_modules` folder from your ZIP file. 
+This folder contains all of the Node dependencies that your code requires in order to run, and these can become quite large.
+Regression Games automatically retrieves these dependencies for you when your bot is loaded into a game.
+:::
 
 <Tabs>
 <TabItem value="windows_zip" label="Windows" default>
 
-```
-* Right-click folder
-* "Send To" ->  "Compressed (zipped) folder"
-```
+* Navigate to your project's root folder
+* Select all of its contents except for `node_modules` (if it is present)
+* Right-click one of your selected files
+* Click "Send To" ->  "Compressed (zipped) folder"
+* Move the ZIP to a convenient location to upload later
 
 </TabItem>
 <TabItem value="mac_zip" label="macOS">
 
-```
-* Right-click folder
-* "Compress <project_root>"
-```
+* Navigate to your project's root folder
+* Select all of its contents except for `node_modules` (if it is present)
+* Right-click one of your selected files
+* Click "Compress"
+* Move the ZIP to a convenient location to upload later
 
 </TabItem>
 <TabItem value="linux_zip" label="Linux">
 
-```
-zip -r <output_file> <project_root>
-```
+* Navigate outside of your project's root folder
+* Run `zip -r <output_file>.zip <root_folder> -x <root_folder>/node_modules`
 
 </TabItem>
 </Tabs>
