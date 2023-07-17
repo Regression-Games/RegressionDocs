@@ -10,7 +10,7 @@ but certain content may be unavailable until your account setup is complete.
 
 First, we recommend you create a [GitHub account](https://www.github.com) if you don't already have one.
 Regression Games uses GitHub to save and load the AIs you create. This is the fastest way to dive into Minecraft AIs and allows us to detect changes you make to your AIs in real-time.
-If you'd rather manage files on your own, [you can upload an AI as a .zip file](TODO-REG-1035:-Add-section-and-link-here) in the Bot Manager.
+If you'd rather manage files on your own, [you can upload an AI as a ZIP file](./creating-bots/coding/upload-zip) in the Bot Manager.
 
 Next, you'll be prompted for a Minecraft username (see our Minecraft requirements and setup [here](supported-games/minecraft/requirements)).
 The Minecraft username associated to your Regression Games account must match the one displayed in your Minecraft Client.
