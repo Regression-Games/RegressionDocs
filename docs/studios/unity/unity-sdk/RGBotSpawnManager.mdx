@@ -5,8 +5,6 @@ sidebar_label: 'RGBotSpawnManager'
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-TODO: Add a link to the API docs for BotInformation
-
 # RGBotSpawnManager
 
 The RGBotSpawnManager is the central configuration point for how bots spawn into your Unity Scene.
@@ -18,7 +16,7 @@ reconnects. A developer must, at a minimum, must define how bots are spawned int
 
 ### `[CanBeNull] public abstract GameObject SpawnBot(bool lateJoin, BotInformation botInformation);`
 
-Defines how a bot if spawned into a scene. More specifically, `botInformation` holds the configuration for the bot, 
+Defines how a bot if spawned into a scene. More specifically, [`botInformation`](./BotInformation) holds the configuration for the bot, 
 and you must implement the operations within your scene to instantiate and spawn that bot. That may be 
 simply instantiating a prefab, or spawning a NetworkObject into the scene.
 
@@ -27,7 +25,7 @@ simply instantiating a prefab, or spawning a NetworkObject into the scene.
 Argument Name | Type | Default | Description
 ---|---|---|---|
 `lateJoin` | `bool` | required | If true, this bot is joining after the game started or after any initial bots have been spawned
-`botInformation` | `BotInformation` | required | The id of the client, name of the bot, and a JSON string containing configuration about your bot.
+`botInformation` | [`BotInformation`](./BotInformation) | required | The id of the client, name of the bot, and a JSON string containing configuration about your bot.
 
 #### Return Value
 The instantiated GameObject. This is later used to find and identify the object in your scene that is controlled by your bot.
@@ -109,14 +107,14 @@ can be further modified.**
 A method that gets called before spawning a bot, but after a client has connected. This is useful for seating a 
 bot into your game before their prefab has actually spawned - for instance, when choosing a character in a character 
 selection screen. This queues the bot to be spawned by the `SpawnBots(bool)` function. You may also override configurations 
-provided by the bot using the `BotInformation.UpdateCharacterConfig<T>(T)` method, which sends a new config back to your bot. 
+provided by the bot using the [`BotInformation.UpdateCharacterConfig<T>(T)`](./BotInformation#public-void-updatecharacterconfigtt-newconfig) method, which sends a new config back to your bot. 
 By default, this method does nothing when not implemented.
 
 #### Arguments
 
 Argument Name | Type | Default | Description
 ---|---|---|---|
-`botToSpawn` | `BotInformation` | required | The id of the client, name of the bot, and a JSON string containing configuration about your bot.
+`botToSpawn` | [`BotInformation`](./BotInformation) | required | The id of the client, name of the bot, and a JSON string containing configuration about your bot.
 
 #### Return Value
 

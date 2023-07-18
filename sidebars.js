@@ -69,12 +69,11 @@ const sidebars = {
           label: 'Unity SDK Reference',
           items: [
             'studios/unity/unity-sdk/overview', 
-            'studios/unity/unity-sdk/in-editor-replay',
             'studios/unity/unity-sdk/RGBotSpawnManager',
             'studios/unity/unity-sdk/BotInformation',
             {
               type: 'category',
-              label: 'Creating Bots',
+              label: 'Creating Bots in JavaScript',
               items: [
                 'studios/unity/unity-sdk/creating-bots/configuration',
                 'studios/unity/unity-sdk/creating-bots/playtest-bots',
@@ -87,6 +86,11 @@ const sidebars = {
           type: 'category',
           label: 'Tutorials and Guides',
           items: ['studios/unity/tutorials/first_tutorial'],
+        },
+        {
+          type: 'category',
+          label: 'Tooling',
+          items: ['studios/unity/unity-sdk/in-editor-replay',]
         }
       ]
     },
