@@ -23,9 +23,10 @@ power ups (the blue spheres). We will cover:
 
 ## Download the sample scene
 
-We have a starting scene that you can play around with to get started. Download that project [here](google.com). This
-scene features a prefab for a character and a power up type, as well as three scripts; one for controlling the game loop,
-one for controlling the character, and one for controlling the power up logic.
+We have a starting scene that you can play around with to get started. Download that project 
+[here](https://github.com/Regression-Games/RGUnitySample). This scene features a prefab for a character and a power 
+up type, as well as three scripts; one for controlling the game loop, one for controlling the character, and one for 
+controlling the power up logic.
 
 ## Import the Regression Games Unity Bots package
 

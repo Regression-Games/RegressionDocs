@@ -37,12 +37,12 @@ features on our [feedback site](https://regression-games.sleekplan.app/feedback)
 
 | **Feature**                    | **Description**                                                                                                                   | **Documentation** |
 |--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| Unity Integration              | A set of scripts and interfaces are provided to easily send state and actions between bots and your game objects                  | INSERT HERE       |
-| JavaScript SDK                 | A JavaScript SDK for implementing bots                                                                                            | INSERT HERE       |
-| Live Reloading                 | Reload bots almost instantly without rebuilding your game, managed via GitHub                                                     | INSERT HERE       |
-| Timeline/Replay                | All bot actions and states are preserved, with a timeline/replay feature available within Unity                                   | INSERT HERE       |
-| Bot Code Generation            | _Only available in Minecraft, see proposals_. Create bots with low-code tools such as behavior trees powered by GPT.              | INSERT HERE       |
-| Platform and Language Agnostic | Our protocol permits bots to eventuall be written in multiple engines and languages. Vote for support in the feedback link above. | INSERT HERE       |
+| Unity Integration              | A set of scripts and interfaces are provided to easily send state and actions between bots and your game objects                  | [Link](./RGBotSpawnManager)       |
+| JavaScript SDK                 | A JavaScript SDK for implementing bots                                                                                            | [Link](./creating-bots/configuration)       |
+| Live Reloading                 | Reload bots almost instantly without rebuilding your game, managed via GitHub                                                     | _Docs coming soon_       |
+| Timeline/Replay                | All bot actions and states are preserved, with a timeline/replay feature available within Unity                                   | [Link](./in-editor-replay)       |
+| Bot Code Generation            | _Only available in Minecraft, see proposals_. Create bots with low-code tools such as behavior trees powered by GPT.              | [Link](../../../players/creating-bots/agent-builder)       |
+| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages. Vote for support in the feedback link above. | _Docs coming soon_       |
 
 
 ## Proposed Features
