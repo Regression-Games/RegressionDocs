@@ -20,6 +20,7 @@ Name | Type  | Description
 ### `public T ParseCharacterConfig<T>()`
 
 Parses the JSON from `characterConfig` into the serialized data type passed into the generic of this function.
+This `characterConfig` is the JavaScript Object that comes from the bot logic.
 
 #### Arguments
 None
@@ -46,9 +47,9 @@ Debug.Log(myBotConfig.speed);
 
 ### `public void UpdateCharacterConfig<T>(T newConfig)`
 
-Updates the bots character config - this is useful for overriding or adding new information defined 
-and set by your Unity code. For example, when seating a bot, you may discover that the requested character 
-type is no longer available, and you need to let the bot know. The generic type you pass in must be [Serializable].
+Overrides the `characterConfig` defined in the JavaScript code for your bot. For example, when seating a bot, you may discover 
+that the requested character type is no longer available, and you need to let the bot know. The generic type you 
+pass in must be [Serializable].
 
 #### Arguments
 

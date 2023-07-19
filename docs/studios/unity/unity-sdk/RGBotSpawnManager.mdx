@@ -7,18 +7,18 @@ import TabItem from '@theme/TabItem';
 
 # RGBotSpawnManager
 
-The RGBotSpawnManager is the central configuration point for how bots spawn into your Unity Scene.
+The RGBotSpawnManager is the central configuration point for spawning bots into your Unity game.
 The class provides default functionality for seating bots as they join, tearing them down, and handling
-reconnects. A developer must, at a minimum, must define how bots are spawned into the scene via the
+reconnects. A developer must, at a minimum, define how bots are spawned into the game via the
 `SpawnBot()` method.
 
 ## Abstract Methods
 
 ### `[CanBeNull] public abstract GameObject SpawnBot(bool lateJoin, BotInformation botInformation);`
 
-Defines how a bot if spawned into a scene. More specifically, [`botInformation`](./BotInformation) holds the configuration for the bot, 
-and you must implement the operations within your scene to instantiate and spawn that bot. That may be 
-simply instantiating a prefab, or spawning a NetworkObject into the scene.
+Defines how a bot is spawned into a game. More specifically, [`botInformation`](./BotInformation) holds the configuration for the bot, 
+and you must implement operations within your game to instantiate and spawn that bot. That may be 
+simply instantiating a prefab, or spawning a NetworkObject into the game.
 
 #### Arguments
 
@@ -28,7 +28,7 @@ Argument Name | Type | Default | Description
 `botInformation` | [`BotInformation`](./BotInformation) | required | The id of the client, name of the bot, and a JSON string containing configuration about your bot.
 
 #### Return Value
-The instantiated GameObject. This is later used to find and identify the object in your scene that is controlled by your bot.
+The instantiated GameObject. This is later used to find and identify the object in the scene that is controlled by your bot.
 
 #### Examples
 <Tabs>
@@ -92,7 +92,7 @@ public override GameObject SpawnBot(bool lateJoin, BotInformation botInformation
 ## Overridable Virtual Methods
 
 The `RGBotSpawnManager` class has a few methods that can be overridden to further configure how a bot is loaded
-and unloaded from a scene.
+and unloaded from a game.
 
 :::caution
 
@@ -124,7 +124,7 @@ No return value
 ### `public virtual void TeardownBot(uint clientId)`
 
 A method that gets called when a bot has received a teardown request (i.e. when the bot has signaled that 
-it is finished, or when the scene shuts down).
+it is finished, or when `RGBotServerListener.GetInstance()?.StopGame()` is called).
 
 #### Arguments
 
@@ -163,7 +163,7 @@ public override void TeardownBot(uint clientId)
 
 ### `public virtual void StopGame()`
 
-A method that gets called when the game or scene is terminated. This will remove all bots from the game. 
+A method that gets called when the game is terminated. This will remove all bots from the game. 
 In most cases, you will not need to override this method, and instead should look at `TeardownBot()`.
 
 #### Arguments
@@ -174,7 +174,7 @@ No arguments
 
 No return value
 
-### `public virtual BotInformation SeatPlayer(uint clientId, string characterConfig, string botName)`
+### `public virtual BotInformation SeatBot(uint clientId, string characterConfig, string botName)`
 
 A method that gets called before spawning a player, but after a client has connected. This is
 useful for seating a bot into your game before their prefab has actually spawned - for instance,
@@ -197,7 +197,7 @@ A [`BotInformation`](./BotInformation) object that contains the clientId, charac
 ## Class Methods
 
 The remaining functions mentioned here are not meant to be overridden, but are helpful when
-implementing your `SpawnBot` and `SeatPlayer` methods.
+implementing your `SpawnBot` and `SeatBot` methods.
 
 ### `public GameObject GetBot(uint clientId)`
 
@@ -215,7 +215,7 @@ The GameObject which encapsulates the bot, or null if the bot is not found
 
 ### `public bool IsBotSpawned(uint clientId)`
 
-Returns true if the bot owned by the given clientId has been spawned into the scene, and false otherwise. Equivalent to
+Returns true if the bot owned by the given clientId has been spawned into the game, and false otherwise. Equivalent to
 checking if `GetBot(clientId) != null`.
 
 #### Arguments
@@ -238,7 +238,7 @@ True if some bots have already been initially spawned
 
 ### `public int? GetBotId(uint clientId)`
 
-Returns the Instance ID of the transform for the bot in the scene. This can be used later to reference the bot in the scene
+Returns the Instance ID of the transform for the bot in the scene. This can be used later to reference the bot in the scene.
 
 #### Arguments
 

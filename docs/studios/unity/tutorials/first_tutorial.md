@@ -1,8 +1,8 @@
 ---
-sidebar_label: 'Building your first bot'
+sidebar_label: 'Building Your First Bot'
 ---
 
-# Building your first bot
+# Building Your First Bot
 
 :::caution
 
@@ -12,12 +12,12 @@ info@regression.gg
 
 :::
 
-In this tutorial, we will get a simple game up and running where a character (the green cube) needs to collect
-power ups (the blue spheres). We will cover:
+In this tutorial, we will get a simple game up and running where a character (represented by a green cube) needs to collect
+power ups (represented by blue spheres). We will cover:
 
 - How to integrate the RG Unity SDK into your game
 - How to add various state and actions scripts to your game for bots to understand
-- Build your first bot
+- How to build your first bot
 
 ![A Unity scene with a cube and a sphere](first_bot_tutorial_images/tutorial_0_start.png)
 
@@ -30,8 +30,8 @@ controlling the power up logic.
 
 ## Import the Regression Games Unity Bots package
 
-Our package is available via GitHub [here](google.com). Clone or download the repository, and import the package by clicking **Add package
-from disk** in the **Package Manager** window. 
+Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Clone or download the repository, 
+and import the package by clicking **Add package from disk** in the **Package Manager** window. 
 
 ![Screenshot of the package imported into the project](first_bot_tutorial_images/tutorial_1_package.png)
 
@@ -48,6 +48,14 @@ This will allow your project to access and start your bots. Access this setting 
 The RGOverlayCanvas prefab provides a drag and drop overlay that let's you easily start and stop bots running
 in your scene. This is extremely useful when initially creating and debugging your bots.
 
+:::caution
+
+Note that this overlay is **required to be placed into your scene** for Regression Games to function. The visibility
+of the overlay can be hidden through the settings. If you have multiple scenes where a bot should be used, place
+this into each scene - the SDK will ensure that only one instance is present.
+
+:::
+
 You can find this prefab by searching in the project file window for `RGOverlayCanvas` within the Packages filter,
 or by navigating to the **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** folder.
 
@@ -63,6 +71,7 @@ likely will not have any bots yet - that's alright, we will make one soon!
 
 If you don't already, your **scene needs to have an EventSystem** to make interaction with the canvas possible.
 You can do this by right-clicking your scene in the Hierarchy, and adding a **GameObject** > **UI** > **Event System**.
+_You only need to do this if you plan on interacting with the canvas_.
 
 :::
 
@@ -131,7 +140,7 @@ to provide additional state, such as a players team, health, if a door is open, 
 
 In this scene, we open the `Player` and `PowerUp` prefabs, and add a component, searching for "RG State". Once that
 component is added to the prefab, change the `Object Type` to `PowerUp` for the PowerUp, and change it to `Player`
-for the player. Make sure to save these prefabs!
+for the player. Make sure to save the changes you make to these existing prefabs by clicking **Save**!
 
 ![Screenshot of the prefab with a RG State script.](first_bot_tutorial_images/tutorial_6_prefab.png)
 
@@ -226,8 +235,10 @@ The `Update()` function implements the logic to move towards that position. If t
 set, and the bot is not within a specific range, then propel the RigidBody in that direction. If the target is
 reached, then reset the target to nothing.
 
-Finally, add this new `RGPlayerMoveAction` component onto the Player prefab. Also, search for and add the `RGAgent`
-script - this tells Regression Games to find all `RGAction`s on this prefab and register them with the agent.
+Add this new `RGPlayerMoveAction` component onto the Player prefab. 
+
+Finally, search for and add the `RGAgent` script to the Player prefab - this tells Regression Games to find all `RGAction`s on this 
+prefab and register them with the agent, and informs Regression Games that this prefab will act as an agent.
 
 ![Screenshot of the prefab with a RG Action script.](first_bot_tutorial_images/tutorial_7_action.png)
 
@@ -311,6 +322,6 @@ The bot will find all entities of the `PowerUp` type, and then queue the action 
 move towards that location. Push your changes, start up the scene, and then select and start the bot
 from the Regression Games overlay (click the button in the bottom right of the screen).
 
-After a few second, you will see your bot spawn and collect the power up!
+After a few seconds, you will see your bot spawn and collect the power up!
 
 ![Video of the bot performing.](first_bot_tutorial_images/tutorial_8_demo.gif)
