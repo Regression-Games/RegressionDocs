@@ -19,16 +19,13 @@ built around these bots.
 
 ![timeline feature](timeline.png)
 
-## SLAs and General Support
+## Availability Assurances
 
-The Regression Games team offers the following SLAs for our initial testing with developers. Additionally, we have a dedicated Discord
-server for support, and can also create a Slack Connect channel, giving you direct access to our entire team. For access to
+The Regression Games team offers the following assurances for our initial testing with developers. Additionally, we have a dedicated Discord server for support, and can also create a Slack Connect channel, giving you direct access to our entire team. For access to
 these channels, send an email to [aaron@regression.gg](mailto:aaron@regression.gg).
 
-### Service Level Agreements
-
 * A single account can run at least 10 bots concurrently
-* The time from requesting a bot to be started to the time it connects to Unity will take less than 10 seconds if the bot is relying on dependencies that are common to most bots. This SLA does not cover bots that may have lots of dependencies.
+* The time from requesting a bot to be started to the time it connects to Unity will take less than 10 seconds if the bot is relying on dependencies that are common to most bots. This does not cover bots that may have lots of library dependencies, which may take longer.
 
 ## Implemented Features
 
