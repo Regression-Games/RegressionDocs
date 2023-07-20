@@ -17,4 +17,4 @@ The Minecraft username associated to your Regression Games account must match th
 
 Regression Games' available games and modes involve using AI to control in-game characters and interact with gameplay elements and mechanics.
 Before you hop into a game, you'll need to create an AI. 
-[See this section on creating AIs](./creating-bots/overview.mdx) using Regression Games' various tools and libraries. 
+[See this section on creating AIs](./creating-bots/starter-templates) using Regression Games' various tools and libraries. 
