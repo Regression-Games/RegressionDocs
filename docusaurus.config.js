@@ -20,6 +20,8 @@ const config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'Regression-Games', // Usually your GitHub org/user name.
   projectName: 'RegressionDocs', // Usually your repo name.
+  deploymentBranch: 'gh-pages', // The branch of your docs repo that you are publishing to GitHub pages
+  trailingSlash: false,
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
