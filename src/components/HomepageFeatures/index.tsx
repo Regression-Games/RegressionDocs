@@ -34,7 +34,7 @@ const FeatureList: FeatureItem[] = [
     image: require('@site/static/img/ai (2).png').default,
     description: (
       <>
-        Bots on Regression Games can click through menus, control spawned character, play test with humans, 
+        Bots on Regression Games can click through menus, control spawned characters, play test with humans, 
         validate behaviors, and more.
       </>
     ),
