@@ -31,9 +31,15 @@ controlling the power up logic.
 ## Import the Regression Games Unity Bots package
 
 Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Clone or download the repository, 
-and import the package by clicking **Add package from disk** in the **Package Manager** window. 
+and import the package by clicking **Add package from disk** in the **Package Manager** window.  
+- Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
+- Note that this package installs a dependency of Newtonsoft Json (https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
 
 ![Screenshot of the package imported into the project](first_bot_tutorial_images/tutorial_1_package.png)
+
+## Restart Unity and your IDE
+
+After installing the Regression Games Unity Bots package and its dependencies into Unity, please restart Unity and your IDE.  Without this step, your IDE may not properly resolve the new packages even after Unity recompiles the scripts.
 
 ## Log into Regression Games
 
