@@ -14,8 +14,8 @@ const FeatureList: FeatureItem[] = [
     image: require('@site/static/img/ai_1.png').default,
     description: (
       <>
-        With replay features, validation libraries, CI/CD integration, and more, Regression Games
-        is building the best platform for AI agent development.
+        Regression Games is building the best platform for AI agent development with replay features, 
+        validation libraries, CI/CD integration, and more.
       </>
     ),
   },
