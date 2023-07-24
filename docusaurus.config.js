@@ -99,11 +99,11 @@ const config = {
             items: [
               {
                 label: 'For Studios',
-                to: '/docs/studios/unity/unity-sdk/overview',
+                to: '/studios/unity/unity-sdk/overview',
               },
               {
                 label: 'For Players',
-                to: '/docs/players/account-setup',
+                to: '/players/account-setup',
               },
             ],
           },

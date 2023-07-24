@@ -19,12 +19,12 @@ function HomepageHeader() {
             <div className={styles.buttons} style={{justifyContent: "left"}}>
               <Link
                 className="button button--primary button--outline button--lg"
-                to="/docs/studios/unity/tutorials/first_tutorial">
+                to="/studios/unity/tutorials/first_tutorial">
                 Get Started
               </Link>
               <Link
                 className="button button--secondary button--lg margin-left--md"
-                to="/docs/studios/unity/unity-sdk/overview">
+                to="/studios/unity/unity-sdk/overview">
                 Full Reference
               </Link>
             </div>
