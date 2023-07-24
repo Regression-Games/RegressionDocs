@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkregression_docs=self.webpackChunkregression_docs||[]).push([[5359],{2709:s=>{s.exports=JSON.parse('{"label":"docusaurus","permalink":"/RegressionDocs/blog/tags/docusaurus","allTagsPath":"/RegressionDocs/blog/tags","count":4}')}}]);

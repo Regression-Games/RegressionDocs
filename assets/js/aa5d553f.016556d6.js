@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkregression_docs=self.webpackChunkregression_docs||[]).push([[6349],{3641:s=>{s.exports=JSON.parse('{"label":"facebook","permalink":"/RegressionDocs/blog/tags/facebook","allTagsPath":"/RegressionDocs/blog/tags","count":1}')}}]);
