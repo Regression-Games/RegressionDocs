@@ -34,7 +34,7 @@ soon as part of our new studio-centric experience).
 
 ## Download the sample scene
 
-We have a starting scene that you can play around with to get started. Download that project 
+We have a sample project that you can play around with to get started. Download that project 
 [here](https://github.com/Regression-Games/RGUnitySample/tree/starter) or clone it using GitHub. **Make sure to
 download or clone the `starter` branch**, which serves as the starting point for this tutorial. For
 the completed tutorial, see the `main` branch.
