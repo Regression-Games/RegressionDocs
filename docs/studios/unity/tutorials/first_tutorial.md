@@ -21,12 +21,32 @@ power ups (represented by blue spheres). We will cover:
 
 ![A Unity scene with a cube and a sphere](first_bot_tutorial_images/tutorial_0_start.png)
 
+## Create an account on Regression Games
+
+The first step is to create an account on Regression Games. Visit the Regression Games site (usually
+this is [https://play.regression.gg](https://play.regression.gg), but it may be different for your organization),
+and click "sign up". Enter a username, email, and password. Once you log in, you will be prompted to connect
+a GitHub account. After connecting your account, the Regression Games platform will be able to pull and live reload
+bots through GitHub repositories.
+
+You will also be prompted to enter a Minecraft username - you can put anything for this field (it will be removed
+soon as part of our new studio-centric experience).
+
 ## Download the sample scene
 
 We have a starting scene that you can play around with to get started. Download that project 
-[here](https://github.com/Regression-Games/RGUnitySample). This scene features a prefab for a character and a power 
-up type, as well as three scripts; one for controlling the game loop, one for controlling the character, and one for 
-controlling the power up logic.
+[here](https://github.com/Regression-Games/RGUnitySample/tree/starter) or clone it using GitHub. **Make sure to
+download or clone the `starter` branch**, which serves as the starting point for this tutorial. For
+the completed tutorial, see the `main` branch.
+
+```
+git clone git@github.com:Regression-Games/RGUnitySample.git
+cd RGUnitySample
+git checkout starter
+```
+
+This scene features a prefab for a character and a power up type, as well as three scripts; one for controlling 
+the game loop, one for controlling the character, and one for controlling the power up logic.
 
 ## Import the Regression Games Unity Bots package
 
@@ -251,22 +271,7 @@ prefab and register them with the agent, and informs Regression Games that this 
 ## Activate and start Regression Games in your game loop
 
 The final piece to start everything up is to start up Regression Games in the game loop. Open up the 
-`Assets/Prefabs/Game Scripts/GameLoop.cs` file. At the end of the `Awake()` function, add the following:
-
-```cs
-RGBotServerListener.GetInstance()?.StartGame();
-RGBotServerListener.GetInstance()?.SpawnBots();
-```
-
-This will start the RegressionGames connection to the bot server, and will start spawning any pre-selected
-bots from your settings. Then, add the following to the `Destroy()` method, which will teardown any running
-bots.
-
-```cs
-RGBotServerListener.GetInstance()?.StopGame();
-```
-
-The new `Awake()` and `Destroy` method should look like the following:
+`Assets/Prefabs/Game Scripts/GameLoop.cs` file, and copy these contents into the `GameLoop` class.
 
 ```cs
 ...
@@ -297,6 +302,9 @@ private void OnDestroy()
 
 ...
 ```
+
+This will start the RegressionGames connection to the bot server, and will start spawning any pre-selected
+bots from your settings. When the game shuts down, it will then stop any bots.
 
 ## Putting it all together
 
