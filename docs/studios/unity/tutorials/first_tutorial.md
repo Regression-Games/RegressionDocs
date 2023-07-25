@@ -312,7 +312,7 @@ The Unity integration for this game is now complete! The final part is to implem
 the scene and perform on the behalf of a player.
 
 Create a new bot by navigating to the [Bot Manager page](https://play.regression.gg/bots/create-bot) on
-Regression Games, and clicking **Create Bot**. Select the **Unity** option, which will open a GitHub
+Regression Games and clicking **Create Bot**. Select the **Unity** option, which will open a GitHub
 page to copy our Unity template. Create the GitHub repo (note that sometimes GitHub seems to break at this 
 point, please try again if that happens), and then on the Regression Games site, select
 that repo (click the refresh button in the panel if you can't see your repository, or click the link
