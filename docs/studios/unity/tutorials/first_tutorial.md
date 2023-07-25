@@ -311,8 +311,20 @@ bots from your settings. When the game shuts down, it will then stop any bots.
 The Unity integration for this game is now complete! The final part is to implement a bot that will connect to
 the scene and perform on the behalf of a player.
 
-Create a new bot by navigating to the [Bot Creation page](https://play.regression.gg/bots/create-bot) on
-Regression Games, and pick the first option. Once the bot is created, clone and open the `index.js` file.
+Create a new bot by navigating to the [Bot Manager page](https://play.regression.gg/bots/create-bot) on
+Regression Games, and clicking **Create Bot**. Select the **Unity** option, which will open a GitHub
+page to copy our Unity template. Create the GitHub repo (note that sometimes GitHub seems to break at this 
+point, please try again if that happens), and then on the Regression Games site, select
+that repo (click the refresh button in the panel if you can't see your repository, or click the link
+to connect the repository if it is private), the main branch, and the root directory. Give your bot a name, 
+select the Unity bot type, and then click save. 
+
+![Screenshot of the bot creation page.](first_bot_tutorial_images/create_bot_1.png)
+![Screenshot of the bot github page.](first_bot_tutorial_images/create_bot_2.png)
+![Screenshot of the bot details page.](first_bot_tutorial_images/create_bot_3.png)
+
+
+Once the bot is created, clone the repository and open the `index.js` file.
 Replace the contents with the following:
 
 ```js
