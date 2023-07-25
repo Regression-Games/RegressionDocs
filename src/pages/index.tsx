@@ -30,7 +30,10 @@ function HomepageHeader() {
             </div>
           </div>
           <div className="col">
-            <img src="/img/temp_screenshot.png" alt="Regression Games" style={{borderRadius: "12px"}}/>
+            <img src={require('@site/static/img/demo.gif').default} alt="Regression Games" style={{borderRadius: "12px"}}/>
+            <div style={{color: "gray", paddingRight: "24px", fontStyle: "italic"}}>
+              Demo of bots validating abilities in <a href="https://unity.com/demos/small-scale-coop-sample" target="_blank">Boss Room</a> (created by Unity), 
+              the timeline feature, and the automated Agent Builder.</div>
           </div>
         </div>
       </div>

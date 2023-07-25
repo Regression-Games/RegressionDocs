@@ -21,12 +21,31 @@ power ups (represented by blue spheres). We will cover:
 
 ![A Unity scene with a cube and a sphere](first_bot_tutorial_images/tutorial_0_start.png)
 
+## Create an account on Regression Games
+
+The first step is to create an account on Regression Games. Visit the [Regression Games site](https://play.regression.gg)
+and click "sign up". Enter a username, email, and password. Once you log 
+in, you will be prompted to connect a GitHub account. After connecting your account, the Regression Games platform will 
+be able to pull and live reload bots through GitHub repositories.
+
+You will also be prompted to enter a Minecraft username - you can put anything for this field (it will be removed
+soon as part of our new studio-centric experience).
+
 ## Download the sample scene
 
-We have a starting scene that you can play around with to get started. Download that project 
-[here](https://github.com/Regression-Games/RGUnitySample). This scene features a prefab for a character and a power 
-up type, as well as three scripts; one for controlling the game loop, one for controlling the character, and one for 
-controlling the power up logic.
+We have a sample project that you can play around with to get started. Download that project 
+[here](https://github.com/Regression-Games/RGUnitySample/tree/starter) or clone it using GitHub. **Make sure to
+download or clone the `starter` branch**, which serves as the starting point for this tutorial. For
+the completed tutorial, see the `main` branch.
+
+```
+git clone git@github.com:Regression-Games/RGUnitySample.git
+cd RGUnitySample
+git checkout starter
+```
+
+This scene features a prefab for a character and a power up type, as well as three scripts; one for controlling 
+the game loop, one for controlling the character, and one for controlling the power up logic.
 
 ## Import the Regression Games Unity Bots package
 
@@ -250,23 +269,8 @@ prefab and register them with the agent, and informs Regression Games that this 
 
 ## Activate and start Regression Games in your game loop
 
-The final piece to start everything up is to start up Regression Games in the game loop. Open up the 
-`Assets/Prefabs/Game Scripts/GameLoop.cs` file. At the end of the `Awake()` function, add the following:
-
-```cs
-RGBotServerListener.GetInstance()?.StartGame();
-RGBotServerListener.GetInstance()?.SpawnBots();
-```
-
-This will start the RegressionGames connection to the bot server, and will start spawning any pre-selected
-bots from your settings. Then, add the following to the `Destroy()` method, which will teardown any running
-bots.
-
-```cs
-RGBotServerListener.GetInstance()?.StopGame();
-```
-
-The new `Awake()` and `Destroy` method should look like the following:
+The last Unity change needed is to start Regression Games when your game starts. Open up the 
+`Assets/Prefabs/Game Scripts/GameLoop.cs` file, and copy these contents into the `GameLoop` class.
 
 ```cs
 ...
@@ -298,13 +302,28 @@ private void OnDestroy()
 ...
 ```
 
+This will start the RegressionGames connection to the bot server, and will start spawning any pre-selected
+bots from your settings. When the game shuts down, it will then stop any running bots.
+
 ## Putting it all together
 
 The Unity integration for this game is now complete! The final part is to implement a bot that will connect to
 the scene and perform on the behalf of a player.
 
-Create a new bot by navigating to the [Bot Creation page](https://play.regression.gg/bots/create-bot) on
-Regression Games, and pick the first option. Once the bot is created, clone and open the `index.js` file.
+Create a new bot by navigating to the [Bot Manager page](https://play.regression.gg/bots/create-bot) on
+Regression Games and clicking **Create Bot**. Select the **Unity** option, which will open a GitHub
+page to copy our Unity template. Create the GitHub repo (note that sometimes GitHub seems to break at this 
+point, please try again if that happens), and then on the Regression Games site, select
+that repo (click the refresh button in the panel if you can't see your repository, or click the link
+to connect the repository if it is private), the main branch, and the root directory. Give your bot a name, 
+select the Unity bot type, and then click save. 
+
+![Screenshot of the bot creation page.](first_bot_tutorial_images/create_bot_1.png)
+![Screenshot of the bot github page.](first_bot_tutorial_images/create_bot_2.png)
+![Screenshot of the bot details page.](first_bot_tutorial_images/create_bot_3.png)
+
+
+Once the bot is created, clone the repository and open the `index.js` file.
 Replace the contents with the following:
 
 ```js
