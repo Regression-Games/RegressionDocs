@@ -270,7 +270,7 @@ prefab and register them with the agent, and informs Regression Games that this 
 
 ## Activate and start Regression Games in your game loop
 
-The final piece to start everything up is to start up Regression Games in the game loop. Open up the 
+The last Unity change needed is to start Regression Games when your game starts. Open up the 
 `Assets/Prefabs/Game Scripts/GameLoop.cs` file, and copy these contents into the `GameLoop` class.
 
 ```cs
