@@ -304,7 +304,7 @@ private void OnDestroy()
 ```
 
 This will start the RegressionGames connection to the bot server, and will start spawning any pre-selected
-bots from your settings. When the game shuts down, it will then stop any bots.
+bots from your settings. When the game shuts down, it will then stop any running bots.
 
 ## Putting it all together
 
