@@ -391,5 +391,52 @@ send us a message on Slack or Discord and we will respond almost immediately!
 
 ![Video of the bot performing.](first_bot_tutorial_images/tutorial_8_demo.gif)
 
+## Extensions - Configuring your bot
+
+You'll notice that in our JavaScript bot code, there is a `configureBot(rg)` function which allows
+us to set arbitrary data that is passed to Unity to configure the bot. Let's extend our Unity integration
+to take this `speed` configuration and set that on the bot in our code.
+
+First, create a new file called `BotCharacterConfig.cs` within `RGScripts/` with the following contents.
+This serialize type should match the data being returned by your bot's `configureBot` function, which
+is serialized into JSON and later parsed using this type.
+
+```cs
+using System;
+
+[Serializable]
+public class BotCharacterConfig
+{
+    public float speed;
+}
+```
+
+Now, within `CharacterBotSpawnManager.cs`, under the comment that says `// We will add more code here later to configure the bot further`
+and before `return bot`, insert the following code:
+
+```cs
+RGPlayerMoveAction moveAction = bot.GetComponent<RGPlayerMoveAction>();
+BotCharacterConfig config = botInformation.ParseCharacterConfig<BotCharacterConfig>();
+if (config != null)
+{
+    Debug.Log($"Changed speed to ${config.speed}");
+    moveAction.speed = config.speed;
+}
+return bot;
+```
+
+On bot spawn, this will grab our action script and the bot config that is being passed in, and set the speed
+to the speed defined in that JavaScript file.
+
+Start up the scene, and use the overlay to spawn a bot. While your bot is running, try updating the JavaScript 
+bot code to use very high and low values for speed. Add, commit, and push your changes, and you will see
+the bot live reload and change it's speed!
+
 ## Next steps
 
+For immediate next steps, we recommend checking out our guide on [creating bots that can do QA validations](studios/unity/unity-sdk/creating-bots/validation-bots). In soon-to-be-added guides, tutorials will walk you through:
+
+- Creating bots with abilities
+- Pairing a Regression Games bot with dialog systems such as character.ai
+- Creating bots that can exploit level structure and attempt to break your game
+- Bots that can click through menus
