@@ -422,7 +422,6 @@ if (config != null)
     Debug.Log($"Changed speed to ${config.speed}");
     moveAction.speed = config.speed;
 }
-return bot;
 ```
 
 On bot spawn, this will grab our action script and the bot config that is being passed in, and set the speed
