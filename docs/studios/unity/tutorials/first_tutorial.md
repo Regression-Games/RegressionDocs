@@ -138,7 +138,7 @@ First, create an `RGScripts/` folder in your `Assets` folder. Then, create a fil
 Double click that file to open it within your editor of choice (we recommend Rider or Visual Studio). We highly recommend
 that the file is opened as part of the solution / project as a whole, so that code completion is available.
 
-Copy and paste the follow code into this file. This component allows us to drag and drop a prefab for our bots and
+Copy and paste the following code into this file. This component allows us to drag and drop a prefab for our bots and
 a spawn point directly within our editor, and informs our SDK of these via those overridden functions.
 
 See the [full reference](/studios/unity/unity-sdk/RGBotSpawnManager) for all the ways you can modify 
