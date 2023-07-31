@@ -186,7 +186,7 @@ Make sure to save the scene.
 
 ## Add state information to relevant GameObjects
 
-The next step is to indicate what state in your scene is available to bots. This state used by bots to
+The next step is to indicate what state in your scene is available to bots. This state is used by bots to
 make decisions on what actions to take. State is relayed to bots by attaching [`RGState`](/studios/unity/unity-sdk/RGState)
 components to any game object or prefab that you want your bots to know about. 
 
