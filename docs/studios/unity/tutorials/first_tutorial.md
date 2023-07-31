@@ -429,7 +429,7 @@ to the speed defined in that JavaScript file.
 
 Start up the scene, and use the overlay to spawn a bot. While your bot is running, try updating the JavaScript 
 bot code to use very high and low values for speed. Add, commit, and push your changes, and you will see
-the bot live reload and change it's speed!
+the bot live reload and change its speed!
 
 ## Next steps
 
