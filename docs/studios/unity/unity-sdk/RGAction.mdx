@@ -1,0 +1,112 @@
+---
+sidebar_label: 'RGAction'
+---
+
+# RGAction
+
+Represents an action that a bot can instruct the game object to take.
+This `RGAction` class should be inherited in a sub class, and developers
+will need to implement the `StartAction` and `GetActionName` function.
+
+:::info
+
+This component is likely to change soon to be more developer-friendly, by changing the
+Dictionary type used to a generic serializable class that you can define.
+
+:::
+
+## Properties
+
+None
+
+## Class Methods
+
+### `public abstract string GetActionName()`
+
+The name of this action, which is used by the bot to request this specific action.
+
+#### Arguments
+None
+
+#### Return Value
+The name of this action (i.e. an identifier).
+
+#### Examples
+<Tabs>
+<TabItem value="example_action" label="Example action name" default>
+
+```cs
+public override string GetActionName()
+{
+    return "AttackEntity";
+}
+```
+</TabItem>
+</Tabs>
+
+### `public abstract void StartAction(Dictionary<string, object> input)`
+
+The action to kick off, given some arguments. Usually this will set up some state
+variables inside of this component, and then most of the logic will happen in an
+update function.
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`input` | `Dictionary<string, object>` | required | The arguments needed to configure this action (e.g. a position to move to)
+
+#### Return Value
+
+None
+
+#### Examples
+<Tabs>
+<TabItem value="example_file" label="Full example of an action file" default>
+
+```cs
+public class RGPlayerMoveAction : RGAction
+{
+    
+    private Vector3? targetPosition;
+    private Rigidbody rigidbody;
+    public float speed = 5000f;
+    public float range = 1f;
+
+    public void Awake()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+    }
+
+    public override string GetActionName()
+    {
+        return "MoveToPosition";
+    }
+
+    public override void StartAction(Dictionary<string, object> input)
+    {
+        var targetX = float.Parse(input["x"].ToString());
+        var targetY = float.Parse(input["y"].ToString());
+        var targetZ = float.Parse(input["z"].ToString());
+        targetPosition = new Vector3(targetX, targetY, targetZ);
+    }
+
+    public void Update()
+    {
+        
+        // If we are in range, reset the action
+        if (targetPosition != null && Vector3.Distance((Vector3) targetPosition, transform.position) < range)
+        {
+            targetPosition = null;
+        }
+        
+        // Set the target velocity
+        if (targetPosition != null)
+        {
+            rigidbody.velocity = ((Vector3) targetPosition - transform.position).normalized * speed * Time.deltaTime;
+        }
+    }
+}
+```
+</TabItem>
+</Tabs>

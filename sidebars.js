@@ -71,6 +71,8 @@ const sidebars = {
             'studios/unity/unity-sdk/overview', 
             'studios/unity/unity-sdk/RGBotSpawnManager',
             'studios/unity/unity-sdk/BotInformation',
+            'studios/unity/unity-sdk/RGState',
+            'studios/unity/unity-sdk/RGAction',
             {
               type: 'category',
               label: 'Creating Bots in JavaScript',
