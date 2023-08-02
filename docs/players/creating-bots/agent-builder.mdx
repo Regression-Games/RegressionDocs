@@ -210,20 +210,20 @@ Copy and paste it into your node:
 ```typescript
 class LeafNode extends TreeNode {
 	public override async execute(): Promise<NodeStatus> {
-		const bot = this.getData<RGBot>('bot');
+        const bot = this.getData<RGBot>('bot');
 
-		const attackableAnimals = await bot.findEntities({
+        const attackableAnimals = await bot.findEntities({
             entityNames: ['Rabbit', 'Chicken'],
             attackable: true,
             maxDistance: Infinity
-		});
+        });
 
-		if (attackableAnimals.length == 0) {
-			return NodeStatus.FAILURE;
-		}
+        if (attackableAnimals.length == 0) {
+            return NodeStatus.FAILURE;
+        }
 
-		return NodeStatus.SUCCESS;
-	}
+        return NodeStatus.SUCCESS;
+    }
 }
 ```
 
