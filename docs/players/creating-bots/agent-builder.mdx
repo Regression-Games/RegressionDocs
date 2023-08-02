@@ -2,8 +2,6 @@
 sidebar_label: 'Using the Agent Builder'
 ---
 
-import CreateBotImages from './_create_bot_images.md'
-
 # Creating AIs Using the Agent Builder
 
 Regression Games' Agent Builder is an easy-to-use visual editor for constructing AI behavior trees.
@@ -49,12 +47,16 @@ For a deeper dive into behavior trees, their nodes, and practical examples of th
 Create a new AI from the Bot Manager and select `Agent Builder` from the list of creation options
 (see the section on [Cloning a Starter Template](./starter-templates) to complete this step).
 
-<CreateBotImages />
+![Create new AI](./img/create-bot-button.png)
+![Select Creation Option](./img/agent-builder/create-from-template.png)
 
 ## Loading Your Tree
 
-If you've used the Agent Builder to create a bot before, you can locate that bot in the Bot Manager and open the Agent Builder interface.
-Once the interface is visible, tell Regression Games to load your tree from GitHub. You should now see your tree and be able to edit its nodes.
+If you've used the Agent Builder to create a bot before, then you can locate that bot in the Bot Manager and open the Agent Builder interface.
+Regression Games will automatically load your tree from GitHub,
+but you can click the "Load from GitHub" button at the top of the page at any time to revert to your most recently-saved version
+(this will discard any unsaved changes).
+Once the interface is visible, you should see your tree and be able to edit its nodes.
 Don't forget to save when you're done!
 
 ![Open Agent Builder](./img/agent-builder/open-agent-builder.png)
@@ -90,13 +92,13 @@ If you'd like to see support for other languages, let us know [here](https://reg
 :::
 
 The nodes in your tree won't be useful until you give them some logic to execute.
-Click on a leaf node to open the side-panel. You'll see the following stub provided in the editor:
+Click on a leaf node to open the side-panel. You'll see the following stub provided in the code editor:
 
 ```javascript
 class LeafNode extends TreeNode {
-    public override async execute(): Promise<NodeStatus> {
-        return NodeStatus.SUCCESS;
-    }
+  public override async execute(): Promise<NodeStatus> {
+    return NodeStatus.SUCCESS;
+  }
 }
 ```
 
@@ -105,20 +107,52 @@ All of your node's code must be defined within the `LeafNode` class, and the `ex
 You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
 :::
 
-You can either manually fill in code using the editor (see the [rg-bot API](../supported-games/minecraft/apis/rg-bot-api)), or you can have GPT do the heavy lifting for you.
+You can either manually type code into the editor (see the [rg-bot API](../supported-games/minecraft/apis/rg-bot-api)), or you can have GPT do the heavy lifting for you.
 To generate code using GPT, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button. 
 The editor will be disabled as code appears, and you can modify the output once it's finished.
-We supplement your prompt with additional context about our APIs but GPT may produce output that doesn't follow our expected format,
-or code that functions differently in-game than your prompt intends.
-If this happens, you may need to alter your prompt and re-submit it for new output, or fix output manually.
+
+There are a lot of different decision-making points and available actions for our supported games,
+so let's start with something simple - getting the AI to walk around.
+This example will have GPT use the [rg-bot library for Minecraft](https://github.com/Regression-Games/RegressionBot).
 
 :::caution
 Generating Code will overwrite anything currently in the editor. It's a good idea to save your tree before trying out new prompts.
 :::
 
-You may notice that the generated code uses the `getData` and `setData` methods. 
-These can be used to share data between nodes, and it's a good practice to specify a type with `getData` to take advantage of the editor's Intellisense.
-For example:
+If you enter the following prompt:
+```text
+If "wanderDistance" is not defined, then set it to 5. Then wander up to the defined "wanderDistance".
+```
+
+then GPT should output code similar to this:
+```typescript
+class LeafNode extends TreeNode {
+  public override async execute(): Promise<NodeStatus> {
+    const bot = this.getData<RGBot>("bot");
+    if (!bot) {
+      return NodeStatus.FAILURE;
+    }
+
+    let wanderDistance = this.getData<number>("wanderDistance");
+    if (!wanderDistance) {
+      wanderDistance = 5;
+      this.setData("wanderDistance", wanderDistance);
+    }
+
+    const wanderResult = await bot.wander(0, wanderDistance);
+    if (wanderResult) {
+      return NodeStatus.SUCCESS;
+    } else {
+      return NodeStatus.FAILURE;
+    }
+  }
+}
+```
+The above output is a good example of how properly-formatted code should look when you're generating or writing it.
+
+You may notice that this code calls the `getData` and `setData` methods.
+These can be used to share data between nodes, and it's a good practice to specify a data type for `getData` to take advantage of the editor's Intellisense.
+For instance:
 
 ```typescript
 // "bot" is available to you by default
@@ -132,10 +166,34 @@ this.setData("myBool", true);
 const myBool = this.getData<boolean>("myBool");
 ```
 
-The below sample uses the [rg-bot library for Minecraft](https://github.com/Regression-Games/RegressionBot) to make the AI wander in a random direction. 
-It demonstrates usage of these methods and how to properly format your code.
+Using these methods, we could add a node to our tree that increases the "wanderDistance" whenever the AI has nothing important to do in the nearby area.
+This effectively encourages the AI to move further and further from its current location if it repeatedly fails to perform any meaningful actions.
+The prompt for this could be worded as:
+```text
+If "wanderDistance" is undefined, then set it to 5. Otherwise increase it by 2. Then succeed.
+```
 
-![Generate Code](./img/agent-builder/generate-code.png)
+which should produce code similar to this:
+```typescript
+class LeafNode extends TreeNode {
+  public override async execute(): Promise<NodeStatus> {
+    let wanderDistance = this.getData<number>("wanderDistance");
+    if (wanderDistance === undefined) {
+      this.setData("wanderDistance", 5);
+    } else {
+      this.setData("wanderDistance", wanderDistance + 2);
+    }
+      return NodeStatus.SUCCESS;
+    }
+}
+```
+
+Whenever you submit a prompt, we provide additional context about our APIs and proper usages to GPT,
+but it may still output code that doesn't follow our expected format, or code that functions differently in-game than your prompt intends.
+If this happens, you may need to alter your prompt and re-submit it for new output, or fix the output manually.
+For the above prompt, note that we explicitly tell GPT to succeed after incrementing "wanderDistance".
+If we omit this instruction, then GPT assumes that we want to perform the wander action after updating the distance, even though we haven't told it to do so.
+This is a good example of how GPT sometimes needs additional coaching to reach your intended result.
 
 ### Validating Code
 
@@ -145,7 +203,34 @@ Clicking the "Validate Code" button will cause a text box to appear with GPT's a
 
 ![Validate Code](./img/agent-builder/validate-code.png)
 
-You can close these results at any time, and reopen them by clicking the clipboard icon.
+Let's give this a try with some code that we know is inefficient.
+The following code attempts to find all the rabbits and chickens nearby, but it searches an unnecessarily large area.
+Copy and paste it into your node:
+
+```typescript
+class LeafNode extends TreeNode {
+  public override async execute(): Promise<NodeStatus> {
+    const bot = this.getData<RGBot>('bot');
+
+    const attackableAnimals = await bot.findEntities({
+      entityNames: ['Rabbit', 'Chicken'],
+      attackable: true,
+      maxDistance: Infinity
+    });
+
+    if (attackableAnimals.length == 0) {
+      return NodeStatus.FAILURE;
+    }
+
+    return NodeStatus.SUCCESS;
+  }
+}
+```
+
+When you click the "Validate Code" button,
+GPT should warn you that `maxDistance` should be set to `100` or less, rather than `Infinity`.
+
+You can close validation results at any time and reopen them by clicking the clipboard icon.
 
 ![ReOpen Validation Results](./img/agent-builder/reopen-validation-results.png)
 
