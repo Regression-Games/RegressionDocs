@@ -96,9 +96,9 @@ Click on a leaf node to open the side-panel. You'll see the following stub provi
 
 ```javascript
 class LeafNode extends TreeNode {
-    public override async execute(): Promise<NodeStatus> {
-        return NodeStatus.SUCCESS;
-    }
+  public override async execute(): Promise<NodeStatus> {
+    return NodeStatus.SUCCESS;
+  }
 }
 ```
 
@@ -127,25 +127,25 @@ If "wanderDistance" is not defined, then set it to 5. Then wander up to the defi
 then GPT should output code similar to this:
 ```typescript
 class LeafNode extends TreeNode {
-    public override async execute(): Promise<NodeStatus> {
-		const bot = this.getData<RGBot>("bot");
-		if (!bot) {
-			return NodeStatus.FAILURE;
-		}
+  public override async execute(): Promise<NodeStatus> {
+    const bot = this.getData<RGBot>("bot");
+    if (!bot) {
+      return NodeStatus.FAILURE;
+    }
 
-		let wanderDistance = this.getData<number>("wanderDistance");
-		if (!wanderDistance) {
-			wanderDistance = 5;
-			this.setData("wanderDistance", wanderDistance);
-		}
+    let wanderDistance = this.getData<number>("wanderDistance");
+    if (!wanderDistance) {
+      wanderDistance = 5;
+      this.setData("wanderDistance", wanderDistance);
+    }
 
-		const wanderResult = await bot.wander(0, wanderDistance);
-		if (wanderResult) {
-			return NodeStatus.SUCCESS;
-		} else {
-			return NodeStatus.FAILURE;
-		}
-	}
+    const wanderResult = await bot.wander(0, wanderDistance);
+    if (wanderResult) {
+      return NodeStatus.SUCCESS;
+    } else {
+      return NodeStatus.FAILURE;
+    }
+  }
 }
 ```
 The above output is a good example of how properly-formatted code should look when you're generating or writing it.
@@ -176,15 +176,15 @@ If "wanderDistance" is undefined, then set it to 5. Otherwise increase it by 2. 
 which should produce code similar to this:
 ```typescript
 class LeafNode extends TreeNode {
-	public override async execute(): Promise<NodeStatus> {
-		let wanderDistance = this.getData<number>("wanderDistance");
-		if (wanderDistance === undefined) {
-			this.setData("wanderDistance", 5);
-		} else {
-			this.setData("wanderDistance", wanderDistance + 2);
-		}
-		return NodeStatus.SUCCESS;
-	}
+  public override async execute(): Promise<NodeStatus> {
+    let wanderDistance = this.getData<number>("wanderDistance");
+    if (wanderDistance === undefined) {
+      this.setData("wanderDistance", 5);
+    } else {
+      this.setData("wanderDistance", wanderDistance + 2);
+    }
+      return NodeStatus.SUCCESS;
+    }
 }
 ```
 
@@ -209,21 +209,21 @@ Copy and paste it into your node:
 
 ```typescript
 class LeafNode extends TreeNode {
-	public override async execute(): Promise<NodeStatus> {
-        const bot = this.getData<RGBot>('bot');
+  public override async execute(): Promise<NodeStatus> {
+    const bot = this.getData<RGBot>('bot');
 
-        const attackableAnimals = await bot.findEntities({
-            entityNames: ['Rabbit', 'Chicken'],
-            attackable: true,
-            maxDistance: Infinity
-        });
+    const attackableAnimals = await bot.findEntities({
+      entityNames: ['Rabbit', 'Chicken'],
+      attackable: true,
+      maxDistance: Infinity
+    });
 
-        if (attackableAnimals.length == 0) {
-            return NodeStatus.FAILURE;
-        }
-
-        return NodeStatus.SUCCESS;
+    if (attackableAnimals.length == 0) {
+      return NodeStatus.FAILURE;
     }
+    
+    return NodeStatus.SUCCESS;
+  }
 }
 ```
 
