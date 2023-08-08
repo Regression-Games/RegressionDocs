@@ -11,8 +11,10 @@ $ yarn
 ### Local Development
 
 ```
-$ yarn start
+$ yarn start -p 3005
 ```
+
+(Port 3005 is to avoid conflicts with the RG Client also running locally)
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
