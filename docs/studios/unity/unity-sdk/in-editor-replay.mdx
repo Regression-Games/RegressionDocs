@@ -43,22 +43,20 @@ The tick rate at which the data was recorded is shown, followed by the tick rate
 The current tick and the total tick count are shown next to buttons for controlling the replay.  You can Play the replay which will automatically update the editor at the playback tick rate.  You can also manually jump to a specific tick number, or manually step forward or back 1 tick at a time.
 
 ### Tick Inspector: Evaluating The Current Tick
-For each tick, the Bot Replay Window will show all entities that were tracked as part of the Game State sent to Regression Games.  These are sorted alphabetically with any entities controlled by Regression Games Bots and any active/enabled entities listed first.
+For each tick, the Bot Replay Window will show all entities that were tracked as part of the Game State sent to Regression Games.  These are sorted alphabetically with any active/enabled entities listed first.
 
-For each object in the tick, you can use the checkboxes to enable or disable rendering its information in the scene
-- Enable or disable rendering of that object model
-- Enable or disable renderingthe path history of that object
-- Enable or disable rendering a targeting circle around that object
-- Enable or disable rendering action information of that object
+For each entity in the tick, you can use the checkboxes to enable or disable rendering its information in the scene
+- Enable or disable rendering of that entity model
+- Enable or disable rendering the path history of that entity
+- Enable or disable rendering a targeting circle around that entity
+- Enable or disable rendering action information of that entity
 
-By default, all 4 checkboxes are enabled for the object of the Bot Instance that the replay data was recorded from.
-
-In addition to controlling rendering, the tick inspector also highlights and shows a heart icon for  objects that are active in the current tick.
+In addition to controlling rendering, the tick inspector also highlights and shows a heart icon for entities that are controller by players or bots.
 
 ![timeline panel](timeline_panel.png)
 
 ### Tick Inspector: Actions And Validations
-For the entity in the tick representing the Bot Instance that the replay data was recorded from,   actions and validations are shown if any were performed in that tick.
+For the entity in the tick representing the Bot Instance that the replay data was recorded from, actions and validations are shown if any were performed in that tick.
 
 #### Actions
 Shows any command(s) that the Bot sent to the game for the current tick.  These could be movements, performed abilities, object interactions, etc
