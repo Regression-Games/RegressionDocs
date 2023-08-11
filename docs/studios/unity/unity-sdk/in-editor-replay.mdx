@@ -51,7 +51,7 @@ For each entity in the tick, you can use the checkboxes to enable or disable ren
 - Enable or disable rendering a targeting circle around that entity
 - Enable or disable rendering action information of that entity
 
-In addition to controlling rendering, the tick inspector also highlights and shows a heart icon for entities that are controller by players or bots.
+In addition to controlling rendering, the tick inspector also highlights and shows a heart icon for "players" (entities that are controlled by humans or bots).
 
 ![timeline panel](timeline_panel.png)
 
@@ -65,4 +65,22 @@ Shows any command(s) that the Bot sent to the game for the current tick.  These 
 Shows any validation(s) that the Bot performed on the current tick.  These are normally test cases coded into the Bot to validate that the tick data changed as expected based on prior actions or other factors in the game state.  See [Validation Bots](./creating-bots/validation-bots) for more information.
 
 ### Registering Custom Models For Replay Objects
-... Coming Soon ...
+When viewing a replay, entities that are dynamically spawned into the scene (not defined in the scene itself) need to be told what model to render with.  By default they will load as a pink capsule, but they can be configured with a specific model based on their type.
+
+When loading a replay zip, the list of entity types to replay model associations will automatically be updated with any missing entities that have `isStatic=false`.  You can also manually add, edit, or remove assocations at any time.
+
+![configure replay models](configure_replay_models.png)
+
+:::tip
+The associations from entity type to replay model are saved in your project as `Assets/RegressionGames/Editor/CustomReplayModels.asset`.
+
+You can edit this asset in the inspector directly or using the `Configure Custom Replay Models` button in the RG Replay Plaback window.
+:::
+
+![replay model manager](replay_model_manager.png)
+
+:::tip
+While the associations support any game object, it is best to associate just the model for your entity.
+
+The replay does not trigger animations, play sounds, process physics, or evaluate any runtime scripts on your associated object.
+:::
