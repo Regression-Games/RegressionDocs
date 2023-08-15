@@ -11,9 +11,9 @@ when connecting external systems to Regression Games.
 ## Generating an API Key
 
 An API key can be generated from your [account](https://play.regression.gg/account) page. At
-the bottom of the screen within the **API Keys** section, click **Generate New Key**. This
-token should be copied and stored somewhere safe - you won't be able to see it again once it
-is generated. Keys have a default expiration date of 1 year.
+the bottom of the screen within the **API Keys** section, enter a unique name for your key, and then
+click **Generate New Key**. This token should be copied and stored somewhere safe - you won't be 
+able to see it again after it is generated. Keys have a default expiration date of 1 year.
 
 ![Generate API Key](./auth_images/generate_key.png)
 
@@ -27,27 +27,7 @@ HEADERS
 Authorization: Bearer <API_KEY>
 ```
 
-Optionall, you may also receive a JWT using the API Key with the following endpoint:
-
-```
-POST /api_key_auth
-Body: 
-{
-    "apiKey": "<API_KEY>"
-}
-Response:
-{
-    "token": "<JWT>"
-}
-```
-
 ## Revoking API Keys
 
 You can remove API Keys at any time by deleting them from the [account](https://play.regression.gg/account) page.
 Next to each key is a delete icon, which immediately revokes the key.
-
-You may also revoke any API key that has been exposed with the following endpoint:
-
-```
-DELETE /api_key/<API_KEY>
-```
