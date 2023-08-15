@@ -67,7 +67,7 @@ Shows any validation(s) that the Bot performed on the current tick. These are no
 ### Registering Custom Models For Replay Objects
 When viewing a replay, entities that are dynamically spawned into the scene (not defined in the scene itself) need to be told what model to render with. By default they will load as a pink capsule, but they can be configured with a specific model based on their type.
 
-When loading a replay zip, the list of entity types to replay model associations will automatically be updated with any missing entities that have `isStatic=false`. You can also manually add, edit, or remove assocations at any time.
+When loading a replay zip, the list of entity types to replay model associations will automatically be updated with any missing entities that have `isRuntimeObject=true`. You can also manually add, edit, or remove assocations at any time.
 
 ![configure replay models](configure_replay_models.png)
 
