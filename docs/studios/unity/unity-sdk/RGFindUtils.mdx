@@ -1,0 +1,52 @@
+---
+sidebar_label: 'RGFindUtils'
+---
+
+# RGFindUtils
+
+`RGFindUtils` is a singleton providing a set of utility functions for finding GameObjects. This
+is extremely useful when implementing [`RGAction`](./RGAction)s that need to find other GameObjects in the scene.
+
+The instance of `RGFindUtils` is automatically created when the scene is loaded, and can be accessed
+with the following function:
+
+```cs
+RGFindUtils.Instance
+```
+
+# Class Methods
+
+### `public T FindOneByInstanceId<T>(int instanceId) where T: MonoBehaviour`
+
+Finds an object of type `T` by its Instance ID. This Instance ID is the ID of the transform for that GameObject.
+The type `T` is used to filter and cache objects in the scene of that type for efficient lookup.
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`instanceId` | `int` | required | The instance ID of the GameObject to find. This is often the ID within the state given by
+Regression Games.
+
+#### Return Value
+The MonoBehaviour of type `T` that has been found in the scene on the GameObject within the given Instance ID.
+
+#### Examples
+
+<Tabs>
+<TabItem value="rg_action_example" label="Start an action to follow another object" default>
+
+```cs
+public override void StartAction(Dictionary<string, object> input)
+{
+    var targetInstanceId = int.Parse(input["targetId"].ToString());
+
+    var targetObject = RGFindUtils.Instance.FindOneByInstanceId<RGState>(targetInstanceId);
+    if (targetObject != null)
+    {
+        // Set some class variable that is then used in the `Update()` function
+        targetTransform = targetObject.transform;
+    }
+}
+```
+</TabItem>
+</Tabs>

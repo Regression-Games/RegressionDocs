@@ -73,6 +73,7 @@ const sidebars = {
             'studios/unity/unity-sdk/BotInformation',
             'studios/unity/unity-sdk/RGState',
             'studios/unity/unity-sdk/RGAction',
+            'studios/unity/unity-sdk/RGFindUtils',
             {
               type: 'category',
               label: 'Creating Bots in JavaScript',

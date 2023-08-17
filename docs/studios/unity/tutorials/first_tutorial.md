@@ -73,7 +73,7 @@ You can also download the project directly by clicking the plug button and the *
 pasting in the following URL.
 
 ```
-git@github.com:Regression-Games/RGUnityBots.git
+https://github.com/Regression-Games/RGUnityBots.git
 ```
 
 ## Restart Unity and your IDE
@@ -90,7 +90,8 @@ Enter the following information:
 
 * **RG Host URL:** `https://play.regression.gg`
 * **RG Email:** `<your email>`
-* wdwa**RG Password:** `<your password>`
+* **RG Password:** `<your password>`
+* Make sure both "Enable Screen Overlay" and "Use Global Settings" are checked on
 
 ![Screenshot of the settings page.](first_bot_tutorial_images/tutorial_2_settings.png)
 
@@ -178,9 +179,8 @@ public class CharacterBotSpawnManager : RGBotSpawnManager
 
 Once this component is implemented, create an empty object within the scene, rename it to `RGBotSpawner` (just so we can find it later),
 and attach this `CharacterBotSpawnManager` component to that object. Then, create another empty object, rename it to `CharacterSpawn`,
-position it within the scene above the platform, and drag that game object into the **Bot Spawn Point** entry of the RGBotSpawner's
-`CharacterBotSpawnManager` component. Finally, find the **Player** prefab provided by the sample project (located within **Assets** > **Prefabs**), and drag this into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene!
-Make sure to save the scene.
+position it within the scene wherever you want to spawn your bot (ideally above the platform), and drag that game object into the 
+**Bot Spawn Point** entry of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the **Player** prefab provided by the sample project (located within **Assets** > **Prefabs**), and drag this into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the scene.
 
 ![Screenshot of the RGOverlayCanvas.](first_bot_tutorial_images/tutorial_5_spawner.png)
 
@@ -304,6 +304,14 @@ Finally, search for and add the `RGAgent` script to the Player prefab - this tel
 prefab and register them with the agent, and informs Regression Games that this prefab will act as an agent.
 
 ![Screenshot of the prefab with a RG Action script.](first_bot_tutorial_images/tutorial_7_action.png)
+
+:::info
+
+It is common that you will want to find GameObjects and other components within your scene to perform actions.
+See the [`RGFindUtils`](../unity-sdk/RGFindUtils) class for helper functions which find GameObjects and components 
+within your scene based on information coming in from an action.
+
+:::
 
 ## Activate and start Regression Games in your game loop
 
