@@ -91,7 +91,7 @@ Enter the following information:
 * **RG Host URL:** `https://play.regression.gg`
 * **RG Email:** `<your email>`
 * **RG Password:** `<your password>`
-* Make sure all both "Enable Screen Overlay" and "Use Global Settings" are checked on
+* Make sure both "Enable Screen Overlay" and "Use Global Settings" are checked on
 
 ![Screenshot of the settings page.](first_bot_tutorial_images/tutorial_2_settings.png)
 
