@@ -8,8 +8,9 @@ Represents an action that a bot can instruct the game object to take.
 This `RGAction` class should be inherited in a sub class, and developers
 will need to implement the `StartAction` and `GetActionName` function.
 
-Also see [`RGFindUtils`](./RGFindUtils) and [`RGState`](./RGState) for concepts that come up when
-implementing actions.
+In most RGAction implementations, it is necessary to find game objects within the scene based
+on the state. See [`RGFindUtils`](./RGFindUtils) and [`RGState`](./RGState) for more details
+and examples of how to implement actions in an easier way.
 
 :::info
 
