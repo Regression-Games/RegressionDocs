@@ -96,6 +96,13 @@ const sidebars = {
         }
       ]
     },
+    {
+      type: 'category',
+      label: 'REST API Reference',
+      items: [
+        'studios/api_reference/authentication',
+      ]
+    },
     'studios/faq'
   ],
 };
