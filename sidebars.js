@@ -88,7 +88,10 @@ const sidebars = {
         {
           type: 'category',
           label: 'Tutorials and Guides',
-          items: ['studios/unity/tutorials/first_tutorial'],
+          items: [
+            'studios/unity/tutorials/first_tutorial',
+            'studios/unity/tutorials/github_actions'
+          ],
         },
         {
           type: 'category',
