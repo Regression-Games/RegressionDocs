@@ -43,7 +43,7 @@ features on our [feedback site](https://regression-games.sleekplan.app/feedback)
 
 ## Importing the Regression Games Unity Bots package
 
-Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Clone and import the repository by 
+Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Import the repository by 
 clicking **Add package from git URL** in the **Package Manager** window (this window can be opened
 in the **Window > Package Manager** menu) and pasting in the following URL.
 
