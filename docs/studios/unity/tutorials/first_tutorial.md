@@ -52,7 +52,7 @@ cd RGUnitySample
 git checkout starter
 ```
 
-Once this is cloned, download **Unity version 2021.3.24f1** (visit the [Unity archive](https://unity.com/releases/editor/archive
+Once this is cloned, download **Unity version 2021.3.24f1** (visit the [Unity archive](https://unity.com/releases/editor/archive)
 if you can't find that version). Open the cloned project in this Unity version. 
 
 Once the project is loaded, open the scene at **Assets > Scenes > SampleScene**. This scene features a prefab 
