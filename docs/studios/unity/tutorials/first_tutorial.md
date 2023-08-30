@@ -61,20 +61,18 @@ the game loop, one for controlling the character, and one for controlling the po
 
 ## Import the Regression Games Unity Bots package
 
-Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Clone or download the repository, 
-and import the package by clicking **Add package from disk** in the **Package Manager** window (this window can be opened
-in the **Window > Package Manager** menu ). 
-- Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
-- Note that this package installs a dependency of Newtonsoft Json (https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
-
-![Screenshot of the package imported into the project](first_bot_tutorial_images/tutorial_1_package.png)
-
-You can also download the project directly by clicking the plug button and the **Add package from git URL** option, and
-pasting in the following URL.
+Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Import the repository by 
+clicking **Add package from git URL** in the **Package Manager** window (this window can be opened
+in the **Window > Package Manager** menu) and pasting in the following URL.
 
 ```
 https://github.com/Regression-Games/RGUnityBots.git
 ```
+
+- Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
+- Note that this package installs a dependency of Newtonsoft Json (https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
+
+![Screenshot of the package imported into the project](first_bot_tutorial_images/tutorial_1_package.png)
 
 ## Restart Unity and your IDE
 
