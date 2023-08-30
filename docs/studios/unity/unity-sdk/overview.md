@@ -40,3 +40,20 @@ features on our [feedback site](https://regression-games.sleekplan.app/feedback)
 | Live Reloading                 | Reload bots almost instantly without rebuilding your game, managed via GitHub                                                     | _Docs coming soon_       |
 | Bot Code Generation            | _Only available in Minecraft, see proposals_. Create bots with low-code tools such as behavior trees powered by GPT.              | [Link](../../../players/creating-bots/agent-builder)       |
 | Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages. Vote for support in the feedback link above. | _Docs coming soon_       |
+
+## Importing the Regression Games Unity Bots package
+
+Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Clone and import the repository by 
+clicking **Add package from git URL** in the **Package Manager** window (this window can be opened
+in the **Window > Package Manager** menu) and pasting in the following URL.
+
+```
+https://github.com/Regression-Games/RGUnityBots.git
+```
+
+- Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
+- Note that this package installs a dependency of Newtonsoft Json (https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
+
+![Screenshot of the package imported into the project](../tutorials/first_bot_tutorial_images/tutorial_1_package.png)
+
+For a full walkthrough on getting started, see the [Building Your First Bot](../tutorials/first_tutorial.md) tutorial.
