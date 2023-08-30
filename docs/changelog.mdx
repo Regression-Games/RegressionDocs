@@ -1,0 +1,57 @@
+---
+sidebar_label: 'Changelog'
+---
+
+# Changelog
+
+## 0.0.11
+
+:::info
+
+This version is a release preview. Our product is in beta and we would love for developers to try it out and provide feedback! Contact
+us at info@regression.gg for dedicated support and access.
+
+:::
+
+**New Platform Features**
+
+- [Agent Builder](/players/creating-bots/agent-builder) Beta - Our GPT-enabled agent builder product is live for select testers, now with improved validation tools. If you&apos;d like to try it out, let us know!
+- Our documentation site is now live! This docs site includes API/SDK references, tutorials, guides, and FAQs for both players and developers.
+- [API Keys](/studios/api_reference/authentication) - developers and players can now create API keys to interact with RG services
+- New onboarding flow for players and game developers
+- Logs for bots can now be downloaded - available via API or through the [Bot History dashboard](/studios/unity/unity-sdk/in-editor-replay)
+- The ID of a bot can now be seen and copied within the Bot Manager
+- Zip Bots - Bots uploaded via zip can now be downloaded
+- The home page has been redesigned to provide more information for getting started for players
+
+**Unity SDK Features**
+
+- An early preview of our [Unity SDK](/studios/unity/unity-sdk/overview) for building AI agents is now live! Our docs site has a getting started guide - message us for access.
+- Developers can now create Unity bots from the Bot Manager
+- Character configuration for Unity bots are more flexible and customizable
+- Validation results for QA testing bots are now saved to Unity Replay files, allowing for viewing the validation directly within Unity
+- Default settings for the SDK have been adjusted for increased ease of use
+- Added a “Stop All” button for stopping bots from within the Unity game
+
+**Bug Fixes**
+
+- Fixed issue where choosing a bot repository via commit would throw an error
+- Fixes a bug where bot logs would not show the correct number of lines before clearing
+- Fixes issues where Unity bots would not teardown properly
+- Fixes a bug where login and registration would sometimes fail
+- Feedback button has been moved to a better spot on the screen to avoid hiding other components
+- Fixed issue with SSL certs on certain systems
+
+**Migration Notes**
+
+- The namespace for various classes in the Unity SDK have been updated. Please make sure to add the following import declaration
+  in your files that use classes from Regression Games.
+
+```csharp
+using RegressionGames;
+```
+
+**Coming Soon**
+
+- New attribute-based system for Unity SDK integration. New attributes will permit defining bot actions and state from existing functions and variables within your code.
+- CI/CD support - Instructions and examples have been added for running a Quality Assurance Bots in GitHub Actions
