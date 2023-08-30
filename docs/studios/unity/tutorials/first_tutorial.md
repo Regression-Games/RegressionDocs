@@ -47,7 +47,7 @@ the completed tutorial, see the `main` branch.
 Run the following commands in your terminal to start:
 
 ```
-git clone git@github.com:Regression-Games/RGUnitySample.git
+git clone https://github.com/Regression-Games/RGUnitySample.git
 cd RGUnitySample
 git checkout starter
 ```
