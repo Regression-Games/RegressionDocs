@@ -2,11 +2,19 @@
 sidebar_label: 'Testing with GitHub Actions'
 ---
 
-# Setting up a bot with GitHub Actions for quality assurance
+# Testing with GitHub Actions
 
-This tutorial will walk you through setting up a QA Bot for your Unity project using [GitHub Actions](https://docs.github.com/en/actions). 
-This tutorial assumes you have some familiarity with GitHub Actions, and that you have a working bot within your
-game (see more on this in the [Creating Bots in JavaScript section](/studios/unity/unity-sdk/creating-bots/configuration)). 
+This tutorial will walk you through the following steps to create a QA Bot for your Unity project using 
+[GitHub Actions](https://docs.github.com/en/actions) and [GameCI](https://game.ci):
+
+1. Add GitHub Actions workflow files to your project to enable Unity builds.
+2. Configure the GitHub Actions workflow files to work with GameCI and Regression Games.
+3. Add a test to your Unity project that will start and run your bot.
+4. Learn how to view test results.
+
+This tutorial assumes you have some familiarity with GitHub Actions, and that you have a working 
+bot within your game (see more on this in the [Creating Bots in JavaScript section](/studios/unity/unity-sdk/creating-bots/configuration)).
+By the end of this tutorial, every push to your GitHub repo will build your Unity project and start bots for testing.
 You can find a working example in [this repository](https://github.com/Regression-Games/RGUnitySample) for reference.
 
 :::caution
@@ -27,32 +35,23 @@ below regarding [test configurations](#3-add-the-qa-bot-workflow-file-to-your-pr
 
 :::
 
-In this guide, we will use GitHub Actions, [GameCI](https://game.ci), and Regression Games to set up a validation bot for your Unity project. Whenever a new
-push is made to your GitHub repository, the Unity project will be built and a bot will be started. The steps to this
-guide are as follows:
-
-1. Add the GitHub Actions workflow files to your project needed to get Unity builds to work.
-2. Configure the GitHub Actions workflow files to work with GameCI and Regression Games.
-3. Add a test to your Unity project that will start and run your bot.
-4. Learn more about how to view test results.
-
-## Add GitHub Action Workflow Files
+## Add GitHub Actions Workflow Files
 
 [GameCI](https://game.ci/) provides a collection of GitHub Actions for building Unity projects. This is our foundation 
 for running GitHub CI/CD builds for Unity.
 
-### Create a new branch in your project.
+### Create a New Branch in your Project
 
 First, create a new branch in your project so that you can test out the GitHub Actions workflow files before committing them to your
 main branch. You can name this branch anything, but we named ours `qa-tests`.
 
-### Follow the steps on GameCI to activate a [Unity License](https://game.ci/docs/github/activation).
+### Follow the Steps on GameCI to Activate a [Unity License](https://game.ci/docs/github/activation)
 
 It is critical that you follow this step! This allows the CI/CD Docker images to properly start and use Unity.
 You can test that the license is configured properly by running this [GitHub Action](https://github.com/marketplace/actions/unity-activate)
 in your GitHub repository.
 
-### Add the QA Bot workflow file to your project.
+### Add the QA Bot Workflow File to Your Project
 
 The QA Bot workflow file is a GitHub Action that will build your Unity project and start a test that will run a bot. From step 2 above,
 you should have a `.github/workflows` folder inside of your project/repository. Inside of this folder, create a new file called 
@@ -123,7 +122,20 @@ jobs:
 
 Note that this will actually run all of your tests, not just the QA Bot test. To configure this workflow to only
 run the QA test, see the [Unity Test Runner Command Line docs](https://docs.unity3d.com/Packages/com.unity.test-framework@2.0/manual/reference-command-line.html),
-which has filter options that can be passed within `customParameters` within the `Run tests` step above.
+which has filter options that can be passed within `customParameters` within the `Run tests` step above. For example,
+see the `customParameters` property below:
+
+```yaml
+...
+- name: Run tests
+  uses: game-ci/unity-test-runner@v2
+  env:
+    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  with:
+    customParameters: -testFilter "<name of method to test>" -RG_BOT ${{ secrets.RG_BOT }} -RG_API_KEY ${{ secrets.RG_API_KEY }} -RG_HOST ${{ secrets.RG_HOST }}
+    githubToken: ${{ secrets.GITHUB_TOKEN }}
+...
+```
 
 :::
 
@@ -153,14 +165,14 @@ In this testing mode, the game starts as if you are playing it, and then termina
 Complete the following steps to setup the required test - feel free to skip some of these steps if you have existing Play tests
 in your Unity project.
 
-### Add your scenes to your build
+### Add Your Scenes to Your Build
 
 Before adding the test, make sure your desired test scenes are placed inside your build. You can add your scenes to the build
 using the menu option **File** > **Build Settings**.
 
 ![Build settings](./github_actions_images/build.png)
 
-### Configure Test Runner for your project
+### Configure Test Runner for Your Project
 
 Next, we need to configure the Unity Test Runner for your project. To do this, go to **Window** > **General** > **Test Runner**.
 Then, in the pane that open, click **Play Mode** > **Create PlayMode Test Assembly Folder**. Create that tests folder with
@@ -181,7 +193,7 @@ open that file and replace it with the contents below, which will include Regres
 
 You can learn more about the Test Runner and setup instructions [here](https://docs.unity.cn/560/Documentation/Manual/testing-editortestsrunner.html).
 
-### Create an `RGBotTests` file to run your bot
+### Create an `RGBotTests` File to Run Your Bot
 
 Within the `Tests` folder, create a new file called `RGBotTests.cs` and copy the following contents into the file.
 
@@ -276,7 +288,7 @@ At a high level, this test is doing the following:
 3. The test then waits for at least one bot to connect. If a bot does not connect within one minute, the test will fail.
 4. Once at least one bot is connected, the test runs until all bots complete their tasks (i.e the bot calls `rg.complete()`)
 
-### Test it out with an existing bot
+### Test it out with an Existing Bot
 
 Our test is now setup! Before we commit and push our changes, let's test it out locally with an existing bot. To do this, you can
 follow the [first bot guide](/studios/unity/tutorials/first_tutorial) or [creating bots reference](/studios/unity/unity-sdk/creating-bots/configuration)
@@ -304,10 +316,11 @@ export async function processTick(rg) {
 
 ## Viewing Test Results
 
-Once a test is done running, you can see your most recent test results within the Regression Games website, within the **History** tab
-of the [Running Bots](https://play.regression.gg/running-bots) page. Within this page, you can download the logs for the run, as well
-as the replay file. Follow the instructions at [here](/studios/unity/unity-sdk/in-editor-replay) for viewing this replay in your local
-editor. Through the logs and replay feature, you can see errors from the bots, validations, and actions that the bot took.
+Once your tests have completed, you can view their results on Regression Games by navigating to the **History** section of the
+[Running Bots](https://play.regression.gg/running-bots) tab. From this page you can download bot logs for the test session which 
+contain output from your bot-code. You can also download in-game replay data which can be loaded in the Unity Editor to watch the 
+movements and actions of each bot, as well as analyze the validations they performed. See the 
+[In-Editor Replay](/studios/unity/unity-sdk/in-editor-replay) for instructions on how to load replay data.
 
 ![Downloads](./github_actions_images/downloads.png)
 
