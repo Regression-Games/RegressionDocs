@@ -55,7 +55,7 @@ in your GitHub repository.
 
 The QA Bot workflow file is a GitHub Action that will build your Unity project and start a test that will run a bot. From step 2 above,
 you should have a `.github/workflows` folder inside of your project/repository. Inside of this folder, create a new file called 
-`qa-bot.yml` and paste the contents below.
+`qa-bot.yml` and paste the contents below. You can also download the file directly from [here](https://raw.githubusercontent.com/Regression-Games/RGUnitySample/main/.github/workflows/main.yml).
 
 ```yaml
 #file: .github/workflows/qa-bot.yml
@@ -205,7 +205,8 @@ instead be the scene you are starting with.
 :::
 
 Also, update `defaultBotId` to an ID of a bot that you'd like to start in your local editor. Remember, you can find
-the ID of a bot within the [Bot Manager page](https://play.regression.gg/bots).
+the ID of a bot within the [Bot Manager page](https://play.regression.gg/bots). You can also download the file
+directly from [here](https://raw.githubusercontent.com/Regression-Games/RGUnitySample/main/Assets/Tests/RGBotTests.cs).
 
 ```csharp
 using System;
@@ -378,6 +379,19 @@ export async function processTick(rg) {
 
 }
 ```
+
+## Pushing Your Changes
+
+Once you are satisfied with your local test, you can commit and push your changes to your GitHub repository. This will trigger the
+GitHub Actions workflow, which will build your Unity project and start your bot. You can view the status of your workflow by going
+to the **Actions** tab of your GitHub repository.
+
+![Actions tab](./github_actions_images/actions_tab.png)
+
+Once your workflow has completed, you can view the results of your test by clicking on the **Build my project** step of your workflow.
+You should see that the bot successfully started and executed!
+
+![Build step](./github_actions_images/build_step.png)
 
 ## Viewing Test Results
 
