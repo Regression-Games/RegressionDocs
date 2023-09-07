@@ -85,6 +85,12 @@ const config = {
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
+            type: 'doc',
+            docId: 'changelog',
+            label: 'Changelog',
+            position: 'right',
+          },
+          {
             href: 'https://github.com/Regression-Games',
             label: 'GitHub',
             position: 'right',

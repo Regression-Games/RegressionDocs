@@ -107,7 +107,8 @@ const sidebars = {
         'studios/api_reference/authentication',
       ]
     },
-    'studios/faq'
+    'studios/faq',
+    'changelog', 
   ],
 };
 
