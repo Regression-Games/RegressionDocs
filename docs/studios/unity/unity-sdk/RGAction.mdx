@@ -1,116 +1,64 @@
 ---
-sidebar_label: 'RGAction'
+sidebar_label: 'Defining Bot Actions'
 ---
 
-# RGAction
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-Represents an action that a bot can instruct the game object to take.
-This `RGAction` class should be inherited in a sub class, and developers
-will need to implement the `StartAction` and `GetActionName` function.
+# Defining Bot Actions
 
-In most RGAction implementations, it is necessary to find GameObjects within the scene based 
-on the game state. See the [`RGState`](./RGState) class for defining the game state and the 
-[`RGFindUtils`](./RGFindUtils) class for helper functions to locate GameObjects within your scene.
+This section refers to an "action" as any instruction the bot can issue to its GameObject.
+This can be anything from movement to casting abilities to navigating UI components.
+
+It is common for actions to interact with entities in the [game state](./RGState) and their corresponding GameObjects.
+The [`RGFindUtils`](./RGFindUtils) class contains utility functions for finding such GameObjects within the scene and is
+useful for these types of actions.
+
+## Defining Actions
+
+Defining an action is as simple as adding the `RGAction` attribute to a method.
+This allows the Regression Games SDK to recognize this method as the entrypoint into a callable action from your [bot code](./creating-bots/configuration).
 
 :::info
-
-This component is likely to change soon to be more developer-friendly, by changing the
-Dictionary type used to a generic serializable class that you can define.
-
+The `RGAction` attribute can only be used within a component, a class that inherits from `MonoBehavior`, or a class whose parent inherits from `MonoBehavior`.
 :::
 
-## Properties
+By default, the name of an action is the same as its method's, but this can be overridden by passing a different name to `RGAction`.
+Any parameters that the method accepts will be valid arguments in your bot code.
 
-None
-
-## Class Methods
-
-### `public abstract string GetActionName()`
-
-The name of this action, which is used by the bot to request this specific action.
-
-#### Arguments
-None
-
-#### Return Value
-The name of this action (i.e. an identifier).
-
-#### Examples
 <Tabs>
-<TabItem value="example_action" label="Example action name" default>
+<TabItem value="action_with_default_name" label="RGAction" default>
 
 ```cs
-public override string GetActionName()
+// This is invoked using the name "Jump"
+
+[RGAction]
+public void Jump()
 {
-    return "AttackEntity";
+    _rigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
 }
 ```
+
+</TabItem>
+<TabItem value="action_with_name" label="RGAction with Overridden Name">
+
+```cs
+// This is invoked using the name "BigJump" (rather than "DoubleJump").
+
+[RGAction("BigJump")]
+public void DoubleJump(int height, UnityEngine.Vector3 position)
+{
+    Debug.Log("Double Jump");
+}
+```
+
 </TabItem>
 </Tabs>
 
-### `public abstract void StartAction(Dictionary<string, object> input)`
+The `RGAction` attribute is designed for ease of integration.
+A method with this attribute may execute an action from start to finish, or it may start an action that `MonoBehavior` methods such as `FixedUpdate` should complete.
+Depending on how your code is structured, you may be able to add the `RGAction` attribute to your existing code with minimal refactoring.
 
-The action to kick off, given some arguments. Usually this will set up some state
-variables inside of this component, and then most of the logic will happen in an
-update function.
+## Compiling Actions
 
-#### Arguments
-
-Argument Name | Type | Default | Description
----|---|---|---|
-`input` | `Dictionary<string, object>` | required | The arguments needed to configure this action (e.g. a position to move to)
-
-#### Return Value
-
-None
-
-#### Examples
-<Tabs>
-<TabItem value="example_file" label="Full example of an action file" default>
-
-```cs
-public class RGPlayerMoveAction : RGAction
-{
-    
-    private Vector3? targetPosition;
-    private Rigidbody rigidbody;
-    public float speed = 5000f;
-    public float range = 1f;
-
-    public void Awake()
-    {
-        rigidbody = GetComponent<Rigidbody>();
-    }
-
-    public override string GetActionName()
-    {
-        return "MoveToPosition";
-    }
-
-    public override void StartAction(Dictionary<string, object> input)
-    {
-        var targetX = float.Parse(input["x"].ToString());
-        var targetY = float.Parse(input["y"].ToString());
-        var targetZ = float.Parse(input["z"].ToString());
-        targetPosition = new Vector3(targetX, targetY, targetZ);
-    }
-
-    public void Update()
-    {
-        
-        // If we are in range, reset the action
-        if (targetPosition != null && Vector3.Distance((Vector3) targetPosition, transform.position) < range)
-        {
-            targetPosition = null;
-        }
-        
-        // Set the target velocity
-        if (targetPosition != null)
-        {
-            rigidbody.velocity = ((Vector3) targetPosition - transform.position).normalized * speed * Time.deltaTime;
-        }
-    }
-}
-```
-</TabItem>
-</Tabs>
+The Regression Games SDK will need to process new or updated actions before they can be called by your bot.
