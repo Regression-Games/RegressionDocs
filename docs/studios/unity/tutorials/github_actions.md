@@ -40,7 +40,7 @@ below regarding [test configurations](#3-add-the-qa-bot-workflow-file-to-your-pr
 [GameCI](https://game.ci/) provides a collection of GitHub Actions for building Unity projects. This is our foundation 
 for running GitHub CI/CD builds for Unity.
 
-### Create a New Branch in your Project
+### Create a New Branch in Your Project
 
 First, create a new branch in your project so that you can test out the GitHub Actions workflow files before committing them to your
 main branch. You can name this branch anything, but we named ours `qa-tests`.
