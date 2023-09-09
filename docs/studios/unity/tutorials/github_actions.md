@@ -51,9 +51,9 @@ It is critical that you follow this step! This allows the CI/CD Docker images to
 You can test that the license is configured properly by running this [GitHub Action](https://github.com/marketplace/actions/unity-activate)
 in your GitHub repository.
 
-### Add the QA Bot Workflow File to Your Project
+### Add the Workflow File to Your Project
 
-The QA Bot workflow file is a GitHub Action that will build your Unity project and start a test that will run a bot. From step 2 above,
+The workflow file is a GitHub Action that will build your Unity project and start a test that will run a bot. From step 2 above,
 you should have a `.github/workflows` folder inside of your project/repository. Inside of this folder, create a new file called 
 `qa-bot.yml` and paste the contents below. You can also download the file directly from [here](https://raw.githubusercontent.com/Regression-Games/RGUnitySample/main/.github/workflows/main.yml).
 
@@ -120,8 +120,8 @@ jobs:
 
 :::info
 
-Note that this will actually run all of your tests, not just the QA Bot test. To configure this workflow to only
-run the QA test, see the [Unity Test Runner Command Line docs](https://docs.unity3d.com/Packages/com.unity.test-framework@2.0/manual/reference-command-line.html),
+Note that this will actually run all of your tests, not just the bot test. To configure this workflow to only
+run the bot test, see the [Unity Test Runner Command Line docs](https://docs.unity3d.com/Packages/com.unity.test-framework@2.0/manual/reference-command-line.html),
 which has filter options that can be passed within `customParameters` within the `Run tests` step above. For example,
 see the `customParameters` property below:
 
@@ -159,7 +159,7 @@ Once you are done adding these secrets, your secrets section should look similar
 
 ## Add a Test to Your Unity Project
 
-The QA Bots are started via the Unity Test Runner in [Play Mode](https://docs.unity3d.com/2019.1/Documentation/Manual/PlaymodeTestFramework.html),
+The bots are started via the Unity Test Runner in [Play Mode](https://docs.unity3d.com/2019.1/Documentation/Manual/PlaymodeTestFramework.html),
 In this testing mode, the game starts as if you are playing it, and then terminates once the function finishes.
 
 Complete the following steps to setup the required test - feel free to skip some of these steps if you have existing Play tests
