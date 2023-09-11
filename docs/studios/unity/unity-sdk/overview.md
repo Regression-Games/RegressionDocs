@@ -6,7 +6,7 @@ sidebar_label: 'Overview'
 
 Regression Games is developing a platform where studios can **build and deploy bots for a variety of use cases in minutes.** We are designing for scale (deploy thousands of bots), ease of use (e.g. generative AI to build bots), ease of integration (minimal impact on game development time), and feature richness (e.g. A/B bot test for engagement).
 
-![vision](vision.png)
+![vision](img/vision.png)
 
 ## Current Stage of the Product
 
@@ -17,7 +17,7 @@ The team has focused on the foundation of supporting use cases and initial infra
 of our value will come from the interfaces to build bots, the scale of our infrastructure, the speed of integration, and the products
 built around these bots.
 
-![timeline feature](timeline.png)
+![timeline feature](img/replay/timeline.png)
 
 ## Availability Assurances
 
