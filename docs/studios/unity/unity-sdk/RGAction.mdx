@@ -24,12 +24,8 @@ The `RGAction` attribute must be used within a component, a class that inherits 
 :::
 
 By default, the action's name matches the method's, but this can be overridden by passing a different name to `RGAction`.
-Any parameters that the method accepts will be valid arguments in your bot code. Their names and data types must match.
-
-:::info
-We recommend using primitive data types for `RGAction` parameters.
-Full support for reference types is coming soon.
-:::
+Any parameters that the method accepts will be valid arguments in your bot code.
+Argument names and data types in the bot code must match those expected by the action.
 
 <Tabs>
 <TabItem value="action_with_default_name" label="RGAction" default>
@@ -130,6 +126,29 @@ public class Player : MonoBehavior
 
 </TabItem>
 </Tabs>
+
+:::info
+We recommend using primitive data types for `RGAction` parameters.
+    Full support for non-primitive types is coming soon.
+    If your method requires non-primitive parameters, consider using a proxy method:
+
+```cs
+// Proxy method for the AttackPlayer action
+[RGAction]
+public void AttackPlayerProxy(int playerId)
+{
+    var player = RGFindUtils.Instance.FindOneByInstanceId<RGState>(playerId);
+    AttackPlayer(player.gameObject);
+}
+
+// The method we want to expose as an action
+private void AttackPlayer(GameObject player)
+{
+  // your implementation here...
+}
+```
+
+:::
 
 ## Assigning Actions to GameObjects
 
