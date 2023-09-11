@@ -24,6 +24,8 @@ The `RGAction` attribute must be used within a component, a class that inherits 
 :::
 
 By default, the action's name matches the method's, but this can be overridden by passing a different name to `RGAction`.
+Action names must be unique within your Unity project.
+
 Any parameters that the method accepts will be valid arguments in your bot code.
 Argument names and data types in the bot code must match those expected by the action.
 
@@ -160,11 +162,12 @@ Whenever you add, remove, or modify actions, you will need to instruct the SDK t
 This should result in a unique generated script for each action you've defined using the `RGAction` attribute.
 You can find these files in your Unity project under `RGScripts/RGActions`.
 Each of these scripts can then be added as components to the appropriate GameObjects within your scene.
+When assigning action scripts to a GameObject, make sure that GameObject has all of the components that the action references.
 
 ![Add Action Script to GameObject](img/rg-action/add-action-script-to-game-object.png)
 
 If your bot code attempts to call an action whose script is not assigned to its GameObject,
-then the Regression Games SDK will produce an error and terminate that bot.
+then the Regression Games SDK will ignore that command and continue executing your bot code as if the action was not called.
 
 :::caution
 Be mindful when removing the `RGAction` attribute from a method, or deleting an action altogether -
