@@ -31,11 +31,8 @@ power ups (represented by blue spheres). We will cover:
 
 The first step is to create an account on Regression Games. Visit the [Regression Games site](https://play.regression.gg)
 and click "sign up". Enter a username, email, and password. Once you log 
-in, you will be prompted to connect a GitHub account. After connecting your account, the Regression Games platform will 
-be able to pull and live reload bots through GitHub repositories.
-
-You will also be prompted to enter a Minecraft username - you can put anything for this field (it will be removed
-soon as part of our new studio-centric experience).
+in, select "I am a game developer", you will be prompted to connect a GitHub account. After connecting your account, 
+the Regression Games platform will be able to pull and live reload bots through GitHub repositories.
 
 ## Download the sample game
 
