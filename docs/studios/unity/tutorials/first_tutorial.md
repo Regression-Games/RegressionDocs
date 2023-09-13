@@ -192,9 +192,10 @@ You can do this by checking out the docs and examples for [`RGState.GetState()`]
 
 In this scene, open the `Player` prefab located in the **Assets > Prefabs** folder by double clicking
 the prefab, click **Add Component**, and then add the `RGState` component by searching for "RG State" in the component
-search modal that pops up. Once that component is added to the prefab, change the `Object Type` to `Player`. 
-Make sure to save the changes you make to these existing prefabs by clicking **Save**! Repeat this process for
-the `PowerUp` prefab, but change the `Object Type` to `PowerUp`.
+search modal that pops up. Once that component is added to the prefab, change the `Object Type` to `Player`, make sure
+that both `Is Player` and `Is Runtime Object` are checked. Make sure to save the changes you make to these existing 
+prefabs by clicking **Save**! Repeat this process for the `PowerUp` prefab, but change the `Object Type` to `PowerUp`, and
+only have `Is Runtime Object` checked (`Is Player` should be off).
 
 ![Screenshot of the prefab with a RG State script.](first_bot_tutorial_images/tutorial_6_prefab.png)
 
