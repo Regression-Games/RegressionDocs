@@ -23,7 +23,7 @@ Name | Type  | Description
 `objectType` | `string` | A tag that informs the bot what kind of object this is, such as an `enemy` or `power_up`.  
 `syncPosition` | `boolean` | If true, the state relayed will include the position of the object.
 `syncRotation` | `boolean` | If true, the state relayed will include the rotation of the object.
-`isPlayer` | `boolean` | If true, this is an object that is controlled as a bot/player. Otherwise, it is a non-player controlled object in the scene.
+`isPlayer` | `boolean` | If true, this state belongs to a player controlled object; whether by a bot or a human player. That player may or may not be driven by a bot.
 `isRuntimeObject` | `boolean` | If true, this is an object spawned during runtime. Otherwise, it is an object that starts in the scene at load-time.
 
 ## Class Methods
