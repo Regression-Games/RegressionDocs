@@ -68,7 +68,7 @@ on: [push]
 # See https://game.ci/docs/github/test-runner and RG_DOCS for more info
 jobs:
   build:
-    name: Build my project ✨
+    name: Build and run bots ✨
     runs-on: ubuntu-latest
     permissions: write-all # This is to allow writing results into the artifacts section of GitHub Actions
     steps:
@@ -272,7 +272,7 @@ public class RGBotTests
             var task = RGServiceManager.GetInstance()
                 .QueueInstantBot((long) botId, (botInstance) =>
                 {
-                    RGBotServerListener.GetInstance().AddClientConnectionForBotInstance(botInstance.id);
+                    RGBotServerListener.GetInstance().AddClientConnectionForBotInstance(botInstance.id, RGClientConnectionType.REMOTE);
                 }, () =>
                 {
                     Debug.LogError($"{timeNow()} Error starting bot with ID {botId}");
