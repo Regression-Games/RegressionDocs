@@ -323,7 +323,7 @@ void Awake()
     RGSettings rgSettings = RGSettings.GetOrCreateSettings();
     if (rgSettings.GetUseSystemSettings())
     {
-        int[] botIds = rgSettings.GetBotsSelected().ToArray();
+        long[] botIds = rgSettings.GetBotsSelected().ToArray();
         int errorCount = 0;
         Task.WhenAll(botIds.Select(botId =>
             RGServiceManager.GetInstance()
