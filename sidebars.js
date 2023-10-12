@@ -76,11 +76,20 @@ const sidebars = {
             'studios/unity/unity-sdk/RGFindUtils',
             {
               type: 'category',
+              label: 'Creating Bots in C#',
+              items: [
+                'studios/unity/unity-sdk/csharp/configuration',
+                'studios/unity/unity-sdk/csharp/playtest-bots',
+                'studios/unity/unity-sdk/csharp/validation-bots'
+              ]
+            },
+            {
+              type: 'category',
               label: 'Creating Bots in JavaScript',
               items: [
-                'studios/unity/unity-sdk/creating-bots/configuration',
-                'studios/unity/unity-sdk/creating-bots/playtest-bots',
-                'studios/unity/unity-sdk/creating-bots/validation-bots'
+                'studios/unity/unity-sdk/javascript/configuration',
+                'studios/unity/unity-sdk/javascript/playtest-bots',
+                'studios/unity/unity-sdk/javascript/validation-bots'
               ]
             }
           ]

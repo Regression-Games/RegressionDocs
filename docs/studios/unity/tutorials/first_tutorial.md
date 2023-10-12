@@ -437,7 +437,7 @@ the bot live reload and change its speed!
 
 ## Next steps
 
-For immediate next steps, we recommend checking out our guide on [creating bots that can do QA validations](/studios/unity/unity-sdk/creating-bots/validation-bots). In soon-to-be-added guides, tutorials will walk you through:
+For immediate next steps, we recommend checking out our guide on [creating bots that can do QA validations](/studios/unity/unity-sdk/javascript/validation-bots). In soon-to-be-added guides, tutorials will walk you through:
 
 - Creating bots with abilities
 - Pairing a Regression Games bot with dialog systems such as character.ai
