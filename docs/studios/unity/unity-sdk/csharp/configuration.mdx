@@ -26,7 +26,7 @@ Each new bot is created with 2 files.
   - `BotRecord.asset` which defines key information about the bot like `name` and `id`  
     - This file is used when starting bots in Unity to properly identify bots by their `id` irrespective of their namespace or directory name.
     - This file is also used when you synchronize local Unity bots with Regression Games servers.
-  - `BotEntryPoint.cs` which extends `RGUserBot.cs` and defines the main C# script entry points for your bot used by the Regression Games SDK to launch and communicate with the bot.
+  - `BotEntryPoint.cs` which extends `RGUserBot.cs` and defines the main C# script entry points for your bot. This is used by the Regression Games SDK to launch and communicate with the bot.
     -  By convention, the namespace of this file and all other `.cs` files for your bot should match the folder name of the bot.  This is important so that different bots' `BotEntryPoint` classes are in unique namespaces.
 
 You may add as many additional scripts or dependencies to your bot as necessary, but the 2 files above MUST exist for your bot to work correctly.
