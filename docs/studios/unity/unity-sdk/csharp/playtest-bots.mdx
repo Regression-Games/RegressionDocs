@@ -19,6 +19,10 @@ These logs can be loaded into the Unity Bot Replay utility which allows you to r
 API methods that filter state objects and check conditions will record additional decision results. 
 These are displayed side-by-side with Bot actions in the Replay utility to help debug your Bot by showing which decisons led to resulting behaviors.  
 
+:::info
+If you are using the [[RGAction]](../RGAction) attribute to generate your actions, then there are also typed `RGActionRequest` classes generated for that action.  The snippets below provide examples for using both typed and untyped actions.
+:::
+
 :::caution
 Commands within `ProcessTick` interact with the game state represented by the current tick only.
 This contrasts with [Validation Bots](./validation-bots), which can delay execution of commands for several ticks until expected conditions are met.
@@ -67,6 +71,7 @@ public override void ProcessTick(RG rgObject)
     if (humanPlayer.Count > 0 &&
         MathFunctions.DistanceSq(currentPosition, (Vector3)humanPlayer[0].position) > 10)
     {
+        // Untyped action request
         rgObject.PerformAction(new RGActionRequest("ApproachObject", new Dictionary<string, object>()
         {
             { "targetId", humanPlayer[0].id },
@@ -78,12 +83,22 @@ public override void ProcessTick(RG rgObject)
         (entity) => 1.Equals(entity.GetField("team")) && !true.Equals(entity.GetField("broken")));
     if (enemy != null && 0.CompareTo(enemy.GetField("Health")) < 0)
     {
-        rgObject.PerformAction(new RGActionRequest("PerformSkill", new Dictionary<string, object>()
-        {
-            { "skillId", 1 },
-            { "targetId", enemy.id },
-            { "position", enemy.position}
-        }));
+        /*
+         * Typed action request
+         *
+         *  Using Generated Class ...
+            public class RGActionRequest_PerformSkill : RGActionRequest
+            {
+                public RGActionRequest_PerformSkill(int skillId, int targetId, Vector3 position)
+                {
+                    action = "PerformSkill";
+                    Input = new ()
+                    {{"skillId", skillId}, {"targetId", targetId}, {"position", position}, };
+                }
+            } 
+         *
+         */
+        rgObject.PerformAction(new RGActionRequest_PerformSkill(1, enemy.id, enemy.position));
     }
 }
 ```
@@ -121,10 +136,7 @@ public override void ProcessTick(RG rgObject)
         var selectGameModeButton = rgObject.GetInteractableButton("SelectGameModeButton");
         if (selectGameModeButton != null && !_stateFlags["SelectGameModeButton"])
         {
-            rgObject.PerformAction(new RGActionRequest("ClickButton", new Dictionary<string, object>
-            {
-                { "targetId", selectGameModeButton.id }
-            }));
+            rgObject.PerformAction(new RGActionRequest_ClickButton(selectGameModeButton.id) );
             _stateFlags["SelectGameModeButton"] = true;
             return;
         }
@@ -132,10 +144,7 @@ public override void ProcessTick(RG rgObject)
         var chooseArcherButton = rgObject.GetInteractableButton("ChooseArcherButton");
         if (chooseArcherButton != null && _stateFlags["SelectGameModeButton"] && !_stateFlags["ChooseArcherButton"])
         {
-            rgObject.PerformAction(new RGActionRequest("ClickButton", new Dictionary<string, object>
-            {
-                { "targetId", chooseArcherButton.id }
-            }));
+            rgObject.PerformAction(new RGActionRequest_ClickButton(chooseArcherButton.id));
             _stateFlags["ChooseArcherButton"] = true;
             return;
         }
@@ -143,10 +152,7 @@ public override void ProcessTick(RG rgObject)
         var startGameButton = rgObject.GetInteractableButton("StartGameButton");
         if (startGameButton != null && _stateFlags["ChooseArcherButton"] && !_stateFlags["StartGameButton"])
         {
-            rgObject.PerformAction(new RGActionRequest("ClickButton", new Dictionary<string, object>
-            {
-                { "targetId", startGameButton.id }
-            }));
+            rgObject.PerformAction(new RGActionRequest_ClickButton(startGameButton.id));
             _stateFlags["StartGameButton"] = true;
             return;
         }
