@@ -130,7 +130,7 @@ your game logic before spawning, how they are destroyed, etc... For this particu
 method, [`SpawnBot()`](/studios/unity/unity-sdk/RGBotSpawnManager#public-virtual-void-seatbotbotinformation-bottospawn). 
 This method will define how our bot prefab is spawned into the scene.
 
-First, create an `RGScripts/` folder in your `Assets` folder. Then, create a file called `CharacterBotSpawnManager.cs`.
+First, create a `RegressionGames/Runtime/` folder in your `Assets` folder. Then, create a file called `CharacterBotSpawnManager.cs`.
 Double click that file to open it within your editor of choice (we recommend Rider or Visual Studio). We highly recommend
 that the file is opened as part of the solution / project as a whole, so that code completion is available.
 
@@ -230,7 +230,7 @@ public abstract class RGAction : MonoBehaviour
 }
 ```
 
-Create a new file called `RGPlayerMoveAction.cs` within the `RGScripts/` folder, and copy the following code into that file.
+Create a new file called `RGPlayerMoveAction.cs` within the `RegressionGames/Runtime/` folder, and copy the following code into that file.
 
 ```cs
 using System.Collections.Generic;
@@ -401,7 +401,7 @@ You'll notice that in our JavaScript bot code, there is a `configureBot(rg)` fun
 us to set arbitrary data that is passed to Unity to configure the bot. Let's extend our Unity integration
 to take this `speed` configuration and set that on the bot in our code.
 
-First, create a new file called `BotCharacterConfig.cs` within `RGScripts/` with the following contents.
+First, create a new file called `BotCharacterConfig.cs` within `RegressionGames/Runtime/` with the following contents.
 This serialize type should match the data being returned by your bot's `configureBot` function, which
 is serialized into JSON and later parsed using this type.
 
