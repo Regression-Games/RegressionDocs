@@ -19,15 +19,15 @@ Name | Type  | Description
 
 ### `public T ParseCharacterConfig<T>()`
 
-Parses the JSON from `characterConfig` ([C#](./csharp/configuration#characterconfig)) ([Javascript](./javascript/configuration#characterconfig)) into the serialized data type 
-passed into the generic of this function. This `characterConfig` ([C#](./csharp/configuration#characterconfig)) ([Javascript](./javascript/configuration#characterconfig)) 
+Parses the JSON from `characterConfig` ([C#](./creating-bots/csharp/configuration#characterconfig)) ([Javascript](./creating-bots/javascript/configuration#characterconfig)) into the serialized data type
+passed into the generic of this function. This `characterConfig` ([C#](./creating-bots/csharp/configuration#characterconfig)) ([Javascript](./creating-bots/javascript/configuration#characterconfig))
 is the JavaScript Object that comes from the bot logic.
 
 #### Arguments
 None
 
 #### Return Value
-The object of type `T` that has been deserialized from JSON in the `characterConfig` ([C#](./csharp/configuration#characterconfig)) ([Javascript](./javascript/configuration#characterconfig)) field.
+The object of type `T` that has been deserialized from JSON in the `characterConfig` ([C#](./creating-bots/csharp/configuration#characterconfig)) ([Javascript](./creating-bots/javascript/configuration#characterconfig)) field.
 
 #### Examples
 <Tabs>
@@ -48,7 +48,7 @@ Debug.Log(myBotConfig.speed);
 
 ### `public void UpdateCharacterConfig<T>(T newConfig)`
 
-Overrides the `characterConfig` ([C#](./csharp/configuration#characterconfig)) ([Javascript](./javascript/configuration#characterconfig)) defined in the JavaScript code for your bot. For example, when seating a bot, you may discover 
+Overrides the `characterConfig` ([C#](./creating-bots/csharp/configuration#characterconfig)) ([Javascript](./creating-bots/javascript/configuration#characterconfig)) defined in the JavaScript code for your bot. For example, when seating a bot, you may discover
 that the requested character type is no longer available, and you need to let the bot know. The generic type you 
 pass in must be [Serializable].
 
