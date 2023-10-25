@@ -358,7 +358,7 @@ At a high level, this test is doing the following:
 ### Test it out with an Existing Bot
 
 Our test is now setup! Before we commit and push our changes, let's test it out locally with an existing bot. To do this, you can
-follow the [first bot guide](/studios/unity/tutorials/first_tutorial) or [creating bots reference](/studios/unity/unity-sdk/javascript/configuration)
+follow the [first bot guide](/studios/unity/tutorials/first_tutorial) or [creating bots reference](/studios/unity/unity-sdk/creating-bots/javascript/configuration)
 to create and configure a bot. As a quick test, you can make a bot that simply waits for a few seconds before completing its test. Note
 that **having your bot call `rg.complete()` is extremely important! Without this line of code, your bot will run forever!**
 
