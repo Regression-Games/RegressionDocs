@@ -10,12 +10,14 @@ import SavingYourTree from '../../../../../common/agent-builder/_saving-your-tre
 # Creating AIs Using the Agent Builder
 
 Regression Games' Agent Builder is an easy-to-use visual editor for constructing AI behavior trees.
-Our editor utilizes large language models like [OpenAI's GPT-4](https://openai.com/blog/chatgpt) to write code for you.
-This makes the Agent Builder an excellent tool for writing bots as you familiarize yourself with your project's SDK integration.
+Agent Builder provides powerful features for bot development, including a code editor powered by our AI code assistant
+(driven by [OpenAI's GPT-4](https://openai.com/blog/chatgpt)).
+Our code assistant can understand your game and its APIs to write code for you and validate code that you write yourself.
+This makes Agent Builder an excellent tool for creating bots as you familiarize yourself with your project's SDK integration.
 
 :::note
-This tool is early in development - it is prone to change and may contain bugs.
-Please report issues and feature requests for the Agent Builder [here](https://regression-games.sleekplan.app/feedback).
+We're constantly working to improve Agent Builder.
+You can report issues and submit feature requests through our [Feedback Site](https://regression-games.sleekplan.app/feedback).
 :::
 
 ## What Is a Behavior Tree?
@@ -79,8 +81,10 @@ In the Agent Builder, click the "Bot Settings" button, then select the .zip from
 ### Generating Code
 
 :::note
-All samples in this section are written in Typescript, which is the only language currently supported by the Agent Builder.
-If you'd like to see support for other languages, like C#, let us know [here](https://regression-games.sleekplan.app/feedback).
+All samples in this section are written in Typescript.
+
+We're constantly evaluating support for other languages.
+Feel free to request others through our [Feedback Site](https://regression-games.sleekplan.app/feedback).
 :::
 
 The nodes in your tree won't be useful until you give them some logic to execute.
@@ -99,8 +103,9 @@ All of your node's code must be defined within the `LeafNode` class, and the `ex
 You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
 :::
 
-You can either manually type code into the editor (see the [PlayTest Bots API](./playtest-bots)), or you can have GPT do the heavy lifting for you.
-To generate code using GPT, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button.
+You can either manually type code into the editor (see the [PlayTest Bots API](./playtest-bots)),
+or you can have our AI code assistant do the heavy lifting for you.
+To generate code using the assistant, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button.
 The editor will be disabled as code appears, and you can modify the output once it's finished.
 
 :::caution
@@ -117,7 +122,7 @@ If we enter the following prompt:
 If there is an Enemy within 10 square meters then approach them and store a reference to them
 ```
 
-then GPT should output code similar to this:
+then AI code assistant should output code similar to this:
 ```typescript
 class LeafNode extends TreeNode {
   public override async execute(rg): Promise<NodeStatus> {
@@ -157,7 +162,11 @@ class LeafNode extends TreeNode {
 The above outputs are good examples of how properly-formatted code should look when you're finished generating or writing it.
 
 You may notice that these examples invoke the `getData` and `setData` methods.
-These can be used to share data between nodes, and it's a good practice to specify a data type for `getData` to take advantage of the editor's Intellisense.
+These can be used to share data between nodes and across ticks during the bot's runtime.
+
+:::info
+We recommend you specify a data type whenever you call `getData` to take advantage of type hints in the editor.
+:::
 
 :::note
 Classes to represent available state variables for entities are coming soon
@@ -174,15 +183,15 @@ this.setData("myBool", true);
 const myBool = this.getData<boolean>("myBool");
 ```
 
-Whenever you submit a prompt to GPT, we supplement it with context about your game's available actions and state attributes as well as our bot API.
-However, large language models like GPT are still in their infancy and may output code that doesn't follow our expected format, or code that functions differently in-game than your prompt intends.
+Whenever you submit a prompt to our AI code assistant, we supplement it with context about your game's available actions and state attributes as well as our bot API.
+However, large language models are still in their infancy and may output code that doesn't follow our expected format, or code that functions differently in-game than your prompt intends.
 You may need to alter your prompt and re-submit it for new output when this happens, or you can fix the output manually.
 
 ### Validating Code
 
 The embedded code editor offers standard syntax highlighting and intelligent code completion features for Regressions Games APIs.
-To take this a step further, GPT can analyze code from the editor and provide suggestions for fixing syntax errors, bugs, and inefficiencies.
-Clicking the "Validate Code" button will cause a text box to appear with GPT's analysis results.
+To take this a step further, our AI code assistant can analyze code from the editor and provide suggestions for fixing syntax errors, bugs, and inefficiencies.
+Clicking the "Validate Code" button will cause a text box to appear with the assistant's analysis results.
 
 Let's give this a try with some code that doesn't properly await one of our async APIs.
 
@@ -197,7 +206,7 @@ class LeafNode extends TreeNode {
 }
 ```
 
-Clicking the "Validate Code" button should cause GPT to warn us that `findNearestEntity` should be awaited if we want to capture the actual "Enemy" entity.
+Clicking the "Validate Code" button should result in a warning that `findNearestEntity` should be awaited if we want to capture the actual "Enemy" entity.
 
 ![Validate Code](../../../../../common/agent-builder/img/validation-results-unity.png)
 

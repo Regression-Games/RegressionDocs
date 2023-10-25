@@ -10,12 +10,14 @@ import SavingYourTree from '../../common/agent-builder/_saving-your-tree.mdx'
 # Creating AIs Using the Agent Builder
 
 Regression Games' Agent Builder is an easy-to-use visual editor for constructing AI behavior trees.
-Our editor utilizes large language models like [OpenAI's GPT-4](https://openai.com/blog/chatgpt) to write code for you.
+Agent Builder provides powerful features for bot development, including a code editor powered by our AI code assistant
+(driven by [OpenAI's GPT-4](https://openai.com/blog/chatgpt)).
+Our code assistant has all the knowledge required to write code for our supported games and game modes.
 This makes our Agent Builder an excellent tool for those new to our AI libraries, or even to programming itself!
 
 :::note
-This tool is early in development - it is prone to change and may contain bugs.
-Please report issues and feature requests for the Agent Builder [here](https://regression-games.sleekplan.app/feedback).
+We're constantly working to improve Agent Builder.
+You can report issues and submit feature requests through our [Feedback Site](https://regression-games.sleekplan.app/feedback).
 :::
 
 ## What Is a Behavior Tree?
@@ -41,8 +43,10 @@ Create a new AI from the Bot Manager and select `Agent Builder` from the list of
 ### Adding Code
 
 :::note
-All samples in this section are written in Typescript, which is the only language currently supported by the Agent Builder.
-If you'd like to see support for other languages, let us know [here](https://regression-games.sleekplan.app/feedback).
+All samples in this section are written in Typescript.
+
+We're constantly evaluating support for other languages.
+Feel free to request others through our [Feedback Site](https://regression-games.sleekplan.app/feedback).
 :::
 
 The nodes in your tree won't be useful until you give them some logic to execute.
@@ -61,13 +65,14 @@ All of your node's code must be defined within the `LeafNode` class, and the `ex
 You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
 :::
 
-You can either manually type code into the editor (see the [rg-bot API](../supported-games/minecraft/apis/rg-bot-api)), or you can have GPT do the heavy lifting for you.
-To generate code using GPT, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button.
+You can either manually type code into the editor (see the [rg-bot API](../supported-games/minecraft/apis/rg-bot-api)),
+or you can have our AI code assistant do the heavy lifting for you.
+To generate code using the assistant, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button.
 The editor will be disabled as code appears, and you can modify the output once it's finished.
 
 There are a lot of different decision-making points and available actions for our supported games,
 so let's start with something simple - getting the AI to walk around.
-This example will have GPT use the [rg-bot library for Minecraft](https://github.com/Regression-Games/RegressionBot).
+This example will have the code assistant use our [rg-bot library for Minecraft](https://github.com/Regression-Games/RegressionBot).
 
 :::caution
 Generating Code will overwrite anything currently in the editor. It's a good idea to save your tree before trying out new prompts.
@@ -78,7 +83,7 @@ If you enter the following prompt:
 If "wanderDistance" is not defined, then set it to 5. Then wander up to the defined "wanderDistance".
 ```
 
-then GPT should output code similar to this:
+then the assistant should output code similar to this:
 ```typescript
 class LeafNode extends TreeNode {
   public override async execute(): Promise<NodeStatus> {
@@ -105,7 +110,12 @@ class LeafNode extends TreeNode {
 The above output is a good example of how properly-formatted code should look when you're generating or writing it.
 
 You may notice that this code calls the `getData` and `setData` methods.
-These can be used to share data between nodes, and it's a good practice to specify a data type for `getData` to take advantage of the editor's Intellisense.
+These can be used to share data between nodes.
+
+:::info
+We recommend you specify a data type whenever you call `getData` to take advantage of type hints in the editor.
+:::
+
 For instance:
 
 ```typescript
@@ -142,18 +152,18 @@ class LeafNode extends TreeNode {
 }
 ```
 
-Whenever you submit a prompt, we provide additional context about our APIs and proper usages to GPT,
-but it may still output code that doesn't follow our expected format, or code that functions differently in-game than your prompt intends.
+You may occasionally receive code from the AI assistant that doesn't follow our expected format,
+or code that functions differently in-game than your prompt intends.
 If this happens, you may need to alter your prompt and re-submit it for new output, or fix the output manually.
-For the above prompt, note that we explicitly tell GPT to succeed after incrementing "wanderDistance".
-If we omit this instruction, then GPT assumes that we want to perform the wander action after updating the distance, even though we haven't told it to do so.
-This is a good example of how GPT sometimes needs additional coaching to reach your intended result.
+For the above prompt, note that we explicitly prompt the assistant to succeed after incrementing "wanderDistance".
+If we omit this instruction, the assistant assumes that we want to perform the wander action immediately, even though we haven't explicitly told it to do so.
+This is a good example of how prompts sometimes need tweaking to achieve your intended result.
 
 ### Validating Code
 
 The embedded code editor offers standard syntax highlighting and intelligent code completion features for Regressions Games APIs.
-To take this a step further, GPT can analyze code from the editor and provide suggestions for fixing syntax errors, bugs, and inefficiencies.
-Clicking the "Validate Code" button will cause a text box to appear with GPT's analysis results.
+To take this a step further, our AI code assistant can analyze code from the editor and provide suggestions for fixing syntax errors, bugs, and inefficiencies.
+Clicking the "Validate Code" button will cause a text box to appear with the assistant's analysis results.
 
 Let's give this a try with some code that we know is inefficient.
 The following code attempts to find all the rabbits and chickens nearby, but it searches an unnecessarily large area.
@@ -179,8 +189,7 @@ class LeafNode extends TreeNode {
 }
 ```
 
-When you click the "Validate Code" button,
-GPT should warn you that `maxDistance` should be set to `100` or less, rather than `Infinity`.
+Clicking the "Validate Code" button should result in a warning that `maxDistance` should be set to `100` or less, rather than `Infinity`.
 
 ![Validate Code](../../common/agent-builder/img/validation-results-minecraft.png)
 

@@ -14,9 +14,9 @@ Different types of nodes have different responsibilities and may react different
 - **Root Node**: The beginning of the tree, where the AI starts its decision-making.
   Its job is simply to execute whatever node is below it in the tree and return its status.
 - **Sequence Node**: This node has one or more children and acts as a logical AND.
-  It executes its child nodes sequentially, and if any one of them fail then the Sequence Node skips execution of the remaining children and returns a failure status.
+  It executes its child nodes sequentially, and if any one of them fail then the Sequence Node immediately returns a failure status, skipping execution of any remaining children.
 - **Selector Node**: This node also has one or more children, but acts as a logical OR.
-  It executes its child nodes sequentially, and if any one of them succeed then the Selector Node returns a success status. 
+  It executes its child nodes sequentially, and if any one of them succeed then the Selector Node immediately returns a success status, skipping execution of any remaining children. 
   If none succeed, then the Selector Node returns a failure status instead.
 - **Action Node**: This node is a leaf node, meaning it cannot have any children of its own.
   This node represents an action for the AI to perform such as moving in a certain direction or interacting with an object in its environment.
