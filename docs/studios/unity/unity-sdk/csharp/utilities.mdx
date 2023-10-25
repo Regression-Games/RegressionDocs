@@ -15,12 +15,13 @@ but it also provides some additional functionality around text drawing and rende
 The RGGizmos library currently supports three main features:
 
 * Drawing lines betweens entities and positions
-* Drawing speheres at entities and positions
+* Drawing spheres at entities and positions
 * Rendering billboard text above an entity 
 
 **Skip to the end of the RGGizmos section to see a video of these in action.**
 
-All methods below can be accessed via the `RGGizmos` variable in your `ProcessTick(RG rgObject)` method.
+All methods below can be accessed via the `RGGizmos` variable in your `ProcessTick(RG rgObject)` method that is
+defined in your bot code (see the [Playtest Bots documentation](./playtest-bots) for more on implementing `ProcessTick`).
 
 ```csharp
 public override void ProcessTick(RG rgObject)
@@ -273,8 +274,9 @@ if you create them and then turn off Gizmos. If you want to remove them, you mus
 
 ### Putting it all together
 
-Let's put this all together! Here is a snippet of code from the a bot written for Unity's Kart Racer sample. This demonstrates
-creating lines, spheres, text, and removing some of these elements.
+Let's put this all together! Here is a snippet of code from the a bot written for Unity's 
+[Kart Racer sample](https://learn.unity.com/project/karting-template). This demonstrates creating lines, spheres, text,
+and removing some of these elements.
 
 ```csharp
 // Inside of processTick()
