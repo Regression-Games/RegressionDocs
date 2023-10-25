@@ -13,7 +13,7 @@ This tutorial will walk you through the following steps to create a QA Bot for y
 4. Learn how to view test results.
 
 This tutorial assumes you have some familiarity with GitHub Actions, and that you have a working 
-bot within your game (see more on this in the [Creating Bots in JavaScript section](/studios/unity/unity-sdk/javascript/configuration)).
+bot within your game (see more on this in the [Creating Bots in JavaScript section](/studios/unity/unity-sdk/creating-bots/javascript/configuration)).
 By the end of this tutorial, every push to your GitHub repo will build your Unity project and start bots for testing.
 You can find a working example in [this repository](https://github.com/Regression-Games/RGUnitySample) for reference, which has
 a GitHub Action configuration and Unity Test Runner file incorporating the ideas of this tutorial.
