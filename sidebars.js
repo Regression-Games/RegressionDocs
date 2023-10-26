@@ -116,6 +116,13 @@ const sidebars = {
         'studios/api_reference/authentication',
       ]
     },
+    {
+      type: 'category',
+      label: 'Platform Features',
+      items: [
+        'studios/platform_features/marketplace',
+      ]
+    },
     'studios/faq',
     'changelog', 
   ],
