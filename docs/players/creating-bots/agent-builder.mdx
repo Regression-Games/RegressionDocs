@@ -2,93 +2,51 @@
 sidebar_label: 'Using the Agent Builder'
 ---
 
+import BehaviorTree from '../../common/agent-builder/_behavior-trees.md'
+import LoadingYourTree from '../../common/agent-builder/_loading-your-tree.mdx'
+import AddingNodes from '../../common/agent-builder/_adding-nodes.mdx'
+import SavingYourTree from '../../common/agent-builder/_saving-your-tree.mdx'
+
 # Creating AIs Using the Agent Builder
 
 Regression Games' Agent Builder is an easy-to-use visual editor for constructing AI behavior trees.
-Our editor utilizes large language models like [OpenAI's GPT-4](https://openai.com/blog/chatgpt) to write code for you.
+Agent Builder provides powerful features for bot development, including a code editor powered by our AI code assistant
+(driven by [OpenAI's GPT-4](https://openai.com/blog/chatgpt)).
+Our code assistant has all the knowledge required to write code for our supported games and game modes.
 This makes our Agent Builder an excellent tool for those new to our AI libraries, or even to programming itself!
 
 :::note
-This tool is early in development - it is prone to change and may contain bugs.
-Please report issues and feature requests for the Agent Builder [here](https://regression-games.sleekplan.app/feedback).
+We're constantly working to improve Agent Builder.
+You can report issues and submit feature requests through our [Feedback Site](https://regression-games.sleekplan.app/feedback).
 :::
 
 ## What Is a Behavior Tree?
 
-A behavior tree is a decision-making model used to determine which actions an agent (such as a character in a video game) should take in different situations.
-You can think of it as a flow chart that the AI thinks through, choosing appropriate actions based on what it knows about itself and its environment.
-Behavior trees are composed of nodes organized in a hierarchical structure that start at a root node and branch out to form different paths.
-Each path represents a line of decision-making that results in one or more actions for the AI to take.
-
-Each node in the tree executes logic and returns one of the following states as a result:
-
-- **Running** -> The node is currently being executed and hasn't completed yet.
-- **Success** -> The node has completed successfully.
-- **Failure** -> The node has failed. This doesn't necessarily mean an error occurred. For example, a heal action might fail if the character doesn't have any potions.
-
-Different types of nodes have different responsibilities and react differently to the states of other nodes.
-
-- **Root Node**: The beginning of the tree, where the AI starts its decision-making.
-Its job is simply to execute whatever node is below it in the tree and return its state.
-- **Sequence Node**: This node has one or more children and acts as a logical AND.
-It executes its child nodes one at a time, and if any of them fail then the Sequence Node immediately fails.
-- **Selector Node**: This node also has one or more children, but acts as an OR.
-It executes each of its children and if one of them succeeds, then the Selector Node immediately succeeds.
-- **Action Node**: This node is a leaf node, meaning it cannot have any children of its own.
-Instead, it represents an action for the AI to take such as moving in a certain direction or interacting with an object in its environment.
-- **Condition Node**: This node is also a leaf node. It evaluates whether certain conditions have been satisfied.
-- **Decorator Node**: There are several kinds of Decorator Nodes, each of which can have only one child. This node modifies its child's state in some way.
-For example, an "Inverter" Decorator will succeed if its child fails, and vice versa.
-
-For a deeper dive into behavior trees, their nodes, and practical examples of their usage in video games, [follow this link](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
+<BehaviorTree />
 
 ## Getting Started with Agent Builder
 
 Create a new AI from the Bot Manager and select `Agent Builder` from the list of creation options
 (see the section on [Cloning a Starter Template](./starter-templates) to complete this step).
 
-![Create new AI](./img/create-bot-button.png)
-![Select Creation Option](./img/agent-builder/create-from-template.png)
+![Create new AI](../../common/bot-creation/img/create-bot-button.png)
+![Select Creation Option](../../common/agent-builder/img/create-from-minecraft-template.png)
 
 ## Loading Your Tree
 
-If you've used the Agent Builder to create a bot before, then you can locate that bot in the Bot Manager and open the Agent Builder interface.
-Regression Games will automatically load your tree from GitHub,
-but you can click the "Load from GitHub" button at the top of the page at any time to revert to your most recently-saved version
-(this will discard any unsaved changes).
-Once the interface is visible, you should see your tree and be able to edit its nodes.
-Don't forget to save when you're done!
-
-![Open Agent Builder](./img/agent-builder/open-agent-builder.png)
-![Load Your Tree](./img/agent-builder/load-tree.png)
+<LoadingYourTree />
 
 ## Adding Nodes
 
-Whenever you create a fresh Agent Builder project for your AI, we'll start you out with a root node and a sequence node to form the basis of your tree.
-
-![Default Tree](./img/agent-builder/default-tree.png)
-
-To begin building your tree, click the connector at the bottom of the sequence node and drag.
-When you release, you'll be presented with different types of nodes that can be added to this sequence.
-For this demonstration, we'll create an action node.
-You can repeat this process for any node that is allowed to have children.
-
-![Select a Node Type](./img/agent-builder/select-node-type.png)
-![Create an Action Node](./img/agent-builder/new-action-node.png)
-![Example Tree](./img/agent-builder/example-tree-1.png)
-
-Clicking on a node opens a panel to the right side of your screen.
-This panel contains information about the selected node including a description of the node's type and a label, as well as a button to delete the node from the tree.
-It's a good idea to set labels to keep track of what you want each node or branch to do.
-If the selected node is a leaf node, such as an action or condition, then the panel will also contain fields used for defining the node's behavior via code.
-
-![Open the Node Panel](./img/agent-builder/edit-node.png)
+<AddingNodes />
 
 ### Adding Code
 
 :::note
-All samples in this section are written in Typescript, which is the only language currently supported by the Agent Builder.
-If you'd like to see support for other languages, let us know [here](https://regression-games.sleekplan.app/feedback).
+All samples in this section are written in Typescript.
+
+We're constantly evaluating support for other languages.
+Feel free to request others through our [Feedback Site](https://regression-games.sleekplan.app/feedback).
 :::
 
 The nodes in your tree won't be useful until you give them some logic to execute.
@@ -103,17 +61,18 @@ class LeafNode extends TreeNode {
 ```
 
 :::info
-All of your node's code must be defined within the `LeafNode` class, and the `execute` method must be defined as your entrypoint into the node. 
+All of your node's code must be defined within the `LeafNode` class, and the `execute` method must be defined as your entrypoint into the node.
 You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
 :::
 
-You can either manually type code into the editor (see the [rg-bot API](../supported-games/minecraft/apis/rg-bot-api)), or you can have GPT do the heavy lifting for you.
-To generate code using GPT, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button. 
+You can either manually type code into the editor (see the [rg-bot API](../supported-games/minecraft/apis/rg-bot-api)),
+or you can have our AI code assistant do the heavy lifting for you.
+To generate code using the assistant, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button.
 The editor will be disabled as code appears, and you can modify the output once it's finished.
 
 There are a lot of different decision-making points and available actions for our supported games,
 so let's start with something simple - getting the AI to walk around.
-This example will have GPT use the [rg-bot library for Minecraft](https://github.com/Regression-Games/RegressionBot).
+This example will have the code assistant use our [rg-bot library for Minecraft](https://github.com/Regression-Games/RegressionBot).
 
 :::caution
 Generating Code will overwrite anything currently in the editor. It's a good idea to save your tree before trying out new prompts.
@@ -124,7 +83,7 @@ If you enter the following prompt:
 If "wanderDistance" is not defined, then set it to 5. Then wander up to the defined "wanderDistance".
 ```
 
-then GPT should output code similar to this:
+then the assistant should output code similar to this:
 ```typescript
 class LeafNode extends TreeNode {
   public override async execute(): Promise<NodeStatus> {
@@ -151,7 +110,12 @@ class LeafNode extends TreeNode {
 The above output is a good example of how properly-formatted code should look when you're generating or writing it.
 
 You may notice that this code calls the `getData` and `setData` methods.
-These can be used to share data between nodes, and it's a good practice to specify a data type for `getData` to take advantage of the editor's Intellisense.
+These can be used to share data between nodes.
+
+:::info
+We recommend you specify a data type whenever you call `getData` to take advantage of type hints in the editor.
+:::
+
 For instance:
 
 ```typescript
@@ -188,20 +152,18 @@ class LeafNode extends TreeNode {
 }
 ```
 
-Whenever you submit a prompt, we provide additional context about our APIs and proper usages to GPT,
-but it may still output code that doesn't follow our expected format, or code that functions differently in-game than your prompt intends.
+You may occasionally receive code from the AI assistant that doesn't follow our expected format,
+or code that functions differently in-game than your prompt intends.
 If this happens, you may need to alter your prompt and re-submit it for new output, or fix the output manually.
-For the above prompt, note that we explicitly tell GPT to succeed after incrementing "wanderDistance".
-If we omit this instruction, then GPT assumes that we want to perform the wander action after updating the distance, even though we haven't told it to do so.
-This is a good example of how GPT sometimes needs additional coaching to reach your intended result.
+For the above prompt, note that we explicitly prompt the assistant to succeed after incrementing "wanderDistance".
+If we omit this instruction, the assistant assumes that we want to perform the wander action immediately, even though we haven't explicitly told it to do so.
+This is a good example of how prompts sometimes need tweaking to achieve your intended result.
 
 ### Validating Code
 
-The embedded code editor offers standard syntax highlighting and Intellisense features for Regressions Games APIs. 
-To take this a step further, GPT can analyze code from the editor and provide suggestions for fixing syntax errors, bugs, and inefficiencies.
-Clicking the "Validate Code" button will cause a text box to appear with GPT's analysis results.
-
-![Validate Code](./img/agent-builder/validate-code.png)
+The embedded code editor offers standard syntax highlighting and intelligent code completion features for Regressions Games APIs.
+To take this a step further, our AI code assistant can analyze code from the editor and provide suggestions for fixing syntax errors, bugs, and inefficiencies.
+Clicking the "Validate Code" button will cause a text box to appear with the assistant's analysis results.
 
 Let's give this a try with some code that we know is inefficient.
 The following code attempts to find all the rabbits and chickens nearby, but it searches an unnecessarily large area.
@@ -227,18 +189,17 @@ class LeafNode extends TreeNode {
 }
 ```
 
-When you click the "Validate Code" button,
-GPT should warn you that `maxDistance` should be set to `100` or less, rather than `Infinity`.
+Clicking the "Validate Code" button should result in a warning that `maxDistance` should be set to `100` or less, rather than `Infinity`.
+
+![Validate Code](../../common/agent-builder/img/validation-results-minecraft.png)
 
 You can close validation results at any time and reopen them by clicking the clipboard icon.
 
-![ReOpen Validation Results](./img/agent-builder/reopen-validation-results.png)
+![ReOpen Validation Results](../../common/agent-builder/img/reopen-validation-results-minecraft.png)
 
 ## Saving Your Tree
 
-Save your tree early and often! Any changes made to your AI will be lost if you leave the Agent Builder without saving.
-
-![Save Your Tree](./img/agent-builder/save-tree.png)
+<SavingYourTree />
 
 ## Editing an AI's source code
 
@@ -257,10 +218,10 @@ and a series of typescript files generated from the config that are used to run 
 └── .gitignore
 ```
 
-You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies. 
+You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies.
 See the [Writing Your Own Code section](./coding/dev-requirements) for more information.
 
-:::danger 
+:::danger
 Changes made to files other than the `agentBuilderWorkspace.json` will be overwritten when you save the tree from the Agent Builder interface.
 If you plan to modify files manually, it's a good idea to create a new GitHub repository to prevent losing your work.
 :::
