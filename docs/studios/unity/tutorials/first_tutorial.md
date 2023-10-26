@@ -63,7 +63,7 @@ clicking **Add package from git URL** in the **Package Manager** window (this wi
 in the **Window > Package Manager** menu) and pasting in the following URL.
 
 ```
-https://github.com/Regression-Games/RGUnityBots.git
+https://github.com/Regression-Games/RGUnityBots.git#v0.0.1
 ```
 
 - Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
