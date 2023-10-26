@@ -92,7 +92,8 @@ const sidebars = {
               items: [
                 'studios/unity/unity-sdk/creating-bots/csharp/configuration',
                 'studios/unity/unity-sdk/creating-bots/csharp/playtest-bots',
-                'studios/unity/unity-sdk/creating-bots/csharp/validation-bots'
+                'studios/unity/unity-sdk/creating-bots/csharp/validation-bots',
+                'studios/unity/unity-sdk/creating-bots/csharp/utilities'
               ]
             },
             {
