@@ -59,41 +59,59 @@ const sidebars = {
   ],
 
   studiosSidebar: [
+    'studios/unity/unity-sdk/overview',
     {
       type: 'category',
-      label: 'Unity',
+      label: 'REST API Reference',
       items: [
-        'studios/unity/unity-sdk/overview', 
+        'studios/api_reference/authentication',
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Regression Games Unity Bots',
+      items: [
         {
           type: 'category',
-          label: 'Unity SDK Reference',
+          label: 'SDK Reference',
           items: [
-            'studios/unity/unity-sdk/overview', 
             'studios/unity/unity-sdk/RGBotSpawnManager',
             'studios/unity/unity-sdk/BotInformation',
             'studios/unity/unity-sdk/RGState',
             'studios/unity/unity-sdk/RGAction',
             'studios/unity/unity-sdk/RGFindUtils',
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Creating Bots',
+          items: [
             {
               type: 'category',
-              label: 'Creating Bots in C#',
+              label: 'C# Reference',
               items: [
-                'studios/unity/unity-sdk/csharp/configuration',
-                'studios/unity/unity-sdk/csharp/playtest-bots',
-                'studios/unity/unity-sdk/csharp/validation-bots',
-                'studios/unity/unity-sdk/csharp/utilities'
+                'studios/unity/unity-sdk/creating-bots/csharp/configuration',
+                'studios/unity/unity-sdk/creating-bots/csharp/playtest-bots',
+                'studios/unity/unity-sdk/creating-bots/csharp/validation-bots',
+                'studios/unity/unity-sdk/creating-bots/csharp/utilities'
               ]
             },
             {
               type: 'category',
-              label: 'Creating Bots in JavaScript',
+              label: 'JavaScript Reference',
               items: [
-                'studios/unity/unity-sdk/javascript/configuration',
-                'studios/unity/unity-sdk/javascript/playtest-bots',
-                'studios/unity/unity-sdk/javascript/validation-bots'
+                'studios/unity/unity-sdk/creating-bots/javascript/configuration',
+                'studios/unity/unity-sdk/creating-bots/javascript/playtest-bots',
+                'studios/unity/unity-sdk/creating-bots/javascript/validation-bots',
+                'studios/unity/unity-sdk/creating-bots/javascript/agent-builder'
               ]
-            }
+            },
           ]
+        },
+        {
+          type: 'category',
+          label: 'Tooling',
+          items: ['studios/unity/unity-sdk/in-editor-replay',]
         },
         {
           type: 'category',
@@ -102,19 +120,7 @@ const sidebars = {
             'studios/unity/tutorials/first_tutorial',
             'studios/unity/tutorials/github_actions'
           ],
-        },
-        {
-          type: 'category',
-          label: 'Tooling',
-          items: ['studios/unity/unity-sdk/in-editor-replay',]
         }
-      ]
-    },
-    {
-      type: 'category',
-      label: 'REST API Reference',
-      items: [
-        'studios/api_reference/authentication',
       ]
     },
     'studios/faq',
