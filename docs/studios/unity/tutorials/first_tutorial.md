@@ -63,7 +63,7 @@ clicking **Add package from git URL** in the **Package Manager** window (this wi
 in the **Window > Package Manager** menu) and pasting in the following URL.
 
 ```
-https://github.com/Regression-Games/RGUnityBots.git
+https://github.com/Regression-Games/RGUnityBots.git#v0.0.1
 ```
 
 - Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
@@ -437,7 +437,7 @@ the bot live reload and change its speed!
 
 ## Next steps
 
-For immediate next steps, we recommend checking out our guide on [creating bots that can do QA validations](/studios/unity/unity-sdk/javascript/validation-bots). In soon-to-be-added guides, tutorials will walk you through:
+For immediate next steps, we recommend checking out our guide on [creating bots that can do QA validations](/studios/unity/unity-sdk/creating-bots/javascript/validation-bots). In soon-to-be-added guides, tutorials will walk you through:
 
 - Creating bots with abilities
 - Pairing a Regression Games bot with dialog systems such as character.ai
