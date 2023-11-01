@@ -123,6 +123,13 @@ const sidebars = {
         }
       ]
     },
+    {
+      type: 'category',
+      label: 'Platform Features',
+      items: [
+        'studios/platform_features/marketplace',
+      ]
+    },
     'studios/faq',
     'changelog', 
   ],
