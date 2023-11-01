@@ -26,11 +26,11 @@ You can report issues and submit feature requests through our [Feedback Site](ht
 
 ## Creating a Bot
 
-Create a new AI from the Bot Manager and select `Agent Builder` from the list of creation options
-(see this section on [Cloning a Starter Template](../../../../../players/creating-bots/starter-templates) to complete this step).
+Create a new AI from the Bot Manager and select `Agent Builder` from the list of creation options,
+give your new bot a name, and then finalize. It's that easy!
 
 ![Create new AI](../../../../../common/bot-creation/img/create-bot-button.png)
-![Select Creation Option](../../../../../common/agent-builder/img/create-from-unity-template.png)
+![Select Creation Option](../../../../../common/agent-builder/img/create-for-unity.png)
 
 ## Loading Your Tree
 
@@ -65,12 +65,12 @@ Bot configurations are applied at runtime before the first game-tick your tree i
 
 #### Saving Your Unity Context
 
-From the Unity Editor, expand the "Regression Games" menu and select "Agent Builder > Extract Data".
+From the Unity Editor, expand the "Regression Games" menu and select "Agent Builder > Extract Game Context".
 This will save your Unity Context as a .zip to your top-level project directory.
 
 ![Extract Game Context](../../../../../common/agent-builder/img/extract-game-context.png)
 
-In the Agent Builder, click the "Bot Settings" button, then select the .zip from the "Upload Generated Game Context" tab.
+In the Agent Builder, click the "Bot Settings" button, then select the .zip from the "Upload Game Context" tab.
 
 ![Upload Game Context](../../../../../common/agent-builder/img/upload-game-context.png)
 
@@ -218,32 +218,35 @@ You can close validation results at any time and reopen them by clicking the cli
 
 <SavingYourTree />
 
-## Editing an AI's source code
+[//]: # (TODO [REG-1386] update this section)
+[//]: # (## Editing an AI's source code)
 
-Whenever you save your tree, multiple files are pushed to GitHub - a config file named `agentBuilderWorkspace.json` which defines the nodes in your tree,
-a `botConfig.json` which stores your bot configurations, an `actions.json` and `state.json` which define your Unity context,
-and a series of typescript files generated from the workspace which are used to run your AI in-game.
+[//]: # (Whenever you save your tree, we generate multiple files and save them to your bot)
+[//]: # (These contents include a config file named `agentBuilderWorkspace.json` which defines the nodes in your tree,)
+[//]: # (a `botConfig.json` which stores your bot configurations, an `actions.json` and `state.json` which define your Unity context,)
+[//]: # (and a series of typescript files generated from the workspace which are used to run your AI in-game.)
 
-```
-├── lib
-│   ├── BaseClasses
-│   │   ├── **/*.ts
-│   ├── **/*.ts
-├── agentBuilderWorkspace.json
-├── index.ts
-├── actions.json
-├── state.json
-├── botConfig.json
-├── package.json
-├── tsconfig.json
-└── .gitignore
-```
+[//]: # (```)
+[//]: # (├── lib)
+[//]: # (│   ├── BaseClasses)
+[//]: # (│   │   ├── **/*.ts)
+[//]: # (│   ├── **/*.ts)
+[//]: # (├── agentBuilderWorkspace.json)
+[//]: # (├── index.ts)
+[//]: # (├── actions.json)
+[//]: # (├── state.json)
+[//]: # (├── botConfig.json)
+[//]: # (├── package.json)
+[//]: # (├── tsconfig.json)
+[//]: # (└── .gitignore)
+[//]: # (```)
 
-You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies.
-See our [PlayTest Bot API](./playtest-bots) for more information.
+[//]: # (You can modify these files in your favorite IDE for more control over the AI's behaviors and dependencies.)
 
-:::danger
-Changes made to `index.ts`, `package.json`, `tsconfig.json` and `/lib` files
-will be overwritten when you save the tree from the Agent Builder interface.
-If you plan to modify files manually, it's a good idea to create a new GitHub repository to prevent losing your work.
-:::
+[//]: # (See our [PlayTest Bot API]&#40;./playtest-bots&#41; for more information.)
+
+[//]: # (:::danger)
+[//]: # (Changes made to `index.ts`, `package.json`, `tsconfig.json` and `/lib` files)
+[//]: # (will be overwritten when you save the tree from the Agent Builder interface.)
+[//]: # (If you plan to modify files manually, it's a good idea to create a new GitHub repository to prevent losing your work.)
+[//]: # (:::)
