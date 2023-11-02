@@ -117,6 +117,7 @@ const sidebars = {
           type: 'category',
           label: 'Tutorials and Guides',
           items: [
+            'studios/unity/tutorials/quickstart_sample_scene',
             'studios/unity/tutorials/first_tutorial',
             'studios/unity/tutorials/github_actions'
           ],
