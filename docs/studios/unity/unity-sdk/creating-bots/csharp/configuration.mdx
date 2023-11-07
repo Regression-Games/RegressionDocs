@@ -27,7 +27,10 @@ Each new bot is created with 2 files.
     - This file is used when starting bots in Unity to properly identify bots by their `id` irrespective of their namespace or directory name.
     - This file is also used when you synchronize local Unity bots with Regression Games servers.
   - `BotEntryPoint.cs` which extends `RGUserBot.cs` and defines the main C# script entry points for your bot. This is used by the Regression Games SDK to launch and communicate with the bot.
-    -  By convention, the namespace of this file and all other `.cs` files for your bot should match the folder name of the bot.  This is important so that different bots' `BotEntryPoint` classes are in unique namespaces.
+    - The system requires the namespace of `BotEntryPoint.cs` and all other `.cs` files for your bot to be the same.  The namespace must follow one of the conventions listed below.  This is important so that different bots' namespaces do not conflict and so that the system knows the correct namespace to load each bot's code from.
+      - The namespace can be `{botName}_{botId}`, where negative botIds have replaced the `-` sign with the letter `n`
+        - OR
+      - The namespace can match the name of the folder the bot is in
 
 You may add as many additional scripts or dependencies to your bot as necessary, but the 2 files above MUST exist for your bot to work correctly.
 
