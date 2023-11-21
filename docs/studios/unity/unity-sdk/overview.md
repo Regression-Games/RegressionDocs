@@ -55,6 +55,4 @@ https://github.com/Regression-Games/RGUnityBots.git#v0.0.1
 - Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
 - Note that this package installs a dependency of Newtonsoft Json (https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
 
-![Screenshot of the package imported into the project](../tutorials/first_bot_tutorial_images/tutorial_1_package.png)
-
 For a full walkthrough on getting started, see the [Building Your First Bot](../tutorials/first_tutorial.md) tutorial.
