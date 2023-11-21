@@ -130,7 +130,7 @@ your game logic before spawning, how they are destroyed, etc... For this particu
 method, [`SpawnBot()`](/studios/unity/unity-sdk/RGBotSpawnManager#public-virtual-void-seatbotbotinformation-bottospawn). 
 This method will define how our bot prefab is spawned into the scene.
 
-First, create a `RegressionGames/Runtime/` folder in your `Assets` folder. Then, create a file called `CharacterBotSpawnManager.cs`.
+First, create a `RegressionGames/Runtime/` folder in your `Assets` folder. Then, create a C# Script called `CharacterBotSpawnManager.cs`.
 Double click that file to open it within your editor of choice (we recommend Rider or Visual Studio). We highly recommend
 that the file is opened as part of the solution / project as a whole, so that code completion is available.
 
