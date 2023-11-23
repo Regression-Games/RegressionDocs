@@ -129,6 +129,7 @@ const sidebars = {
       label: 'Platform Features',
       items: [
         'studios/platform_features/marketplace',
+        'studios/platform_features/validations',
       ]
     },
     'studios/faq',
