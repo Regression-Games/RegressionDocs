@@ -4,21 +4,9 @@ sidebar_label: 'Integrating and Building Your First Bot'
 
 # Integrating and Building Your First Bot
 
-TODOs
-- [ ] Make sure that Is Bot is selected properly in the prefabs
-- [ ] Make sure the y position of the spawn point is 0 so things aren't floating
-
-:::caution
-
-This API and reference is subject to change, as the product is in an **early preview**. We
-are making changes based on your recommendations and feedback, so let us know what you think at
-info@regression.gg
-
-:::
-
 :::info
 
-This tutorial assumes a basic understanding of Unity concepts.
+This tutorial assumes a basic understanding of Unity concepts. If you get stuck, join our [Discord](https://discord.com/invite/925SYVse2H) and we can help you out!
 
 :::
 
@@ -34,11 +22,12 @@ shoot the enemy in our playground sample. This tutorial will cover:
 ## Download the sample game
 
 Feel free to follow this tutorial within your own game, but we recommend starting with a simple sample game. Clone the project
-at [INSERT LINK HERE](https://google.com) and open it within Unity version 2021.3.24f1 (visit the 
-[Unity archive](https://unity.com/releases/editor/archive) if you can't find that version).
+at the [Regression-Games-Marketplace/SampleDemoScene](https://github.com/Regression-Games-Marketplace/SampleDemoScene.git) GitHub repository
+and open it within Unity version 2021.3.24f1 (visit the [Unity archive](https://unity.com/releases/editor/archive) if 
+you can't find that version).
 
 ```
-git clone INSERT HTTPS LINK HERE
+git clone https://github.com/Regression-Games-Marketplace/SampleDemoScene.git
 ```
 
 Once the project is loaded, the default scene with the bots in a playground should open. If it does not, open the **Playground**
@@ -49,7 +38,7 @@ keys to move around the character.
 
 ## Import the Regression Games Unity Bots package
 
-Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Import the repository by 
+Our package is available on GitHub [here](https://github.com/Regression-Games/RGUnityBots). Import the repository by 
 clicking **Add package from git URL** in the **Package Manager** window (this window can be opened
 in the **Window > Package Manager** menu) and pasting in the following URL.
 
@@ -88,7 +77,13 @@ or by navigating to the **Packages** > **Regression Games Unity Bots** > **Runti
 
 ![Screenshot of the search pane for the RGOverlayCanvas.](first_bot_tutorial_images/overlay_4.png)
 
-Drag this overlay onto your scene. Once you have this overlay available, you can click play to see this in action! A
+Drag this overlay onto your scene in the object hierarchy. Once you add it to the scene, scroll down to the `RG Bot Server Listener` 
+component and set the Tick Rate to `5` (this means that every 5 game ticks, bots will receive and respond to state 
+information from the game).
+
+![Screenshot of the search pane for the RGOverlayCanvas.](first_bot_tutorial_images/tick_rate.png)
+
+Once you have this overlay available, you can click play to see this in action! A
 Regression Games logo will appear at the bottom of your screen. Click this button to see a dropdown for your bots. You
 likely will not have any bots yet - that's alright, we will make one soon!
 
@@ -123,8 +118,6 @@ bot to a multiplayer network protocol, configure information like the character 
 This can all be done through the interface provided by `RGBotSpawnManager`.
 
 ```cs
-using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
 using RegressionGames;
@@ -133,16 +126,19 @@ using RegressionGames.Types;
 public class CharacterBotSpawnManager : RGBotSpawnManager
 {
     
+    // Expose a field in the editor for the prefab to spawn as a bot
     [SerializeField]
     [Tooltip("The character to spawn")]
     private GameObject rgBotPrefab;
 
+    // Expose a field in the editor to define where the bot should spawn
     [SerializeField]
     [Tooltip("Spawn point for RG Bots")]
     private Transform botSpawnPoint;
 
     public override GameObject SpawnBot(bool lateJoin, BotInformation botInformation)
     {
+        // Loads the bot prefab and spawns it into the scene
         var bot = Instantiate(rgBotPrefab, Vector3.zero, Quaternion.identity);
         bot.transform.position = botSpawnPoint.position;
         return bot;
@@ -150,6 +146,7 @@ public class CharacterBotSpawnManager : RGBotSpawnManager
     
     new void Awake()
     {
+        // Prepares the RG SDK for spawning bots
         base.Awake();
         RGBotServerListener.GetInstance()?.StartGame();
         RGBotServerListener.GetInstance()?.SpawnBots();
@@ -157,6 +154,7 @@ public class CharacterBotSpawnManager : RGBotSpawnManager
 
     private void OnDestroy()
     {
+        // Stops all bots and cleans up the RG SDK
         RGBotServerListener.GetInstance()?.StopGame();
     }
 
@@ -164,7 +162,8 @@ public class CharacterBotSpawnManager : RGBotSpawnManager
 ```
 
 Once this component is implemented, create an empty object within the scene, rename it to `RGBotSpawner` (just so we can find it later),
-and attach this `CharacterBotSpawnManager` component to that object. Position it within the scene wherever you want to spawn your bot (ideally above the platform), and drag that game object into the 
+and attach this `CharacterBotSpawnManager` component to that object. Position it within the scene wherever you want to spawn your bot 
+(**make sure to set the Y coordinate to 0 so your bot does not float!**), and drag `RGBotSpawner`'s own Transform into the 
 **Bot Spawn Point** entry of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the 
 **Player** prefab provided by the sample project (located within `Assets/FirstBotDemo/Demo/Prefabs/Player.prefab`), and drag 
 this into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the 
@@ -174,7 +173,7 @@ scene.
 
 ## Add state information to relevant GameObjects
 
-We are onto the final parts of the integration! Finally, we need to indicate the following within our game:
+We are onto the final parts of the integration! We need to indicate the following within our game:
 
 * What state information our bots can see
 * What actions our bots can perform
@@ -183,7 +182,8 @@ First, let's add the state information. Regression Games marks states for bot co
 This attribute can be applied to any public method that returns a value or any variable within a `MonoBehaviour`, and
 it will automatically be sent to the bot.
 
-First, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file, and add the following method to the class:
+First, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file, and add the following method to the class, which
+will allow our bot to know when it is currently in an attack animation (make sure to import any missing imports):
 
 ```csharp
 [RGState]
@@ -193,13 +193,13 @@ public bool IsAttacking()
 }
 ```
 
-Then, within the `Assets/FirstBotDemo/Demo/Scripts/EnemyController.cs` file, the following attributes to the existing `GetCurrentHp()`
+Then, within the `Assets/FirstBotDemo/Demo/Scripts/EnemyController.cs` file, add the following attributes to the existing `GetCurrentHp()`
 and `GetTotalHp()` methods:
 
 ```csharp
 /*
-    * Gets the enemies current hp
-    */
+* Gets the enemies current hp
+*/
 [RGState("CurrentHealth")]
 public int GetCurrentHp()
 {
@@ -207,8 +207,8 @@ public int GetCurrentHp()
 }
 
 /*
-    * Gets the enemy's total HP from its assigned info
-    */
+* Gets the enemy's total HP from its assigned info
+*/
 [RGState("MaxHealth")]
 public int GetTotalHp()
 {
@@ -276,7 +276,8 @@ namespace FirstBotDemo
 }
 ```
 
-Then, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file again, and add the following method to the class:
+Then, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file again, and add the following method to the class,
+which defines an action that allows a bot to target an enemy and use an ability:
 
 ```csharp
 [RGAction]
@@ -306,8 +307,10 @@ The final step is to generate the scripts that will be used by the bots, and the
 The attributes by themselves do not inform the bots of anything - we use these attributes to generate components that
 are attached to the objects in your scene.
 
-First, go to the **Regression Games** > **Generate Scripts** menu, and click **Generate Scripts** to create the scripts, which
-get added to your project under a special Regression Games folder.
+First, go to the **Regression Games** menu in the menu bar and click **Generate Scripts** to create the components, which
+get added to your project under the `Assets/RegressionGames` folder.
+
+![Screenshot of the player prefab with the components added.](first_bot_tutorial_images/generate_scripts.png)
 
 Then, open the `Player` prefab (found at `Assets/FirstBotDemo/Demo/Prefabs/Player.prefab`) and add the following components with
 the requested settings (you can find these components by typing them into the component search bar after clicking **Add Component**):
@@ -323,7 +326,7 @@ the requested settings (you can find these components by typing them into the co
 
 :::caution
 
-Make sure you are editing the prefab, and not the character in the scene. Make sure to also **save**!
+Make sure you are editing the prefab, and not the character in the scene. Also make sure to **save**!
 
 :::
 
@@ -337,20 +340,149 @@ the requested settings:
 
 ![Screenshot of the enemy prefab with the components added.](first_bot_tutorial_images/enemy_8.png)
 
+As a last step here, in the player input code, you will see that we introduced an `isBot` field to the `PlayerInputControl` component.
+This will allow our player to be controlled by the bot logic when it is set to true. However, there is an existing `Player`
+GameObject in the scene, which we want to control using our manual input controls. Click this `Player` in the object hierarchy,
+find the `Player Input Control` component, set `Is Bot` to unchecked, and then save (you may find that it is already unchecked).
+
+![Screenshot of the player prefab with the components added.](first_bot_tutorial_images/is_bot.png)
+
 ## Starting from our template - Bot Marketplace
 
-1. Export the zip
+Now that our integration is complete, our final step is to use an implementation of a bot. We will start with a template
+found in our [Bot Marketplace](https://play.regression.gg/marketplace), and then edit it further.
+
+Go to [this page](https://play.regression.gg/marketplace/1) to see the existing bot, and click "Create Bot" to create a copy 
+of the bot. On the bot creation page, give it a name such as "DemoBot", and then click "Create Bot". You will then be
+taken to the Agent Builder tool; feel free to click around and see how the bot works!
+
+![Screenshot of the bot creation page.](first_bot_tutorial_images/create_bot_9.png)
+
+![Screenshot of the agent builder configuration for this bot.](first_bot_tutorial_images/agent_builder.png)
+
+Go back to Unity, and within the **Regression Games** menu in the menu bar, click **Synchronize Bots with RG**. This will pull your new
+bot into your Unity project. At this point, you can click play, and then select the Regression Games overlay button in the bottom
+right of your game screen. Use the dropdown to select the bot you just created, and then click "Start Bot". The bot will begin to
+run around and shoot the enemy!
+
+![Screenshot of the bot creation page.](first_bot_tutorial_images/start_bot_10.png)
 
 ## Editing the bot in the Agent Builder
 
-Now that
+Now that we have the bot working, let's extend its behavior to instead circle around the enemy and shoot every
+500 ticks.
+
+Go back to the Agent Builder page for your bot, and remove the nodes underneath the "Move logic" sequence node (click the node and click
+the red delete button in the editor pane). Click and drag from the small black circle at the bottom of the "Move logic" sequence node 
+towards underneath the node. Once you release the mouse, a dialog with node types will become available.
+
+First, create a `Condition` node. Give it a name of "If we are waiting to attack", and then enter the following code into
+the code editor.
+
+```csharp
+protected override NodeStatus Execute(RG rgObject)
+{
+  // Retrieve the last time we attacked
+  var lastAttackTick = GetData<long?>("lastAttackTick");
+
+  // If we have never attacked, abort the movement operation (so we can attack)
+  if (lastAttackTick == null)
+  {
+      return NodeStatus.Failure;
+  }
+
+  // If it has been less than 200 ticks since our last attack, then
+  // we can focus on moving
+  else if (rgObject.Tick - lastAttackTick < 200)
+  {
+      return NodeStatus.Success;
+  }
+  // Otherwise it has been at least 200 ticks since our last attack,
+  // so we should cancel moving and attack instead.
+  else
+  {
+      return NodeStatus.Failure;
+  }
+}
+```
+
+This will cause the bot to only complete the move sequence if it has been at least 200 ticks since we last attacked.
+Now, we will implement the code to move radially around the enemy. From the "Move logic" sequence node, click and drag
+the small black circle again and create an Action node. Give it a name of "Move radially around enemy", and then enter
+the following code into the code editor.
+
+```csharp
+protected override NodeStatus Execute(RG rgObject)
+{
+  // Find this player and the closest Enemy
+  var myPlayer = rgObject.GetMyPlayer();
+  var nearestEnemy = rgObject.FindNearestEntity("Enemy", myPlayer.position);
+  if (nearestEnemy == null)
+    return NodeStatus.Failure;
+
+  // Get a vector from the player to the enemy
+  var directionToEnemy = nearestEnemy.position - myPlayer.position;
+
+  // By default, move in a vector that is 90 degrees from the direction to the enemy
+  // This means we will move in a way that circles the enemy
+  var directionToMove = new Vector2(-directionToEnemy.z, directionToEnemy.x); 
+
+  // However, if we are too far from the enemy, move directly towards the enemy first
+  if (RG.MathFunctions.DistanceSq(myPlayer.position, nearestEnemy.position) > 10) {
+    directionToMove = new Vector2(directionToEnemy.x, directionToEnemy.z);
+  }
+
+  // Kick off the action to move towards the enemy
+  rgObject.PerformAction(new RGActionRequest("MoveInDirection", new Dictionary<string, object> { { "newMoveDirection", directionToMove } }));
+  return NodeStatus.Success;
+}
+```
+
+This code will cause the bot to move in a circle around the enemy, and then move directly towards the enemy if it is
+too far away. Finally, we will implement the code to attack the enemy. In the existing "Attack the enemy" Action node,
+copy and paste the following code:
+
+```csharp
+protected override NodeStatus Execute(RG rgObject)
+{
+  // Find this player and the closest Enemy
+  var myPlayer = rgObject.GetMyPlayer();
+  var nearestEnemy = rgObject.FindNearestEntity("Enemy", myPlayer.position);
+  if (nearestEnemy == null)
+    return NodeStatus.Failure;
+
+  // Create the arguments for our attack - we provide the enemy to attack,
+  // and the ability (0 is the default attack)
+  var actionParams = new Dictionary<string, object> { { "enemyId", nearestEnemy.id }, { "ability", 0 } };
+
+  // Kick off two actions - the attack action, and a request to stop moving
+  rgObject.PerformAction(new RGActionRequest("SelectAndAttackEnemy", actionParams));
+  rgObject.PerformAction(new RGActionRequest("MoveInDirection", new Dictionary<string, object> { { "newMoveDirection", Vector2.zero } }));
+	
+  // Finally, set a global variable that defines when we last attacked
+  // This is used in our condition for determining when to stop moving
+  SetData("lastAttackTick", rgObject.Tick);
+  return NodeStatus.Success;
+}
+```
+
+This is similar to our previous attack code, but it also sets a global variable that is read in our movement condition
+code. This variable, `lastAttackTick`, will track how long it has been since we last attacked, and will only stop the
+bot from moving to focus on attacking if it has been at least 200 ticks since we last attacked.
+
+Save this new agent by clicking **Save to Server** in the top right of the Agent Builder. Then, go back to Unity and
+click **Synchronize Bots with RG** again. Finally, click play and start the bot. The bot will now circle around the
+enemy and shoot every 200 ticks!
+
+<div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/b5de89edf51841e489d18dc0f282f6f9?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
+
 
 ## Next Steps
 
 Congratulations, you've now experienced the integration process for bots! Using this guide and our reference material,
-you can now integrate bots into your own game. If you have any questions, please reach out to us on our Discord. Please
-note that we offer **dedicated support** for your integration, we are happy to do it for you or walk you through it on a
-call step by step.
+you can now integrate bots into your own game. If you have any questions, please reach out to us on our 
+[Discord](https://discord.com/invite/925SYVse2H). Please note that we offer **dedicated support** for your integration, 
+we are happy to do it for you or walk you through it on a call step by step.
 
 The following guides and references are great next steps:
 

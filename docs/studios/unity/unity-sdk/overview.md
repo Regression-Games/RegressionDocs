@@ -39,7 +39,7 @@ features on our [feedback site](https://regression-games.sleekplan.app/feedback)
 | Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                                   | [Link](./creating-bots/csharp/configuration)         |
 | JavaScript SDK                 | A JavaScript SDK for implementing bots remotely in Regression Games.                                                               | [Link](./creating-bots/javascript/configuration)     |
 | Live Reloading                 | Reload bots almost instantly without rebuilding your game, managed via GitHub.                                                     | _Docs coming soon_                                   |
-| Bot Code Generation            | _Only available in Minecraft, see proposals. Create bots with low-code tools such as behavior trees powered by GPT.                | [Link](../../../players/creating-bots/agent-builder) |
+| Bot Code Generation            | _Only available in Minecraft, see proposals. Create bots with low-code tools such as behavior trees powered by GPT._                | [Link](../../../players/creating-bots/agent-builder) |
 | Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages. Vote for support in the feedback link above. | _Docs coming soon_                                   |
 
 ## Importing the Regression Games Unity Bots package
@@ -49,7 +49,7 @@ clicking **Add package from git URL** in the **Package Manager** window (this wi
 in the **Window > Package Manager** menu) and pasting in the following URL.
 
 ```
-https://github.com/Regression-Games/RGUnityBots.git#v0.0.1
+https://github.com/Regression-Games/RGUnityBots.git#v0.0.15
 ```
 
 - Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
