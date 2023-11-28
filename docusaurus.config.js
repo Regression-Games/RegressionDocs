@@ -148,6 +148,13 @@ const config = {
         additionalLanguages: ['csharp'],
       },
     }),
+    scripts: [
+      {
+        src:
+          '/js/loadposthog.js',
+        async: false,
+      },
+    ]
 };
 
 module.exports = config;
