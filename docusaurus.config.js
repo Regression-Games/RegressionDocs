@@ -73,11 +73,10 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'studiosSidebar',
+            sidebarId: 'unitySidebar',
             position: 'left',
-            label: 'Studios',
+            label: 'Developer Reference',
           },
-          // {to: '/blog', label: 'Blog', position: 'left'},
           {
             type: 'doc',
             docId: 'changelog',
@@ -144,8 +143,7 @@ const config = {
     }),
     scripts: [
       {
-        src:
-          '/js/loadposthog.js',
+        src: '/js/loadposthog.js',
         async: false,
       },
     ]
