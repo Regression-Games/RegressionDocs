@@ -14,14 +14,14 @@
 const sidebars = {
 
   unitySidebar: [
-    'studios/unity/unity-sdk/overview',
-    'studios/unity/tutorials/quickstart_sample_scene',
+    'overview',
+    'quickstart',
     {
       type: 'category',
-      label: 'Guides',
+      label: 'Tutorials',
       items: [
-        'studios/unity/tutorials/first_tutorial',
-        'studios/unity/tutorials/github_actions'
+        'tutorials/building-your-first-bot',
+        'tutorials/github-actions'
       ],
     },
     {
@@ -31,16 +31,16 @@ const sidebars = {
       defaultStyle: true,
       className: 'horizontal-divider'
     },
-    'studios/api_reference/authentication',
+    'authenticating-with-api-keys',
     {
       type: 'category',
       label: 'Integrating with Unity',
       items: [
-        'studios/unity/unity-sdk/RGState',
-        'studios/unity/unity-sdk/RGAction',
-        'studios/unity/unity-sdk/BotInformation',
-        'studios/unity/unity-sdk/RGBotSpawnManager',
-        'studios/unity/unity-sdk/RGFindUtils',
+        'integrating-with-unity/importing-the-rg-unity-bots-package',
+        'integrating-with-unity/defining-entities-and-their-states',
+        'integrating-with-unity/defining-actions',
+        'integrating-with-unity/BotInformation',
+        'integrating-with-unity/seating-and-spawning-bots',
       ]
     },
     {
@@ -51,31 +51,31 @@ const sidebars = {
           type: 'category',
           label: 'C# Reference',
           items: [
-            'studios/unity/unity-sdk/creating-bots/csharp/configuration',
-            'studios/unity/unity-sdk/creating-bots/csharp/playtest-bots',
-            'studios/unity/unity-sdk/creating-bots/csharp/validation-bots',
-            'studios/unity/unity-sdk/creating-bots/csharp/utilities'
+            'creating-bots/csharp/configuration',
+            'creating-bots/csharp/playtest-bots',
+            'creating-bots/csharp/validation-bots',
+            'creating-bots/csharp/utilities'
           ]
         },
         {
           type: 'category',
           label: 'JavaScript Reference',
           items: [
-            'studios/unity/unity-sdk/creating-bots/javascript/configuration',
-            'studios/unity/unity-sdk/creating-bots/javascript/playtest-bots',
-            'studios/unity/unity-sdk/creating-bots/javascript/validation-bots',
-            'studios/unity/unity-sdk/creating-bots/javascript/agent-builder'
+            'creating-bots/javascript/configuration',
+            'creating-bots/javascript/playtest-bots',
+            'creating-bots/javascript/validation-bots',
+            'creating-bots/javascript/agent-builder'
           ]
         },
       ]
     },
-    'studios/platform_features/marketplace',
+    'pre-made-bots',
     {
       type: 'category',
-      label: 'Bot Insights',
+      label: 'Session Insights',
       items: [
-          'studios/platform_features/validations',
-          'studios/unity/unity-sdk/in-editor-replay'
+          'session-insights/client-dashboard',
+          'session-insights/in-editor-replay'
       ]
     }
   ]
