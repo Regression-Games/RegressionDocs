@@ -16,12 +16,12 @@ const HomepageHeader = () => (
             <div className={styles.buttons} style={{justifyContent: "left"}}>
               <Link
                 className="button button--primary button--outline button--lg"
-                to="/studios/unity/tutorials/first_tutorial">
+                to="tutorials/building-your-first-bot">
                 Get Started
               </Link>
               <Link
                 className="button button--secondary button--lg margin-left--md"
-                to="/studios/unity/unity-sdk/overview">
+                to="overview">
                 Full Reference
               </Link>
             </div>

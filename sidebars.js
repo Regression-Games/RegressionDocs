@@ -36,7 +36,6 @@ const sidebars = {
       type: 'category',
       label: 'Integrating with Unity',
       items: [
-        'integrating-with-unity/importing-the-rg-unity-bots-package',
         'integrating-with-unity/defining-entities-and-their-states',
         'integrating-with-unity/defining-actions',
         'integrating-with-unity/BotInformation',

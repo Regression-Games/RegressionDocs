@@ -46,8 +46,8 @@ public override void StartAction(Dictionary<string, object> input)
     var targetObject = RGFindUtils.Instance.FindOneByInstanceId<RGState>(targetInstanceId);
     if (targetObject != null)
     {
-    // Set some class variable that is then used in the `Update()` function
-    targetTransform = targetObject.transform;
+        // Set some class variable that is then used in the `Update()` function
+        targetTransform = targetObject.transform;
     }
 }
 ```

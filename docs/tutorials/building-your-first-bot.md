@@ -437,7 +437,7 @@ the bot live reload and change its speed!
 
 ## Next steps
 
-For immediate next steps, we recommend checking out our guide on [creating bots that run pre-determined scenarios](../creating-bots/javascript/scenario-testing). 
+For immediate next steps, we recommend checking out our guide on [creating bots that run predetermined scenarios](../creating-bots/javascript/scenario-testing). 
 In soon-to-be-added guides, tutorials will walk you through:
 
 - Creating bots with abilities
