@@ -22,7 +22,7 @@ These are displayed side-by-side with Bot actions in the Replay utility to help 
 
 :::caution
 Commands within `processTick` interact with the game state represented by the current tick only.
-This contrasts with [Unit-Testing Bots](./unit-testing), which can delay execution of commands for several ticks until expected conditions are met.
+This contrasts with [Scenario Bots](./scenario-testing), which can delay execution of commands for several ticks until expected conditions are met.
 :::
 
 <Tabs>
@@ -280,7 +280,7 @@ const myBot = rg.getBot();
 
 Flags the current Bot as complete, which will stop Bot execution and send a teardown notification to your game for this Bot.  
 This is particularly useful for [PERSISTENT Bots](./configuration#lifecycle) which must be stopped explicitly, 
-and for [Unit-Testing Bots](./unit-testing) which execute a specific set of commands and then are considered to have 'completed' their tasks
+and for [Scenario Bots](./scenario-testing) which execute a specific set of commands and then are considered to have 'completed' their tasks
 regardless of whether the Unity Integration itself has signalled Bots to disconnect.
 
 #### Arguments
