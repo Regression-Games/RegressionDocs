@@ -73,17 +73,10 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'playersSidebar',
+            sidebarId: 'unitySidebar',
             position: 'left',
-            label: 'Players',
+            label: 'Developer Reference',
           },
-          {
-            type: 'docSidebar',
-            sidebarId: 'studiosSidebar',
-            position: 'left',
-            label: 'Studios',
-          },
-          // {to: '/blog', label: 'Blog', position: 'left'},
           {
             type: 'doc',
             docId: 'changelog',
@@ -104,12 +97,12 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'For Studios',
-                to: '/studios/unity/unity-sdk/overview',
+                label: 'Overview',
+                to: 'overview',
               },
               {
-                label: 'For Players',
-                to: '/players/account-setup',
+                label: 'Quickstart',
+                to: 'quickstart',
               },
             ],
           },
@@ -150,8 +143,7 @@ const config = {
     }),
     scripts: [
       {
-        src:
-          '/js/loadposthog.js',
+        src: '/js/loadposthog.js',
         async: false,
       },
     ]

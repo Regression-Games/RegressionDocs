@@ -1,0 +1,529 @@
+---
+sidebar_label: 'Creating Adaptive Bots'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Defining Bots that Adapt to the Game State
+
+Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
+Whenever the Bot runtime receives an update, Regression Games calls the `processTick(rg)` method.
+This is Regression Games' entrypoint into your Bot logic, where you will describe how your Bot makes decisions and reacts to the current game state.
+`processTick` must be implemented and exported from your `index.js` file.
+
+The `rg` object passed to `processTick` exposes the Regression Games API which contains methods for evaluating the game state and queueing behaviors that you've defined as `RGActions`.
+This API is defined in the sections below.
+
+In-game movements and `RGActions` are automatically recorded during each session. 
+These logs can be loaded into the Unity Bot Replay utility which allows you to re-watch the session and debug Bot behaviors tick-by-tick. 
+API methods that filter state objects and check conditions will record additional decision results. 
+These are displayed side-by-side with Bot actions in the Replay utility to help debug your Bot by showing which decisons led to resulting behaviors.  
+
+:::caution
+Commands within `processTick` interact with the game state represented by the current tick only.
+This contrasts with [Scenario Bots](./scenario-testing), which can delay execution of commands for several ticks until expected conditions are met.
+:::
+
+<Tabs>
+<TabItem value="runTurn_coopBot" label="Follow and support a human player as an NPC" default>
+
+```javascript title="index.js"
+export function configureBot(rg) {
+    rg.characterConfig = {
+        role: "WARRIOR"
+    };
+}
+
+/**
+ * Outline of our Bot algorithm. For every tick:
+ *  - If the Bot is standing on a switch that is holding a door open, then do nothing
+ *  - If the switch is within a range of sqrt(30) units from the Bot, move onto the switch
+ *  - If the Bot is not near the player, move within range of the player
+ *  - If an enemy is within a certain distance of a player, attack that enemy
+ */
+export async function processTick(rg) {
+
+    if(rg.getState().sceneName !== "Dungeon") return;
+
+    const currentPosition = rg.getBot().position;
+
+    // if the Bot is standing on a switch that is holding a door open, then do nothing
+    const floorSwitch = await rg.findEntity("FloorSwitch");
+    if(floorSwitch && await rg.entityHasAttribute(floorSwitch, "isOn", true)) return;
+
+    // if the switch is within range of sqrt(30) units from the Bot, then move onto it
+    if(floorSwitch && rg.MathFunctions.distanceSq(currentPosition, floorSwitch.position) < 30) {
+        rg.performAction("ApproachObject", {
+            targetId: floorSwitch.id,
+            range: 0.1
+        });
+        return;
+    }
+
+    // if the Bot is not near the human player, then move within range of that player
+    const humanPlayer = await rg.findEntity("HumanPlayer");
+    if(humanPlayer && rg.MathFunctions.distanceSq(currentPosition, humanPlayer.position) > 10 ) {
+        rg.performAction("ApproachObject", {
+            targetId: humanPlayer.id,
+            range: 2
+        });
+        return;
+    }
+
+    // Otherwise, attack a nearby enemy if there is one
+    const enemy = await rg.findNearestEntity(null, currentPosition, (entity) => { return entity.team === 1 && !entity.broken});
+    if(enemy && enemy.health > 0) {
+        rg.performAction("PerformSkill", {
+            skillId: 1,
+            targetId: enemy.id,
+            position: enemy.position,
+        });
+    }
+}
+```
+</TabItem>
+<TabItem value="runTurn_abilityBot" label="Cycle through castable abilities">
+
+```javascript title="index.js"
+export function configureBot(rg) {
+    rg.characterConfig = {
+        role: "ARCHER"
+    };
+}
+
+/**
+ * Entrypoint into the Bot logic
+ */
+export async function processTick(rg) {
+
+    // only activate abilities if we're ready to play
+    if (rg.getState().sceneName !== "Dungeon") return;
+
+    // select 1 ability per update
+    await selectAbility(rg);
+}
+
+/**
+ * Returns the ID of the next ability in our rotation
+ */
+function getNextAbility(rg) {
+    const abilities = rg.getBot().abilities;
+    const abilityIndex = CURRENT_ABILITY % abilities.length;
+    return abilities[abilityIndex];
+}
+
+
+let CURRENT_ABILITY = 0;
+
+/**
+ * Selects an ability for this character, then queues it as an action
+ */
+async function selectAbility(rg) {
+
+    const ability = getNextAbility(rg);
+    if(!rg.entityHasAttribute(rg.getBot(), ["abilityAvailable", `${ability.name}`], true)) {
+        // this ability is still on cool-down
+        return;
+    }
+
+    const targetType = ability.targetType;
+    let currentTarget;
+
+    if (targetType === "None") 
+    {
+        // No target needed
+        currentTarget = null;
+    } 
+    else if (targetType === "Enemy") {
+        currentTarget = await rg.findNearestEntity(null, null, (entity) => { return entity.hostile && !entity.incapacitated } )
+        if(!currentTarget) {
+            // can't cast this without a valid target
+            return;
+        }
+    } 
+    else if (targetType === "Ally") {
+        currentTarget = await rg.findNearestEntity(null, null, (entity) => { return !entity.hostile });
+        if(!currentTarget) {
+            // can't cast this without a valid target
+            return;
+        }
+    }
+  
+    rg.performAction("PerformSkill", {
+        skillId: ability,
+        targetId: currentTarget?.id,
+        position: currentTarget?.position,
+    });
+
+    CURRENT_ABILITY++;
+}
+```
+
+</TabItem>
+
+<TabItem value="runTurn_menuBot" label="Click buttons to start the game">
+
+```javascript title="index.js"
+export function configureBot(rg) {
+    rg.isSpawnable = false;
+    rg.lifecycle = "PERSISTENT";
+}
+
+// flags for clicking the 6 buttons we need to click to start the game
+let stateFlags = {
+    "SelectGameModeButton": false
+    "ChooseArcherButton": false,
+    "StartGameButton": false,
+}
+
+/** 
+ * Click buttons to get us from the Main Menu into the dungeon.
+ * Once we enter the dungeon, this Bot has completed its tasks.
+ */
+export async function runTurn(rg) {
+
+    if(rg.getState().sceneName === "MainMenu") {
+        const selectGameModeButton = await getInteractableButton("SelectGameModeButton");
+        if (selectGameModeButton && !stateFlags["SelectGameModeButton"]) {
+            rg.performAction("ClickButton", {targetId: selectGameModeButton.id});
+            stateFlags["SelectGameModeButton"] = true
+            return;
+        }
+
+        const chooseArcherButton = await getInteractableButton("ChooseArcherButton");
+        if (chooseArcherButton && stateFlags["SelectGameModeButton"] && !stateFlags["ChooseArcherButton"]) {
+            rg.performAction("ClickButton", {targetId: chooseArcherButton.id});
+            stateFlags["ChooseArcherButton"] = true
+            return;
+        }
+
+        const startGameButton = await getInteractableButton("StartGameButton");
+        if (startButton && stateFlags["ChooseArcherButton"] && !stateFlags["StartGameButton"]) {
+            rg.performAction("ClickButton", {targetId: startGameButton.id});
+            stateFlags["StartGameButton"] = true
+            return;
+        }
+    } else {
+        rg.complete();
+    }
+}
+
+async function getInteractableButton(buttonName) {
+    const button = await rg.findEntity(buttonName);
+    if (button && await rg.entityHasAttribute(button, "interactable", true)) {
+        return button;
+    }
+    return null;
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+## Variables
+
+### `playerId`
+
+The ID of this Bot in the game state. Readonly.
+
+### `name`
+
+The name of the connected Bot. Readonly.
+
+
+## Methods
+
+### `getState(id: number = null);`
+
+Returns the complete state object including the current state of all registered entities
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`id` | `number` | `null` | Return state information for a specific entity
+
+#### Return Value
+Returns information about the current state
+
+#### Examples
+
+```javascript
+// get all information about the current state
+const fullState = rg.getState();
+
+// get the current state of a known entity
+const mascot = await rg.findEntity("Williward");
+...
+const objectState = rg.getState(mascot.id); 
+```
+
+### `getBot();`
+
+Returns the current state information for this Bot.  
+Synonymous with [`rg.getState(rg.playerId)`](#getstateid-number--null)
+
+#### Arguments
+None
+
+#### Return Value
+Returns the current state information for this Bot
+
+#### Examples
+
+```javascript
+const myBot = rg.getBot();
+```
+
+### `complete()`;
+
+Flags the current Bot as complete, which will stop Bot execution and send a teardown notification to your game for this Bot.  
+This is particularly useful for [PERSISTENT Bots](./configuration#lifecycle) which must be stopped explicitly, 
+and for [Scenario Bots](./scenario-testing) which execute a specific set of commands and then are considered to have 'completed' their tasks
+regardless of whether the Unity Integration itself has signalled Bots to disconnect.
+
+#### Arguments
+None
+
+#### Return Value
+No return value
+
+#### Examples
+
+```javascript
+rg.complete();
+```
+
+### `performAction(actionName: string, args: object | null);`
+
+Queues an action that the Bot should perform. Action names are freeform strings and must correspond to the name of one of your defined `RGActions`.
+Multiple actions may be queued per tick.
+
+:::info
+Actions do not necessarily start executing the same tick that they were queued.
+:::
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`actionName` | `string` | | The name of an action, as defined by its corresponding `RGAction`
+`args` | `object` | | Any arguments that should be passed to the `RGAction`
+
+#### Return Value
+No return value
+
+#### Examples
+
+<Tabs>
+<TabItem value="performAction_simple" label="Open a Door" default>
+
+```javascript
+const door = await rg.findEntity("Door");
+rg.performAction("OpenDoor", { targetId: door.id });
+```
+
+</TabItem>
+<TabItem value="performAction_arguments" label="Equip a sword">
+
+```javascript
+const bot = rg.getBot();
+if(!await rg.entityHasAttribute(bot, "equippedItem", "sword")) {
+    rg.performAction("EquipItem", { 
+        itemName: "sword",
+        slot: "mainHand" 
+    });
+}
+```
+</TabItem>
+</Tabs>
+
+### `findEntity(objectType: string);`
+
+Find an entity with the given Object Type in the game state.
+This method should be used when only one entity with the given Object Type is expected to exist in the state,
+or when any entity with this Object Type will satisfy the scenario.
+For more control over finding specific entities in the game state, see [getState](#getstateid-number--null)
+and [findNearestEntity](#findnearestentityobjecttype-string--null-position-object--null-filterfunc-function--entity--true).
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`objectType` | `string` | | The objectType to search for, as defined by the entity's corresponding `RGState`
+
+#### Return Value
+Promise&lt;object | null&gt;
+
+#### Examples
+
+
+```javascript
+const door = await rg.findEntity("Door");
+const humanPlayer = await rg.findEntity("HumanPlayer");
+const areaBoss = await rg.findEntity("Boss");
+```
+
+### `findNearestEntity(objectType: string | null, position: object = null, filterFunc: function = (entity) => true);`
+
+Finds the closest entity to the given position.
+The filter function is applied to all entities matching the given objectType (if one is defined) before evaluating entity positions.
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`objectType` | `string` &#124; `null` | | Optionally filter entities by Object Type
+`position` | `object` | The Bot's current position | The position to measure distance from
+`filterFunc` | `function` | (entity) => true | Optionally filter entities to find 
+
+#### Return Value
+Promise&lt;object | null&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="findNearestEntity_default" label="No Filter" default>
+
+```javascript
+const williward = await rg.findNearestEntity("Williward");
+const enemyNearestToWilliward = await rg.findNearestEntity("Enemy", williward.position);
+```
+
+</TabItem>
+<TabItem value="findNearestEntity_filtered" label="Apply a Filter">
+
+```javascript
+const patrolPoint = await rg.findEntity("PatrolPoint");
+const guardOnPatrol = await rg.findNearestEntity("Guard", patrolPoint.position, (entity) => { return !entity.isAsleep });
+```
+
+</TabItem>
+</Tabs>
+
+### `entityExists(entity: object | number | string);`
+
+Return whether the given entity exists.
+The `entity` argument can be a reference to an entity, its id, or an Object Type.
+If this is an Object Type, this method will return true if _any_ entities with this ObjectType exist. 
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`entity` | `object` &#124; `number` &#124; `string` | | The entity, its id, or an Object Type. If this is an Object Type, will return true if _any_ entities with this ObjectType exist. 
+
+#### Return Value
+Promise&lt;boolean&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="entityExists_entity" label="Entity" default>
+
+```javascript
+const entity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityExists(entity);
+```
+
+</TabItem>
+<TabItem value="entityExists_id" label="Entity ID">
+
+```javascript
+const entity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityExists(entity.id);
+```
+
+</TabItem>
+<TabItem value="entityExists_objectType" label="Object Type">
+
+```javascript
+const exists = await rg.entityExists("Williward");
+```
+
+</TabItem>
+</Tabs>
+
+### `entityDoesNotExist(entity: object | number | string);`
+
+Return whether the given entity does not exist.
+The `entity` argument can be a reference to an entity, its id, or an Object Type.
+If this is an Object Type, this method will return true if _no_ entities with this ObjectType exist. 
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`entity` | `object` &#124; `number` &#124; `string` | | The entity, its id, or an Object Type. If this is an Object Type, will return true if _no_ entities with this ObjectType exist. 
+
+#### Return Value
+Promise&lt;boolean&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="entityDoesNotExist_entity" label="Entity" default>
+
+```javascript
+const staleEntity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityDoesNotExist(staleEntity);
+```
+
+</TabItem>
+<TabItem value="entityDoesNotExist_id" label="Entity ID">
+
+```javascript
+const staleEntity = await rg.findEntity("Williward");
+... 
+const exists = await rg.entityDoesNotExist(staleEntity.id);
+```
+
+</TabItem>
+<TabItem value="entityDoesNotExist_objectType" label="Object Type">
+
+```javascript
+const exists = await rg.entityDoesNotExist("Williward");
+```
+
+</TabItem>
+</Tabs>
+
+
+### `entityHasAttribute(targetEntity: object, stateAttribute: string | string[], expectedValue: any);`
+
+Return whether the entity in the game state has the expected value for one of its attributes.
+
+#### Arguments
+Argument Name | Type | Default | Description
+---|---|---|---|
+`targetEntity` | `object` | | The entity
+`stateAttribute` | `string` &#124; `string[]` | | The name of the attribute key, or an array of keys for nested attributes
+`expectedValue` | `any` | | The expected value for the entity's state attribute
+
+#### Return Value
+Promise&lt;boolean&gt;
+
+#### Examples
+
+<Tabs>
+<TabItem value="entityHasAttribute_entity" label="Attribute" default>
+
+```javascript
+const entity = await rg.findEntity("Williward");
+if(await rg.entityHasAttribute(entity, "color", "teal")) {
+    console.log("Williward is looking good!")
+}
+```
+
+</TabItem>
+<TabItem value="entityHasAttribute_id" label="Nested Attribute">
+
+```javascript
+const entity = await rg.findEntity("Boss");
+if(await rg.entityHasAttribute(entity, ["healthObject", "currentHealth"], 1000)) {
+    console.log("The boss is at full health")
+}
+```
+</TabItem>
+</Tabs>
+
+

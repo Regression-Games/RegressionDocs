@@ -5,7 +5,6 @@
  - provide next/previous navigation
 
  The sidebars can be generated from the filesystem, or explicitly defined here.
-
  Create as many sidebars as you want.
  */
 
@@ -14,127 +13,71 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
 
-  playersSidebar: [
-    'players/account-setup',
+  unitySidebar: [
+    'overview',
+    'quickstart',
     {
       type: 'category',
-      label: 'Supported Games',
+      label: 'Tutorials',
+      items: [
+        'tutorials/building-your-first-bot',
+        'tutorials/github-actions'
+      ],
+    },
+    {
+      // horizontal divider
+      type: 'html',
+      value: '<span style="border-top: 1px solid var(--ifm-color-light-gray); display: block;" />',
+      defaultStyle: true,
+      className: 'horizontal-divider'
+    },
+    'authenticating-with-api-keys',
+    {
+      type: 'category',
+      label: 'Integrating with Unity',
+      items: [
+        'integrating-with-unity/defining-entities-and-their-states',
+        'integrating-with-unity/defining-actions',
+        'integrating-with-unity/BotInformation',
+        'integrating-with-unity/seating-and-spawning-bots',
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Creating Bots',
       items: [
         {
           type: 'category',
-          label: 'Minecraft',
+          label: 'C# Reference',
           items: [
-              'players/supported-games/minecraft/requirements',
-              'players/supported-games/minecraft/ultimate-collector',
-              'players/supported-games/minecraft/capture-the-flag',
-              {
-                type: 'category',
-                label: 'APIs',
-                items: ['players/supported-games/minecraft/apis/rg-bot-api', 'players/supported-games/minecraft/apis/ctf-utils']
-              },
-              {
-                type: 'category',
-                label: 'Tutorials',
-                items: ['players/supported-games/minecraft/tutorials/trash-talking-bot', 'players/supported-games/minecraft/tutorials/hunter-bot']
-              }
-          ],
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: 'Creating AIs',
-      items: [
-        'players/creating-bots/starter-templates',
-        'players/creating-bots/blockly',
-        'players/creating-bots/agent-builder',
-        {
-          type: 'category',
-          label: 'Writing Your Own Code',
-          items: ['players/creating-bots/coding/dev-requirements', 'players/creating-bots/coding/upload-zip']
-        }
-      ]
-    },
-    'players/faq'
-  ],
-
-  studiosSidebar: [
-    'studios/unity/unity-sdk/overview',
-    {
-      type: 'category',
-      label: 'REST API Reference',
-      items: [
-        'studios/api_reference/authentication',
-      ]
-    },
-    {
-      type: 'category',
-      label: 'Regression Games Unity Bots',
-      items: [
-        {
-          type: 'category',
-          label: 'SDK Reference',
-          items: [
-            'studios/unity/unity-sdk/RGBotSpawnManager',
-            'studios/unity/unity-sdk/BotInformation',
-            'studios/unity/unity-sdk/RGState',
-            'studios/unity/unity-sdk/RGAction',
-            'studios/unity/unity-sdk/RGFindUtils',
+            'creating-bots/csharp/configuration',
+            'creating-bots/csharp/adaptive-bots',
+            'creating-bots/csharp/scenario-testing',
+            'creating-bots/csharp/utilities'
           ]
         },
         {
           type: 'category',
-          label: 'Creating Bots',
+          label: 'JavaScript Reference',
           items: [
-            {
-              type: 'category',
-              label: 'C# Reference',
-              items: [
-                'studios/unity/unity-sdk/creating-bots/csharp/configuration',
-                'studios/unity/unity-sdk/creating-bots/csharp/playtest-bots',
-                'studios/unity/unity-sdk/creating-bots/csharp/validation-bots',
-                'studios/unity/unity-sdk/creating-bots/csharp/utilities'
-              ]
-            },
-            {
-              type: 'category',
-              label: 'JavaScript Reference',
-              items: [
-                'studios/unity/unity-sdk/creating-bots/javascript/configuration',
-                'studios/unity/unity-sdk/creating-bots/javascript/playtest-bots',
-                'studios/unity/unity-sdk/creating-bots/javascript/validation-bots',
-                'studios/unity/unity-sdk/creating-bots/javascript/agent-builder'
-              ]
-            },
+            'creating-bots/javascript/configuration',
+            'creating-bots/javascript/adaptive-bots',
+            'creating-bots/javascript/scenario-testing',
+            'creating-bots/javascript/agent-builder'
           ]
         },
-        {
-          type: 'category',
-          label: 'Tooling',
-          items: ['studios/unity/unity-sdk/in-editor-replay',]
-        },
-        {
-          type: 'category',
-          label: 'Tutorials and Guides',
-          items: [
-            'studios/unity/tutorials/quickstart_sample_scene',
-            'studios/unity/tutorials/first_tutorial',
-            'studios/unity/tutorials/github_actions'
-          ],
-        }
       ]
     },
+    'pre-made-bots',
     {
       type: 'category',
-      label: 'Platform Features',
+      label: 'Session Insights',
       items: [
-        'studios/platform_features/marketplace',
-        'studios/platform_features/validations',
+          'session-insights/client-dashboard',
+          'session-insights/in-editor-replay'
       ]
-    },
-    'studios/faq',
-    'changelog', 
-  ],
+    }
+  ]
 };
 
 module.exports = sidebars;
