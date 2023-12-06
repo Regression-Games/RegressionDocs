@@ -5,18 +5,18 @@ sidebar_label: 'Scenario Testing'
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Defining Bots for Scenario Testing
+# Defining Bots that Execute Pre-Determined Scenarios
 
 Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
 The game state can be monitored to test the impacts of GameObject behaviors on other GameObjects.
 
-Validation Bots share the same APIs as [Dynamic Bots](./dynamic-decision-making), with two important distinctions:
+Validation Bots share the same APIs as [Adaptive Bots](./adaptive-bots), with two important distinctions:
 1. Bot logic is implemented within a `startScenario(rg)` method rather than `processTick(rg)`. 
 `startScenario` is invoked once after the Bot connects and will run to completion rather than being invoked repeatedly over the lifetime of the Bot. 
 Like `processTick`, the `rg` object passed to `startScenario` exposes the Regression Games API.
 2. Commands act as assertions. When a command is executed, it automatically waits and retries until the game state meets its expectations. 
 If an expectation hasn't been met before a timeout is reached, then the command (and by extension the scenario) will fail.
-For example, running the command `rg.findEntity("MyEntity")` for a Dynamic Bot will return the matching entity or null based on the current tick's game state,
+For example, running the command `rg.findEntity("MyEntity")` for a Adaptive Bot will return the matching entity or null based on the current tick's game state,
 but running the same command for a Validation Bot will check the state across several tick intervals until a matching entity is found, or else the command will fail.
 
 :::tip
@@ -147,7 +147,7 @@ export async function startScenario(rg) {
 
 ## Methods
 
-These methods are in addition to the APIs defined in the [Dynamic Bots section](./dynamic-decision-making#variables).
+These methods are in addition to the APIs defined in the [Adaptive Bots section](./adaptive-bots#variables).
 
 ### `recordValidation(validationName: string, result: "PASS" | "FAIL" | "WARNING", options);`
 

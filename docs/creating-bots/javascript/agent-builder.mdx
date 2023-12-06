@@ -89,7 +89,7 @@ information about your game-state that the bot can analyze to make decisions. Ac
 for every game, so Agent Builder requires some simple setup for your unique integration.
 
 :::info
-The Agent Builder is designed for the creation of [Dynamic bots](./dynamic-decision-making), which form decisions every tick.
+The Agent Builder is designed for the creation of [Adaptive bots](./adaptive-bots), which form decisions every tick.
 This means your Agent Builder tree will be executed once per game tick.
 
 Performing actions through our SDK queues them to be handled within your game asynchronously.
@@ -165,7 +165,7 @@ All of your node's code must be defined within the `LeafNode` class, and the `ex
 You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
 :::
 
-You can either manually type code into the editor (see the [Dynamic Bots API](./dynamic-decision-making)),
+You can either manually type code into the editor (see the [Adaptive Bots API](./adaptive-bots)),
 or you can have our AI code assistant do the heavy lifting for you.
 To generate code using the assistant, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button.
 The editor will be disabled as code appears, and you can modify the output once it's finished.

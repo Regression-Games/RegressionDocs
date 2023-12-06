@@ -103,7 +103,7 @@ protected override bool GetIsSpawnable()
 
 Bots can be either `MANAGED` or `PERSISTENT`.
 A `MANAGED` Bot will automatically disconnect when `RGBotServerListener.GetInstance()?.StopGame()` is called from the Unity Integration.
-A `PERSISTENT` Bot must either terminate itself (see [complete()](dynamic-decision-making#complete)) when its tasks are complete or be terminated manually from the RG Overlay.
+A `PERSISTENT` Bot must either terminate itself (see [complete()](adaptive-bots#complete)) when its tasks are complete or be terminated manually from the RG Overlay.
 This allows `PERSISTENT` bots to stay active across multiple scenes/sessions. 
 
 #### Examples
