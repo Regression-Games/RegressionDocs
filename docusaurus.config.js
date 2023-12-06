@@ -97,12 +97,12 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'For Studios',
-                to: '/studios/unity/unity-sdk/overview',
+                label: 'Overview',
+                to: 'overview',
               },
               {
-                label: 'For Players',
-                to: '/players/account-setup',
+                label: 'Quickstart',
+                to: 'quickstart',
               },
             ],
           },
