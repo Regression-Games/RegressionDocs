@@ -6,7 +6,7 @@ sidebar_label: 'Overview'
 
 Regression Games is developing a platform where studios can **build and deploy bots for a variety of use cases in minutes.** We are designing for scale (deploy thousands of bots), ease of use (e.g. generative AI to build bots), ease of integration (minimal impact on game development time), and feature richness (e.g. A/B bot test for engagement).
 
-![vision](./img/vision.png)
+![vision](img/vision.png)
 
 ## Current Stage of the Product
 
@@ -16,12 +16,12 @@ The team has focused on the foundation of supporting use cases and initial infra
 of our value will come from the interfaces to build bots, the scale of our infrastructure, the speed of integration, and the products
 built around these bots.
 
-![timeline feature](./session-insights/img/replay/timeline.png)
+![timeline feature](session-insights/img/replay/timeline.png)
 
 ## Availability Assurances
 
 The Regression Games team offers the following assurances for our initial testing with developers. Additionally, we have a dedicated Discord server for support, and can also create a Slack Connect channel, giving you direct access to our entire team. For access to
-these channels, send an email to [aaron@regression.gg](mailto:aaron@regression.gg).
+these channels, send an e-mail to [aaron@regression.gg](mailto:aaron@regression.gg).
 
 * A single account can run at least 10 bots concurrently
 * The time from requesting a bot to be started to the time it connects to Unity will take less than 10 seconds if the bot is relying on dependencies that are common to most bots. This does not cover bots that may have lots of library dependencies, which may take longer.
@@ -30,15 +30,15 @@ these channels, send an email to [aaron@regression.gg](mailto:aaron@regression.g
 
 The table below details and links to documentation for the features implemented on our platform.
 
-| **Feature**                    | **Description**                                                                                                     | **Documentation**                                    |
-|--------------------------------|---------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| Unity Integration              | A set of scripts and interfaces are provided to easily send state and actions between bots and your game objects.   | [Link](./RGBotSpawnManager)                          |
-| Timeline/Replay                | All bot actions and states are preserved, with a timeline/replay feature available within Unity.                    | [Link](./in-editor-replay)                           |
-| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                    | [Link](./creating-bots/csharp/configuration)         |
-| JavaScript SDK                 | A JavaScript SDK for implementing bots remotely in Regression Games.                                                | [Link](./creating-bots/javascript/configuration)     |
-| Live Reloading                 | Reload bots almost instantly without rebuilding your game, managed via GitHub.                                      | _Docs coming soon_                                   |
-| Bot Code Generation            | _Only available in Minecraft, see proposals. Create bots with low-code tools such as behavior trees powered by GPT. | [Link](../../../players/creating-bots/agent-builder) |
-| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                               | _Docs coming soon_                                   |  
+| **Feature**                    | **Description**                                                                                                   | **Documentation**                                        |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| Unity Integration              | A set of scripts and interfaces are provided to easily send state and actions between bots and your game objects. | [Link](integrating-with-unity/seating-and-spawning-bots) |
+| Timeline/Replay                | All bot actions and states are preserved, with a timeline/replay feature available within Unity.                  | [Link](session-insights/in-editor-replay)                |
+| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](creating-bots/csharp/configuration)               |
+| JavaScript SDK                 | A JavaScript SDK for implementing bots remotely in Regression Games.                                              | [Link](creating-bots/javascript/configuration)           |
+| Live Reloading                 | Reload bots almost instantly without rebuilding your game, managed via GitHub.                                    | _Docs coming soon_                                       |
+| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](creating-bots/javascript/agent-builder)           |
+| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                                       |  
 
 ## Importing the Regression Games Unity Bots package
 

@@ -65,19 +65,19 @@ For a deeper dive into behavior trees, their nodes, and practical examples of th
 Create a new AI from the Bot Manager and select `Agent Builder` from the list of creation options,
 give your new bot a name, and then finalize. It's that easy!
 
-![Create new AI](./img/agent-builder/create-bot-button.png)
-![Select Creation Option](./img/agent-builder/create-for-unity.png)
+![Create new AI](img/agent-builder/create-bot-button.png)
+![Select Creation Option](img/agent-builder/create-for-unity.png)
 
 ## Loading Your Tree
 
 If you've used the Agent Builder to create a bot before, then you can locate that bot in the Bot Manager and open the Agent Builder interface.
 
-![Open Agent Builder](./img/agent-builder/open-agent-builder.png)
+![Open Agent Builder](img/agent-builder/open-agent-builder.png)
 
 At any time, you can click the "Reload from Server" button at the top of the page to revert to your most recently-saved version
 (this will discard any unsaved changes). Don't forget to save when you're done!
 
-![Load Your Tree](./img/agent-builder/load-tree.png)
+![Load Your Tree](img/agent-builder/load-tree.png)
 
 
 ## Getting Started with the Agent Builder
@@ -89,7 +89,7 @@ information about your game-state that the bot can analyze to make decisions. Ac
 for every game, so Agent Builder requires some simple setup for your unique integration.
 
 :::info
-The Agent Builder is designed for the creation of [PlayTest bots](./playtest-bots), which form decisions every tick.
+The Agent Builder is designed for the creation of [Dynamic bots](./dynamic-decision-making), which form decisions every tick.
 This means your Agent Builder tree will be executed once per game tick.
 
 Performing actions through our SDK queues them to be handled within your game asynchronously.
@@ -104,41 +104,41 @@ Click the "Bot Settings" button in the Agent Builder interface to access a range
 See the [Bot Configuration section](./configuration) for information on each setting and how it affects bot startup and teardown.
 Bot configurations are applied at runtime before the first game-tick your tree is executed.
 
-![Bot Settings](./img/agent-builder/bot-settings-button.png)
-![Bot Configuration](./img/agent-builder/bot-configuration-tab.png)
+![Bot Settings](img/agent-builder/bot-settings-button.png)
+![Bot Configuration](img/agent-builder/bot-configuration-tab.png)
 
 #### Saving Your Unity Context
 
 From the Unity Editor, expand the "Regression Games" menu and select "Agent Builder > Extract Game Context".
 This will save your Unity Context as a .zip to your top-level project directory.
 
-![Extract Game Context](./img/agent-builder/extract-game-context.png)
+![Extract Game Context](img/agent-builder/extract-game-context.png)
 
 In the Agent Builder, click the "Bot Settings" button, then select the .zip from the "Upload Game Context" tab.
 
-![Upload Game Context](./img/agent-builder/upload-game-context.png)
+![Upload Game Context](img/agent-builder/upload-game-context.png)
 
 ### Adding Nodes
 
 New Agent Builder projects start with a root node and a sequence node to form the basis of your tree.
 
-![Default Tree](./img/agent-builder/default-tree.png)
+![Default Tree](img/agent-builder/default-tree.png)
 
 To begin building your tree, click the connector at the bottom of the sequence node and drag.
 When you release, you'll be presented with different types of nodes that can be added to this sequence.
 For this demonstration, we'll create an action node.
 You can repeat this process for any node that is allowed to have children.
 
-![Select a Node Type](./img/agent-builder/select-node-type.png)
-![Create an Action Node](./img/agent-builder/new-action-node.png)
-![Example Tree](./img/agent-builder/example-tree-1.png)
+![Select a Node Type](img/agent-builder/select-node-type.png)
+![Create an Action Node](img/agent-builder/new-action-node.png)
+![Example Tree](img/agent-builder/example-tree-1.png)
 
 Clicking on a node opens a panel to the right side of your screen.
 This panel contains information about the selected node including a description of the node's type and a label, as well as a button to delete the node from the tree.
 It's a good idea to set labels to keep track of what you want each node or branch to do.
 If the selected node is a leaf node, such as an action or condition, then the panel will also contain fields used for defining the node's behavior via code.
 
-![Open the Node Panel](./img/agent-builder/edit-node.png)
+![Open the Node Panel](img/agent-builder/edit-node.png)
 
 ### Generating Code
 
@@ -165,7 +165,7 @@ All of your node's code must be defined within the `LeafNode` class, and the `ex
 You may encounter errors loading your AI into a game if these are not properly defined when you save your tree.
 :::
 
-You can either manually type code into the editor (see the [PlayTest Bots API](./playtest-bots)),
+You can either manually type code into the editor (see the [Dynamic Bots API](./dynamic-decision-making)),
 or you can have our AI code assistant do the heavy lifting for you.
 To generate code using the assistant, describe what you want this node to do in the "GPT Prompt" field then click the "Generate Code" button.
 The editor will be disabled as code appears, and you can modify the output once it's finished.
@@ -270,14 +270,14 @@ class LeafNode extends TreeNode {
 
 Clicking the "Validate Code" button should result in a warning that `findNearestEntity` should be awaited if we want to capture the actual "Enemy" entity.
 
-![Validate Code](./img/agent-builder/validation-results-unity.png)
+![Validate Code](img/agent-builder/validation-results-unity.png)
 
 You can close validation results at any time and reopen them by clicking the clipboard icon.
 
-![ReOpen Validation Results](./img/agent-builder/reopen-validation-results-unity.png)
+![ReOpen Validation Results](img/agent-builder/reopen-validation-results-unity.png)
 
 ## Saving Your Tree
 
 Save your tree early and often! Any changes made to your AI will be lost if you leave the Agent Builder without saving.
 
-![Save Your Tree](./img/agent-builder/save-tree.png)
+![Save Your Tree](img/agent-builder/save-tree.png)

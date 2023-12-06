@@ -25,7 +25,7 @@ power ups (represented by blue spheres). We will cover:
 - How to add various state and actions scripts to your game for bots to understand
 - How to build your first bot
 
-![A Unity scene with a cube and a sphere](./img/building-your-first-bot/tutorial-0-start.png)
+![A Unity scene with a cube and a sphere](img/building-your-first-bot/tutorial-0-start.png)
 
 ## Create an account on Regression Games
 
@@ -67,9 +67,9 @@ https://github.com/Regression-Games/RGUnityBots.git#v0.0.1
 ```
 
 - Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
-- Note that this package installs a dependency of Newtonsoft Json (https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
+- Note that this package installs a dependency of [Newtonsoft Json](https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
 
-![Screenshot of the package imported into the project](./img/building-your-first-bot/tutorial-1-package.png)
+![Screenshot of the package imported into the project](img/building-your-first-bot/tutorial-1-package.png)
 
 ## Restart Unity and your IDE
 
@@ -88,7 +88,7 @@ Enter the following information:
 * **RG Password:** `<your password>`
 * Make sure both "Enable Screen Overlay" and "Use Global Settings" are checked on
 
-![Screenshot of the settings page.](./img/building-your-first-bot/tutorial-2-settings.png)
+![Screenshot of the settings page.](img/building-your-first-bot/tutorial-2-settings.png)
 
 ## Add the RGOverlayCanvas
 
@@ -106,7 +106,7 @@ this into each scene - the SDK will ensure that only one instance is present.
 You can find this prefab by searching in the project file window for `RGOverlayCanvas` (make sure the "In Packages" filter is selected),
 or by navigating to the **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** folder.
 
-![Screenshot of the search pane for the RGOverlayCanvas.](./img/building-your-first-bot/tutorial-3-RGOverlay1.png)
+![Screenshot of the search pane for the RGOverlayCanvas.](img/building-your-first-bot/tutorial-3-RGOverlay1.png)
 
 Drag this overlay onto your scene. Once you have this overlay available, you can click play to see this in action! A
 Regression Games logo will appear at the bottom of your screen. Click this button to see a dropdown for your bots. You
@@ -120,14 +120,14 @@ _You only need to do this if you plan on interacting with the canvas_.
 
 :::
 
-![Screenshot of the RGOverlayCanvas.](./img/building-your-first-bot/tutorial-4-RGOverlay2.png)
+![Screenshot of the RGOverlayCanvas.](img/building-your-first-bot/tutorial-4-RGOverlay2.png)
 
 ## Implement the RGBotSpawnManager
 
 The RGBotSpawnManager is the primary point of configuration for how your bots are spawned into the game. This component
 provides a few methods that can be overridden to control how bots are spawned into the scene, how they are seated into
 your game logic before spawning, how they are destroyed, etc... For this particular tutorial, we need to define one
-method, [`SpawnBot()`](/studios/unity/unity-sdk/RGBotSpawnManager#public-virtual-void-seatbotbotinformation-bottospawn). 
+method, [`SpawnBot()`](../integrating-with-unity/seating-and-spawning-bots#public-virtual-void-seatbotbotinformation-bottospawn). 
 This method will define how our bot prefab is spawned into the scene.
 
 First, create a `RegressionGames/Runtime/` folder in your `Assets` folder. Then, create a file called `CharacterBotSpawnManager.cs`.
@@ -137,7 +137,7 @@ that the file is opened as part of the solution / project as a whole, so that co
 Copy and paste the following code into this file. This component allows us to drag and drop a prefab for our bots and
 a spawn point directly within our editor, and informs our SDK of these via those overridden functions.
 
-See the [full reference](/studios/unity/unity-sdk/RGBotSpawnManager) for all the ways you can modify 
+See the [full reference](../integrating-with-unity/seating-and-spawning-bots) for all the ways you can modify 
 the spawning of bots. Sometimes you may need to add this
 bot to a multiplayer network protocol, configure information like the character type, or define special start logic.
 This can all be done through the interface provided by `RGBotSpawnManager`.
@@ -177,18 +177,18 @@ and attach this `CharacterBotSpawnManager` component to that object. Then, creat
 position it within the scene wherever you want to spawn your bot (ideally above the platform), and drag that game object into the 
 **Bot Spawn Point** entry of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the **Player** prefab provided by the sample project (located within **Assets** > **Prefabs**), and drag this into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the scene.
 
-![Screenshot of the RGOverlayCanvas.](./img/building-your-first-bot/tutorial-5-spawner.png)
+![Screenshot of the RGOverlayCanvas.](img/building-your-first-bot/tutorial-5-spawner.png)
 
 ## Add state information to relevant GameObjects
 
 The next step is to indicate what state in your scene is available to bots. This state is used by bots to
-make decisions on what actions to take. State is relayed to bots by attaching [`RGState`](/studios/unity/unity-sdk/RGState)
+make decisions on what actions to take. State is relayed to bots by attaching [`RGState`](../integrating-with-unity/defining-entities-and-their-states)
 components to any game object or prefab that you want your bots to know about. 
 
-The base implementation of [`RGState`](/studios/unity/unity-sdk/RGState) provided by Regression Games relays default 
+The base implementation of [`RGState`](../integrating-with-unity/defining-entities-and-their-states) provided by Regression Games relays default 
 information such as a `type`, `position`, and a unique identifier. In this sample scene, we will use this default 
 state information, but of course you may need to provide additional state, such as a players team, health, if a door is open, etc...
-You can do this by checking out the docs and examples for [`RGState.GetState()`](/studios/unity/unity-sdk/RGState#public-virtual-dictionarystring-object-getstate).
+You can do this by checking out the docs and examples for [`RGState.GetState()`](../integrating-with-unity/defining-entities-and-their-states#public-virtual-dictionarystring-object-getstate).
 
 In this scene, open the `Player` prefab located in the **Assets > Prefabs** folder by double clicking
 the prefab, click **Add Component**, and then add the `RGState` component by searching for "RG State" in the component
@@ -197,14 +197,14 @@ that both `Is Player` and `Is Runtime Object` are checked. Make sure to save the
 prefabs by clicking **Save**! Repeat this process for the `PowerUp` prefab, but change the `Object Type` to `PowerUp`, and
 only have `Is Runtime Object` checked (`Is Player` should be off).
 
-![Screenshot of the prefab with a RG State script.](./img/building-your-first-bot/tutorial-6-prefab.png)
+![Screenshot of the prefab with a RG State script.](img/building-your-first-bot/tutorial-6-prefab.png)
 
 That's all you need to do for your bot to see the state of the game!
 
 ## Implement actions your bot can take
 
 Finally, we need to provide an interface that allows bots to control these characters in your game. This is
-done using the [`RGAction`](/studios/unity/unity-sdk/RGAction) interface. 
+done using the [`RGAction`](../integrating-with-unity/defining-actions) interface. 
 
 ```cs
 /**
@@ -281,9 +281,9 @@ public class RGPlayerMoveAction : RGAction
 }
 ```
 
-You can think of [`RGAction`](/studios/unity/unity-sdk/RGAction) as a task that your bot can run. In this case, 
+You can think of [`RGAction`](../integrating-with-unity/defining-actions) as a task that your bot can run. In this case, 
 we define a move action, which tells the bot to move to a location until they are in range of the target location. 
-Because [`RGAction`](/studios/unity/unity-sdk/RGAction) is a MonoBehaviour, `Awake()` and `Update()` methods are 
+Because [`RGAction`](../integrating-with-unity/defining-actions) is a MonoBehaviour, `Awake()` and `Update()` methods are 
 implemented that run the logic for this type of action. An action can triggered by a Regression Games bot, and the
 action script can execute the logic to perform that action.
 
@@ -299,12 +299,12 @@ bot should approach.
 Finally, search for and add the `RGAgent` script to the Player prefab - this tells Regression Games to find all `RGAction`s on this 
 prefab and register them with the agent, and informs Regression Games that this prefab will act as an agent.
 
-![Screenshot of the prefab with a RG Action script.](./img/building-your-first-bot/tutorial-7-action.png)
+![Screenshot of the prefab with a RG Action script.](img/building-your-first-bot/tutorial-7-action.png)
 
 :::info
 
 It is common that you will want to find GameObjects and other components within your scene to perform actions.
-See the [`RGFindUtils`](../unity-sdk/RGFindUtils) class for helper functions which find GameObjects and components 
+See the [`RGFindUtils`](../creating-bots/csharp/utilities#rgfindutils) class for helper functions which find GameObjects and components 
 within your scene based on information coming in from an action.
 
 :::
@@ -361,9 +361,9 @@ then back on the Regression Games site, select that repo (click the refresh butt
 you can't see your repository, or click the link to connect the repository if it is private), the main branch, 
 and the root directory. Give your bot a name, select the Unity bot type, and then click **Create Bot**. 
 
-![Screenshot of the bot creation page.](./img/building-your-first-bot/create-bot-1.png)
-![Screenshot of the bot github page.](./img/building-your-first-bot/create-bot-2.png)
-![Screenshot of the bot details page.](./img/building-your-first-bot/create-bot-3.png)
+![Screenshot of the bot creation page.](img/building-your-first-bot/create-bot-1.png)
+![Screenshot of the bot github page.](img/building-your-first-bot/create-bot-2.png)
+![Screenshot of the bot details page.](img/building-your-first-bot/create-bot-3.png)
 
 
 Once the bot is created, clone the repository and open the `index.js` file.
@@ -393,7 +393,7 @@ from the Regression Games overlay (click the button in the bottom right of the s
 After a few seconds, you will see your bot spawn and collect the power up! If something is not working,
 send us a message on Slack or Discord and we will respond almost immediately!
 
-![Video of the bot performing.](./img/building-your-first-bot/tutorial-8-demo.gif)
+![Video of the bot performing.](img/building-your-first-bot/tutorial-8-demo.gif)
 
 ## Extensions - Configuring your bot
 
@@ -437,7 +437,8 @@ the bot live reload and change its speed!
 
 ## Next steps
 
-For immediate next steps, we recommend checking out our guide on [creating bots that can do QA validations](/studios/unity/unity-sdk/creating-bots/javascript/validation-bots). In soon-to-be-added guides, tutorials will walk you through:
+For immediate next steps, we recommend checking out our guide on [creating bots that can perform unit-testing style validations](../creating-bots/javascript/unit-testing). 
+In soon-to-be-added guides, tutorials will walk you through:
 
 - Creating bots with abilities
 - Pairing a Regression Games bot with dialog systems such as character.ai

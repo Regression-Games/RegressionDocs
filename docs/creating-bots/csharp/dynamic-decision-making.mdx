@@ -1,11 +1,11 @@
 ---
-sidebar_label: 'PlayTest Bots'
+sidebar_label: 'Dynamic Decision-Making'
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Defining Bots for PlayTesting
+# Defining Bots that Make Decisions Based on Game-State
 
 Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
 Whenever the Bot runtime receives an update, Regression Games calls the `ProcessTick(RG rgObject)` method.
@@ -20,12 +20,12 @@ API methods that filter state objects and check conditions will record additiona
 These are displayed side-by-side with Bot actions in the Replay utility to help debug your Bot by showing which decisons led to resulting behaviors.  
 
 :::info
-If you are using the [[RGAction]](../../RGAction) attribute to generate your actions, then there are also typed `RGActionRequest` classes generated for that action.  The snippets below provide examples for using both typed and untyped actions.
+If you are using the [[RGAction]](../../integrating-with-unity/defining-actions) attribute to generate your actions, then there are also typed `RGActionRequest` classes generated for that action.  The snippets below provide examples for using both typed and untyped actions.
 :::
 
 :::caution
 Commands within `ProcessTick` interact with the game state represented by the current tick only.
-This contrasts with [Validation Bots](./validation-bots), which can delay execution of commands for several ticks until expected conditions are met.
+This contrasts with [Unit-Testing Bots](./unit-testing), which can delay execution of commands for several ticks until expected conditions are met.
 :::
 
 <Tabs>

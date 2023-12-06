@@ -13,9 +13,9 @@ This tutorial will walk you through the following steps to create a QA Bot for y
 4. Learn how to view test results.
 
 This tutorial assumes you have some familiarity with GitHub Actions, and that you have a working 
-bot within your game (see more on this in the [Creating Bots in JavaScript section](/studios/unity/unity-sdk/creating-bots/javascript/configuration)).
+bot within your game (see more on this in the [Creating Bots in JavaScript section](../creating-bots/javascript/configuration)).
 By the end of this tutorial, every push to your GitHub repo will build your Unity project and start bots for testing.
-You can find a working example in [this repository](https://github.com/Regression-Games/RGUnitySample) for reference, which has
+You can find a working example in [our sample repository](https://github.com/Regression-Games/RGUnitySample), which has
 a GitHub Action configuration and Unity Test Runner file incorporating the ideas of this tutorial.
 
 :::caution
@@ -31,7 +31,7 @@ tutorial is a first-pass at supporting CI/CD, but more features are coming soon 
 
 This feature requires a Unity license, as CI/CD builds for Unity are only available to those with
 a Unity license. If you want to use an existing CI/CD pipeline, you can skip ahead to the sections
-below regarding [test configurations](#3-add-the-qa-bot-workflow-file-to-your-project) and 
+below regarding [test configurations](#add-the-workflow-file-to-your-project) and 
 [test files](#add-a-test-to-your-unity-project).
 
 :::
@@ -148,15 +148,15 @@ the following secrets by clicking the green **New repository secret** button.
 
 1. `RG_HOST` - `https://play.regression.gg`
 2. `RG_API_KEY` - Your API key from Regression Games, which can be found in your [account settings](https://play.regression.gg/account).
-                  Full instructions for this can be found in the [Authentication docs](studios/api_reference/authentication).
+                  Full instructions for this can be found in the [Authentication docs](../authenticating-with-api-keys).
 3. `RG_BOT` - The ID of the bot you want to run. You can find this through the bot's details within the Regression Games 
               [Bot Manager page](https://play.regression.gg/bots).
 
-![Bot ID](./img/github-actions/bot-id.png)
+![Bot ID](img/github-actions/bot-id.png)
 
 Once you are done adding these secrets, your secrets section should look similar to the following:
 
-![Secrets for GitHub Actions](./img/github-actions/secrets.png)
+![Secrets for GitHub Actions](img/github-actions/secrets.png)
 
 ## Add a Test to Your Unity Project
 
@@ -171,7 +171,7 @@ in your Unity project.
 Before adding the test, make sure your desired test scenes are placed inside your build. You can add your scenes to the build
 using the menu option **File** > **Build Settings**.
 
-![Build settings](./img/github-actions/build.png)
+![Build settings](img/github-actions/build.png)
 
 ### Configure Test Runner for Your Project
 
@@ -358,7 +358,7 @@ At a high level, this test is doing the following:
 ### Test it out with an Existing Bot
 
 Our test is now setup! Before we commit and push our changes, let's test it out locally with an existing bot. To do this, you can
-follow the [first bot guide](/studios/unity/tutorials/first_tutorial) or [creating bots reference](/studios/unity/unity-sdk/creating-bots/javascript/configuration)
+follow the [first bot guide](../tutorials/building-your-first-bot) or [creating bots reference](../creating-bots/javascript/configuration)
 to create and configure a bot. As a quick test, you can make a bot that simply waits for a few seconds before completing its test. Note
 that **having your bot call `rg.complete()` is extremely important! Without this line of code, your bot will run forever!**
 
@@ -387,12 +387,12 @@ Once you are satisfied with your local test, you can commit and push your change
 GitHub Actions workflow, which will build your Unity project and start your bot. You can view the status of your workflow by going
 to the **Actions** tab of your GitHub repository.
 
-![Actions tab](./img/github-actions/actions-tab.png)
+![Actions tab](img/github-actions/actions-tab.png)
 
 Once your workflow has completed, you can view the results of your test by clicking on the **Build my project** step of your workflow.
 You should see that the bot successfully started and executed!
 
-![Build step](./img/github-actions/build-step.png)
+![Build step](img/github-actions/build-step.png)
 
 ## Viewing Test Results
 
@@ -400,8 +400,8 @@ Once your tests have completed, you can view their results on Regression Games b
 [Running Bots](https://play.regression.gg/running-bots) tab. From this page you can download bot logs for the test session which 
 contain output from your bot-code. You can also download in-game replay data which can be loaded in the Unity Editor to watch the 
 movements and actions of each bot, as well as analyze the validations they performed. See the 
-[In-Editor Replay](/studios/unity/unity-sdk/in-editor-replay) for instructions on how to load replay data.
+[In-Editor Replay](../session-insights/in-editor-replay) for instructions on how to load replay data.
 
-![Downloads](./img/github-actions/downloads.png)
+![Downloads](img/github-actions/downloads.png)
 
-![The timeline feature](./img/github-actions/timeline.png)
+![The timeline feature](img/github-actions/timeline.png)

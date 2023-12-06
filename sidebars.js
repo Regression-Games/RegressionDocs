@@ -52,8 +52,8 @@ const sidebars = {
           label: 'C# Reference',
           items: [
             'creating-bots/csharp/configuration',
-            'creating-bots/csharp/playtest-bots',
-            'creating-bots/csharp/validation-bots',
+            'creating-bots/csharp/dynamic-decision-making',
+            'creating-bots/csharp/unit-testing',
             'creating-bots/csharp/utilities'
           ]
         },
@@ -62,8 +62,8 @@ const sidebars = {
           label: 'JavaScript Reference',
           items: [
             'creating-bots/javascript/configuration',
-            'creating-bots/javascript/playtest-bots',
-            'creating-bots/javascript/validation-bots',
+            'creating-bots/javascript/dynamic-decision-making',
+            'creating-bots/javascript/unit-testing',
             'creating-bots/javascript/agent-builder'
           ]
         },

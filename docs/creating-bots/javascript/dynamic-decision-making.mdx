@@ -1,11 +1,11 @@
 ---
-sidebar_label: 'PlayTest Bots'
+sidebar_label: 'Dynamic Decision-Making'
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Defining Bots for PlayTesting
+# Defining Bots that Make Decisions Based on Game-State
 
 Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
 Whenever the Bot runtime receives an update, Regression Games calls the `processTick(rg)` method.
@@ -22,7 +22,7 @@ These are displayed side-by-side with Bot actions in the Replay utility to help 
 
 :::caution
 Commands within `processTick` interact with the game state represented by the current tick only.
-This contrasts with [Validation Bots](./validation-bots), which can delay execution of commands for several ticks until expected conditions are met. 
+This contrasts with [Unit-Testing Bots](./unit-testing), which can delay execution of commands for several ticks until expected conditions are met.
 :::
 
 <Tabs>
@@ -123,7 +123,7 @@ async function selectAbility(rg) {
 
     const ability = getNextAbility(rg);
     if(!rg.entityHasAttribute(rg.getBot(), ["abilityAvailable", `${ability.name}`], true)) {
-        // this ability is still on cooldown
+        // this ability is still on cool-down
         return;
     }
 
@@ -262,7 +262,7 @@ const objectState = rg.getState(mascot.id);
 ### `getBot();`
 
 Returns the current state information for this Bot.  
-Synonymous with [`rg.getState(rg.playerId)`](./playtest-bots#getstateid-number--null)
+Synonymous with [`rg.getState(rg.playerId)`](#getstateid-number--null)
 
 #### Arguments
 None
@@ -280,7 +280,7 @@ const myBot = rg.getBot();
 
 Flags the current Bot as complete, which will stop Bot execution and send a teardown notification to your game for this Bot.  
 This is particularly useful for [PERSISTENT Bots](./configuration#lifecycle) which must be stopped explicitly, 
-and for [Validation Bots](./validation-bots) which execute a specific set of commands and then are considered to have 'completed' their tasks 
+and for [Unit-Testing Bots](./unit-testing) which execute a specific set of commands and then are considered to have 'completed' their tasks
 regardless of whether the Unity Integration itself has signalled Bots to disconnect.
 
 #### Arguments
@@ -343,8 +343,8 @@ if(!await rg.entityHasAttribute(bot, "equippedItem", "sword")) {
 Find an entity with the given Object Type in the game state.
 This method should be used when only one entity with the given Object Type is expected to exist in the state,
 or when any entity with this Object Type will satisfy the scenario.
-For more control over finding specific entities in the game state, see [getState](./playtest-bots#getstateid-number--null)
-and [findNearestEntity](./playtest-bots#findnearestentityobjecttype-string--null-position-object--null-filterfunc-function--entity--true).
+For more control over finding specific entities in the game state, see [getState](#getstateid-number--null)
+and [findNearestEntity](#findnearestentityobjecttype-string--null-position-object--null-filterfunc-function--entity--true).
 
 #### Arguments
 Argument Name | Type | Default | Description

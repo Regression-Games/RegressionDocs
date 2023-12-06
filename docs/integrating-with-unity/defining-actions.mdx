@@ -10,14 +10,14 @@ import TabItem from '@theme/TabItem';
 This section refers to an "action" as any instruction that a bot can issue to its GameObject.
 This can be anything from movement to casting abilities to navigating UI components.
 
-It is common for actions to interact with entities in the [game state](./RGState) and their corresponding GameObjects.
-The [`RGFindUtils`](./RGFindUtils) class contains utility functions for finding such GameObjects within the scene and is
+It is common for actions to interact with entities in the [game state](./defining-entities-and-their-states) and their corresponding GameObjects.
+The [`RGFindUtils`](../creating-bots/csharp/utilities#rgfindutils) class contains utility functions for finding such GameObjects within the scene and is
 useful for these types of actions.
 
 ## Using the `RGAction` Attribute
 
 Defining an action is as simple as adding the `RGAction` attribute to a method.
-This allows the Regression Games SDK to recognize this method as the entrypoint into a callable action from your bot code ([C#](./creating-bots/csharp/configuration)) ([JavaScript](./creating-bots/javascript/configuration)).
+This allows the Regression Games SDK to recognize this method as the entrypoint into a callable action from your bot code ([C#](../creating-bots/csharp/configuration)) ([JavaScript](../creating-bots/javascript/configuration)).
 
 :::info
 The `RGAction` attribute must be used within a component, a class that inherits from `MonoBehavior`, or a class whose parent inherits from `MonoBehavior`.
