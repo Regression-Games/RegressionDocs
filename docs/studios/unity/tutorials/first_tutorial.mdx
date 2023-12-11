@@ -144,10 +144,9 @@ public class CharacterBotSpawnManager : RGBotSpawnManager
         return bot;
     }
     
-    new void Awake()
+    void Start()
     {
         // Prepares the RG SDK for spawning bots
-        base.Awake();
         RGBotServerListener.GetInstance()?.StartGame();
         RGBotServerListener.GetInstance()?.SpawnBots();
     }
