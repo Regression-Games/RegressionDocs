@@ -59,14 +59,14 @@ public void OpenContainer(bool isLocked)
 </Tabs>
 
 The `[RGAction]` attribute is designed for ease of integration.
-A method with this attribute may execute an action from start to finish, or it may start an action that `MonoBehavior` methods such as `FixedUpdate` should complete.
+A method with this attribute may execute an action from start to finish, or it may start an action that `MonoBehaviour` methods such as `FixedUpdate` should complete.
 Depending on how your code is structured, you may be able to add the `RGAction` attribute to your existing code with minimal refactoring.
 
 <Tabs>
 <TabItem value="complete_action" label="RGAction Completes the Action" default>
 
 ```cs
-public class Player : MonoBehavior
+public class Player : MonoBehaviour
 {
     public float jumpPower = 10f;
     private RigidBody _rigidbody;
@@ -88,7 +88,7 @@ public class Player : MonoBehavior
 <TabItem value="action_with_update" label="RGAction Starts the Action">
 
 ```cs
-public class Player : MonoBehavior
+public class Player : MonoBehaviour
 {
     public float speed = 100f;
     public float range = 1f;
@@ -170,7 +170,7 @@ _Clicking UI buttons is a global action handler available by default on the over
  
 Source File: Player.cs
 ```cs
-public class Player : MonoBehavior
+public class Player : MonoBehaviour
 {
     public float speed = 100f;
     public float range = 1f;
