@@ -182,13 +182,9 @@ position it within the scene wherever you want to spawn your bot (ideally above 
 ## Add state information to relevant GameObjects
 
 The next step is to indicate what state in your scene is available to bots. This state is used by bots to
-make decisions on what actions to take. State is relayed to bots by attaching [`RGState`](../integrating-with-unity/defining-entities-and-their-states)
-components to any game object or prefab that you want your bots to know about. 
+make decisions on what actions to take. For more information about exposing the state of GameObjects [`RGState`](../integrating-with-unity/defining-states).
 
-The base implementation of [`RGState`](../integrating-with-unity/defining-entities-and-their-states) provided by Regression Games relays default 
-information such as a `type`, `position`, and a unique identifier. In this sample scene, we will use this default 
-state information, but of course you may need to provide additional state, such as a players team, health, if a door is open, etc...
-You can do this by checking out the docs and examples for [`RGState.GetState()`](../integrating-with-unity/defining-entities-and-their-states#public-virtual-dictionarystring-object-getstate).
+TODO (REG-1279) : Re - Write this section
 
 In this scene, open the `Player` prefab located in the **Assets > Prefabs** folder by double clicking
 the prefab, click **Add Component**, and then add the `RGState` component by searching for "RG State" in the component
@@ -202,6 +198,8 @@ only have `Is Runtime Object` checked (`Is Player` should be off).
 That's all you need to do for your bot to see the state of the game!
 
 ## Implement actions your bot can take
+
+TODO (REG-1279) : Re - Write this section
 
 Finally, we need to provide an interface that allows bots to control these characters in your game. This is
 done using the [`RGAction`](../integrating-with-unity/defining-actions) interface. 

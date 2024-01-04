@@ -36,7 +36,7 @@ const sidebars = {
       type: 'category',
       label: 'Integrating with Unity',
       items: [
-        'integrating-with-unity/defining-entities-and-their-states',
+        'integrating-with-unity/defining-states',
         'integrating-with-unity/defining-actions',
         'integrating-with-unity/BotInformation',
         'integrating-with-unity/seating-and-spawning-bots',
