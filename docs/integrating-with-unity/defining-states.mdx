@@ -23,7 +23,7 @@ Unless one of the other methods is used, this will include only the [core](#core
 :::info
 Adding `RGStatefulGameObject` to a GameObject is **NOT** required when using any of the other methods described below.
 
-`RGStatefulGameObject` is useful only for GameObjects that should be included in the state, but that do not have any of the attributes below.
+`RGStatefulGameObject` is only useful for GameObjects that should be included in the state, but that do not have any of the attributes below.
 :::
 
 Each GameObject is included in the overall state dictionary keyed by its `id`.
@@ -32,17 +32,17 @@ Each GameObject is included in the overall state dictionary keyed by its `id`.
  The core state for each GameObject is put into the state dictionary as an `RGStateEntity_Core` which provides fields for each
 of the core state properties.  Any other state properties can be retrieved using the `GetField` methods on the core StateEntity for a GameObject.
 
-| Name          | Type         | Description                                                                                                                                                                                       |
-|---------------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`          | `int`        | The transform id of this GameObject.                                                                                                                                                              |  
-| `name`        | `string`     | The name of this GameObject as seen in the editor.                                                                                                                                                |
-| `tag`         | `string`     | The tag of this GameObject as seen in the editor, can be null if GameObject is untagged.                                                                                                          |
-| `scene`       | `string`     | The name of the scene this GameObject is part of.                                                                                                                                                 |
-| `pathInScene` | `string`     | The full path to this GameObject in its scene.                                                                                                                                                    |
-| `position`    | `Vector3`    | The position of this GameObject in world space.                                                                                                                                                   |
-| `rotation`    | `Quaternion` | The rotation of this GameObject in world space.                                                                                                                                                   |
-| `isPlayer`    | `boolean`    | If true, this GameObject has a MonoBehaviour representing a player controlled object. That player may or may not be driven by a bot.  (See the [RGStateType] section below for more information.) |
-| `clientId`    | `long?`      | The id of the client that owns/controls this GameObject if it represents a bot.  This field can be null.                                                                                          |
+| Name          | Type         | Description                                                                                                                                                                                                                                 |
+|---------------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`          | `int`        | The transform id of this GameObject.                                                                                                                                                                                                        |  
+| `name`        | `string`     | The name of this GameObject as seen in the editor.                                                                                                                                                                                          |
+| `tag`         | `string`     | The tag of this GameObject as seen in the editor, can be null if GameObject is untagged.                                                                                                                                                    |
+| `scene`       | `string`     | The name of the scene this GameObject is part of.                                                                                                                                                                                           |
+| `pathInScene` | `string`     | The full path to this GameObject in its scene.                                                                                                                                                                                              |
+| `position`    | `Vector3`    | The position of this GameObject in world space.                                                                                                                                                                                             |
+| `rotation`    | `Quaternion` | The rotation of this GameObject in world space.                                                                                                                                                                                             |
+| `isPlayer`    | `boolean`    | If true, this GameObject has a MonoBehaviour representing a player controlled object. That player may or may not be driven by a bot.  (See the [[RGStateType](#2---rgstatetype-class-level-attribute)] section below for more information.) |
+| `clientId`    | `long?`      | The id of the client that owns/controls this GameObject if it represents a bot.  This field can be null.                                                                                                                                    |
 
 
 ### 2 - `[RGStateType]` Class Level Attribute
