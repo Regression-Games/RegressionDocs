@@ -7,12 +7,13 @@ import TabItem from '@theme/TabItem';
 
 # Defining States
 
-:::info
-TODO: We need to write a better description about why it is important to limit the state exposed to your bot.
-If we can't justify this vs accessing game object state directly, we should question what value we add...
-:::
-
 The state of the game sent to Regression Games includes only GameObjects selected to be part of the state.
+
+:::info
+Exposing every field or property of each Behaviour on every GameObject is too much information to capture each each tick in all but the smallest of games.
+
+The methods for exposing state listed below make it quick and easy to expose exactly the amount of state you need.
+:::
 
 ## Ways to include a GameObject in the state...
 
@@ -327,7 +328,7 @@ Any MonoBehaviour using this attribute will be included in the state under a pro
 :::info
 `[RGAction]` **DOES NOT** require using `[RGStateType]`.  Your Behaviour will still be included as a property in the state with only `[RGAction]` attributes present.
 
-You can use both attributes when you want to specify `isPlayer` as `true` or want to override the `typeName` used for the property name in the state.
+You can use both attributes when you want to specify `isPlayer` as `true` or want to override the `typeName` used for this Behaviour in the state.
 :::
 
 See [Defining Actions](../integrating-with-unity/defining-actions) for more information about defining actions.
