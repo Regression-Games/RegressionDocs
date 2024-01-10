@@ -140,8 +140,8 @@ If your Javascript bot needs to call a method with non-primitive parameters, con
 [RGAction]
 public void AttackPlayerProxy(int playerId)
 {
-    var player = RGFindUtils.Instance.FindOneByInstanceId<RGState>(playerId);
-    AttackPlayer(player.gameObject);
+    var playerGameObject = RGFindUtils.Instance.FindOneByInstanceId(playerId);
+    AttackPlayer(playerGameObject);
 }
 
 // The method we want to expose as an action
