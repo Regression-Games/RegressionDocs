@@ -20,7 +20,7 @@ Once downloaded, open the project in Unity.
 Navigate to the **Scenes** folder in the Project window and open the **MainMenu** scene.
 Use this scene for the rest of the tutorial.
 
-TODO: Screenshot of the MainMenu scene
+![The Unity Project panel showing the "MainMenu" scene in the Boss Room sample.](img/getting-started/bossroom-mainmenu-scene.png)
 
 ## Installing the package
 
@@ -36,7 +36,7 @@ https://github.com/Regression-Games/RegressionGames.Unity.Testing.git?path=src/g
 * **NOTE**: The package uses [TextMeshPro](https://docs.unity3d.com/Manual/com.unity.textmeshpro.html) to provide UI elements. If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
 * **NOTE**: The package uses [Newtonsoft Json](https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) to serialize state for recordings.
 
-TODO: Screenshot of package manager dialog and import
+![The Unity Package Manager dialog with the "Add package from git URL" option selected.](img/getting-started/add-package-from-git.png)
 
 ## Adding the Automation Controller and components to your scene
 
@@ -48,7 +48,11 @@ The Controller also provides APIs for spawning bots and managing recordings (via
 
 To add the Automation Controller to your scene, click **GameObject > Regression Games > Automation Controller** in the Unity menu.
 
-TODO: Screenshot of Automation Controller in menu
+![The "Automation Controller" option in the Regression Games submenu of the GameObject menu](img/getting-started/add-automation-controller-menu.png)
+
+**By default**, the Automation Controller and all it's children will mark themselves as [DontDestroyOnLoad](https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html). This ensures that bots continue to run when you load a new scene in your game. You can disable this behavior by unchecking the "Dont Destroy On Load" checkbox on the Automation Controller component.
+
+![The Automation Controller component with the "Dont Destroy On Load" checkbox checked](img/getting-started/ac-dont-destroy-on-load.png)
 
 ## Adding Entity Discoverers to your scene
 
@@ -57,11 +61,11 @@ The Automation Controller uses Entity Discoverers to find entities in the scene 
 The package provides a few built-in Entity Discoverers, but you can also create your own.
 To add one of the built-in discoverers, open the **GameObject > Regression Games > Discovery** menu and select the discoverer you want to add:
 
-TODO: Screenshot of Entity Discoverer menu
+![The "UI Element Discoverer" option in the Regression Games submenu of the GameObject menu](img/getting-started/add-uielement-discoverer.png)
 
 As long as you have an Automation Controller in your scene, the Entity Discoverer will be **automatically** be added as a child of the Automation Controller, no matter what object is selected in the Hierarchy window.
 
-TODO: Screenshot of spawned Entity Discover.
+![The Unity Hierarchy view showing the "UI Element Discoverer" object as a child of the "Automation Controller"](img/getting-started/ui-element-discoverer-in-scene.png)
 
 For this example, we recommend spawning the "UI Element Discoverer", which will find all the UI elements in your scene.
 Elements will provide various states that can be recorded, such as the opacity and interactability of a Canvas Group.
@@ -69,19 +73,23 @@ Some elements provide actions that the bot can take, such as clicking on a Butto
 
 ## Adding the Overlay UI
 
-For simple scenarios, we provide an Overlay UI that can be used to spawn bots in the scene.
+For simple scenarios, we provide a UI Overlay that can be used to spawn bots in the scene.
 This allows you to quickly try out automations without having to write code to manage the bots.
-To add the Overlay UI, click **GameObject > Regression Games > Overlay UI** in the Unity menu.
+To add the Overlay UI, click **GameObject > Regression Games > UI Overlay** in the Unity menu.
 
-TODO: Screenshot of Overlay UI menu
+![The Overlay UI running in the Boss Room sample](img/getting-started/overlay-menu.png)
 
-The Overlay UI provides a small button in the bottom-right corner of the game.
+The UI Overlay provides a small button in the bottom-right corner of the game.
 When clicked, this button will open a dialog that shows you a list of available bots that can be spawned.
-You can customize which bots appear in this list using the "Available Bots" property on the Overlay UI component.
+You can customize which bots appear in this list using the "Available Bots" property on the UI Overlay component.
 
-TODO: Screenshot of Available Bots property
+![The "Available Bots" property on the UI Overlay component](img/getting-started/overlay-available-bots.png)
 
-By default, the Overlay UI includes the built-in "Monkey Bot", which is a bot that randomly clicks on UI elements in your game and records a screenshot of the game after each click.
+The UI Overlay includes the built-in "Monkey Bot", which is a bot that randomly clicks on UI elements in your game and records a screenshot of the game after each click.
+
+**By default**, the Overlay UI will mark itself as [DontDestroyOnLoad](https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html). This allows you to retain control over starting and stopping bots when you load a new scene in your game. You can disable this behavior by unchecking the "Dont Destroy On Load" checkbox on the Overlay UI component.
+
+![The Automation Controller component with the "Dont Destroy On Load" checkbox checked](img/getting-started/ac-dont-destroy-on-load.png)
 
 ## Running the Monkey Bot
 
@@ -103,9 +111,9 @@ You can view the recordings by clicking on the "Automation Controller" object in
 On the inspector, find the "Automation Recorder" component and click the **View Recordings...** button.
 The directory in which the recordings are stored will open in your file explorer.
 
-TODO: Screenshot of "View Recordings..." button
+![The Automation Recorder component with the "View Recordings..." button](img/getting-started/view-recordings-button.png)
 
-TODO: Screenshot of recordings directory
+![The macOS Finder showing the directory containing the recordings](img/getting-started/recordings-in-finder.png)
 
 Each recording is an `.rgrec.zip` file.
 Inside these ZIP files are:
@@ -114,4 +122,4 @@ Inside these ZIP files are:
 1. A series of `snapshot.[frameNumber].json` files that contain all the state captured for each frame of the recording. Frames with no state changes are not included in the recording, so if a given frame `N` is missing, it means that the state of the game did not change between frames `N-1` and `N`.
 1. A series of `screenshot.[frameNumber].png` files that contain a screenshot of the game for each frame that a screenshot was requested. Bots, and your game code, can use an API on the Automation Controller to request a screenshot at any time. For example, the Monkey Bot requests a screenshot for the frame immediately after it clicks on a UI element.
 
-TODO: Screenshot of recording contents
+![The macOS Finder showing the contents of a recording](img/getting-started/recording-content-in-finder.png)
