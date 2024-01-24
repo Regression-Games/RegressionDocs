@@ -40,30 +40,30 @@ https://github.com/Regression-Games/RegressionGames.Unity.Testing.git?path=src/g
 
 ## Adding the Automation Controller and components to your scene
 
-Once the package is installed, you need to add an Automation Controller to the scene you wish to automate.
+Once the package is installed, add an Automation Controller to the scene you wish to automate.
 The Automation Controller is the hub for all automation in a scene.
 Bots are spawned as children of the Automation Controller,
-and Entity Discoverers (see below) should be added as children of the Automation Controller.
+and Entity Discoverers (see below) must be added as children of the Automation Controller to allow it to identify and interact with your GameObjects.
 The Controller also provides APIs for spawning bots and managing recordings (via a separate, Automation Recorder component attached to the same object).
 
 To add the Automation Controller to your scene, click **GameObject > Regression Games > Automation Controller** in the Unity menu.
 
 ![The "Automation Controller" option in the Regression Games submenu of the GameObject menu](img/getting-started/add-automation-controller-menu.png)
 
-**By default**, the Automation Controller and all it's children will mark themselves as [DontDestroyOnLoad](https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html). This ensures that bots continue to run when you load a new scene in your game. You can disable this behavior by unchecking the "Dont Destroy On Load" checkbox on the Automation Controller component.
+**By default**, the Automation Controller and all its children will mark themselves as [DontDestroyOnLoad](https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html). This ensures that bots continue to run when you load a new scene in your game. You can disable this behavior by unchecking the "Dont Destroy On Load" checkbox on the Automation Controller component.
 
 ![The Automation Controller component with the "Dont Destroy On Load" checkbox checked](img/getting-started/ac-dont-destroy-on-load.png)
 
 ## Adding Entity Discoverers to your scene
 
 In order to automate entities in your game, the Automation Controller needs to be able to find them.
-The Automation Controller uses Entity Discoverers to find entities in the scene that can be automated.
+The Automation Controller uses Entity Discoverers to find entities in the scene that can be interacted with.
 The package provides a few built-in Entity Discoverers, but you can also create your own.
 To add one of the built-in discoverers, open the **GameObject > Regression Games > Discovery** menu and select the discoverer you want to add:
 
 ![The "UI Element Discoverer" option in the Regression Games submenu of the GameObject menu](img/getting-started/add-uielement-discoverer.png)
 
-As long as you have an Automation Controller in your scene, the Entity Discoverer will be **automatically** be added as a child of the Automation Controller, no matter what object is selected in the Hierarchy window.
+As long as you have an Automation Controller in your scene, the Entity Discoverer will **automatically** be added as a child of the Automation Controller, no matter what object is selected in the Hierarchy window.
 
 ![The Unity Hierarchy view showing the "UI Element Discoverer" object as a child of the "Automation Controller"](img/getting-started/ui-element-discoverer-in-scene.png)
 
