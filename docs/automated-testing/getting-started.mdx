@@ -4,17 +4,13 @@ sidebar_label: Getting Started
 
 # Getting Started with Automated Testing
 
-This quick walk-through will show you how to integrate the Regression Games Automated Testing package into your game, 
-and how to use the built-in "Monkey Bot",
-which is a bot that randomly clicks on UI elements in your game,
-recording state along the way. 
+This quick walkthrough will teach you how integrate the Regression Games Automated Testing package into your game and leverage a built-in bot to perform Monkey Testing. Monkey Testing is a strategy where a user randomly interacts with UI elements to uncover potential edge-cases. The built-in "Monkey Bot" will allow you to do some basic UI hardening to ensure your game doesn't crash or behave unexpectedly when a user clicks on random UI elements.
 
 ## A sample game to start with
 
 If you have a game you want to automate, you can skip this step.
 But if you just want to check the package out and don't have an active game project,
-we recommend using the Boss Room Co-Op Sample Project from Unity.
-You can download it from GitHub: [https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop](https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop)
+we recommend using the [Boss Room Co-Op Sample Project](https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop) from Unity.
 
 Once downloaded, open the project in Unity.
 Navigate to the **Scenes** folder in the Project window and open the **MainMenu** scene.
@@ -33,8 +29,10 @@ Select **Add package from git URL** and paste in the following URL:
 https://github.com/Regression-Games/RegressionGames.Unity.Testing.git?path=src/gg.regression.unity.testing#v0.0.1
 ```
 
-* **NOTE**: The package uses [TextMeshPro](https://docs.unity3d.com/Manual/com.unity.textmeshpro.html) to provide UI elements. If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
-* **NOTE**: The package uses [Newtonsoft Json](https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) to serialize state for recordings.
+:::info
+* The package uses [TextMeshPro](https://docs.unity3d.com/Manual/com.unity.textmeshpro.html) to provide UI elements. If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
+* The package uses [Newtonsoft Json](https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) to serialize state for recordings.
+:::
 
 ![The Unity Package Manager dialog with the "Add package from git URL" option selected.](img/getting-started/add-package-from-git.png)
 
@@ -46,11 +44,11 @@ Bots are spawned as children of the Automation Controller,
 and Entity Discoverers (see below) must be added as children of the Automation Controller to allow it to identify and interact with your GameObjects.
 The Controller also provides APIs for spawning bots and managing recordings (via a separate, Automation Recorder component attached to the same object).
 
-To add the Automation Controller to your scene, click **GameObject > Regression Games > Automation Controller** in the Unity menu.
+To add the Automation Controller to your scene, go to Unity's main menu bar and click **GameObject > Regression Games > Automation Controller**. In the BossRoom sample, we recommend adding the controller to the `Assets/Scenes/MainMenu.unity` scene.
 
 ![The "Automation Controller" option in the Regression Games submenu of the GameObject menu](img/getting-started/add-automation-controller-menu.png)
 
-**By default**, the Automation Controller and all its children will mark themselves as [DontDestroyOnLoad](https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html). This ensures that bots continue to run when you load a new scene in your game. You can disable this behavior by unchecking the "Dont Destroy On Load" checkbox on the Automation Controller component.
+**By default**, the Automation Controller and all its children will mark themselves as [`DontDestroyOnLoad`](https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html). This ensures that bots continue to run when you load a new scene in your game. You can disable this behavior by unchecking the "Dont Destroy On Load" checkbox on the Automation Controller component.
 
 ![The Automation Controller component with the "Dont Destroy On Load" checkbox checked](img/getting-started/ac-dont-destroy-on-load.png)
 
@@ -59,7 +57,7 @@ To add the Automation Controller to your scene, click **GameObject > Regression 
 In order to automate entities in your game, the Automation Controller needs to be able to find them.
 The Automation Controller uses Entity Discoverers to find entities in the scene that can be interacted with.
 The package provides a few built-in Entity Discoverers, but you can also create your own.
-To add one of the built-in discoverers, open the **GameObject > Regression Games > Discovery** menu and select the discoverer you want to add:
+To add one of the built-in discoverers, go to the Unity main menu and open the **GameObject > Regression Games > Discovery** menu. Then, select the discoverer you want to add:
 
 ![The "UI Element Discoverer" option in the Regression Games submenu of the GameObject menu](img/getting-started/add-uielement-discoverer.png)
 
@@ -67,7 +65,7 @@ As long as you have an Automation Controller in your scene, the Entity Discovere
 
 ![The Unity Hierarchy view showing the "UI Element Discoverer" object as a child of the "Automation Controller"](img/getting-started/ui-element-discoverer-in-scene.png)
 
-For this example, we recommend spawning the "UI Element Discoverer", which will find all the UI elements in your scene.
+For this example, we recommend adding the "UI Element Discoverer", which will find all the UI elements in your scene.
 Elements will provide various states that can be recorded, such as the opacity and interactability of a Canvas Group.
 Some elements provide actions that the bot can take, such as clicking on a Button.
 
@@ -75,7 +73,7 @@ Some elements provide actions that the bot can take, such as clicking on a Butto
 
 For simple scenarios, we provide a UI Overlay that can be used to spawn bots in the scene.
 This allows you to quickly try out automations without having to write code to manage the bots.
-To add the Overlay UI, click **GameObject > Regression Games > UI Overlay** in the Unity menu.
+To add the Overlay UI, go to the Unity main menu and open the **GameObject > Regression Games**. Click **UI Overlay** to add the UI Overlay to your scene. It does **not** need to be a child of the automation controller, you can place it anywhere in your scene.
 
 ![The Overlay UI running in the Boss Room sample](img/getting-started/overlay-menu.png)
 
@@ -90,6 +88,10 @@ The UI Overlay includes the built-in "Monkey Bot", which is a bot that randomly 
 **By default**, the Overlay UI will mark itself as [DontDestroyOnLoad](https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html). This allows you to retain control over starting and stopping bots when you load a new scene in your game. You can disable this behavior by unchecking the "Dont Destroy On Load" checkbox on the Overlay UI component.
 
 ![The Automation Controller component with the "Dont Destroy On Load" checkbox checked](img/getting-started/ac-dont-destroy-on-load.png)
+
+:::info
+Save the scene before continuing to run the bot.
+:::
 
 ## Running the Monkey Bot
 
