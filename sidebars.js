@@ -77,7 +77,12 @@ const sidebars = {
           'session-insights/in-editor-replay'
       ]
     }
-  ]
+  ],
+
+  automatedTesting: [
+    'automated-testing/overview',
+    'automated-testing/getting-started',
+  ],
 };
 
 module.exports = sidebars;
