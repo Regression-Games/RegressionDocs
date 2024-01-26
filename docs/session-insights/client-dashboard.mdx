@@ -1,0 +1,32 @@
+---
+sidebar_label: 'Client Dashboard'
+---
+
+# Viewing Validations
+
+Validations are used to assert the state of your bots at a point in time. You can think of them as tests that can be run to
+ensure that your bots are behaving as you expect. Beyond functioning as tests, validations can be used to locate tricky errors
+and to fine-tune your game's balance. To get started with validations, check out our docs for both [C#](../creating-bots/csharp/scenario-testing)
+and [JavaScript](../creating-bots/javascript/scenario-testing) bots.
+
+![Validations Page](img/validation-dashboard/home.png)
+
+On the Validations Page you can see all the bot instances for a particular bot. An instance can be expanded to show
+each individual validation asserted during the course of that bot instance's lifetime. Validations can be filtered by passed,
+failed, and warning results. By default, all validations will be shown regardless of result.
+
+You can select an individual validation to view both a screenshot and the game state at the time
+that the validation was asserted (unfortunately we can only display screenshots for C# bots at this time). Clicking on
+the screenshot will show it at a larger size.
+
+## How To Find The Validations Page
+
+Visit the **Running Bots** tab and click on the **History** filter to see a list of your previous bot instances. Navigate to the
+Validations Page for a bot instance by clicking on the **Go To Validations** button.
+
+![Validations Page Via Bot History](img/validation-dashboard/navigate-from-bot-history.png)
+
+Visit the **Bot Manager** tab and select a bot whose validations you would like to view. Navigate to the Validations Page
+for the selected bot by clicking on the **Go To Validations** button in the panel on the right.
+
+![Validations Page Via Bot Manager](img/validation-dashboard/bot-details-preview.png)

@@ -1,0 +1,251 @@
+---
+sidebar_label: 'Seating and Spawning Bots'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# RGBotSpawnManager
+
+The RGBotSpawnManager is the central configuration point for spawning bots into your Unity game.
+The class provides default functionality for seating bots as they join, tearing them down, and handling
+reconnects. A developer must, at a minimum, define how bots are spawned into the game via the
+`SpawnBot()` method.
+
+## Abstract Methods
+
+### `[CanBeNull] public abstract GameObject SpawnBot(bool lateJoin, BotInformation botInformation);`
+
+Defines how a bot is spawned into a game. More specifically, [`botInformation`](./BotInformation) holds the configuration for the bot, 
+and you must implement operations within your game to instantiate and spawn that bot. That may be 
+simply instantiating a prefab, or spawning a NetworkObject into the game.
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`lateJoin` | `bool` | required | If true, this bot is joining after the game started or after any initial bots have been spawned
+`botInformation` | [`BotInformation`](./BotInformation) | required | The id of the client, name of the bot, and a JSON string containing configuration about your bot.
+
+#### Return Value
+The instantiated GameObject. This is later used to find and identify the object in the scene that is controlled by your bot.
+
+#### Examples
+<Tabs>
+<TabItem value="editor_prefab" label="Instantiate from a simple prefab in the editor" default>
+
+```cs
+...
+
+[SerializeField]
+[Tooltip("The character to spawn")]
+private GameObject rgBotPrefab;
+
+[SerializeField]
+[Tooltip("Spawn point for RG Bots")]
+private Transform botSpawnPoint;
+
+public override GameObject SpawnBot(bool lateJoin, BotInformation botInformation)
+{
+    var bot = Instantiate(rgBotPrefab, Vector3.zero, Quaternion.identity);
+    bot.transform.position = botSpawnPoint.position;
+    return bot;
+}
+
+...
+```
+</TabItem>
+<TabItem value="editor_prefab_with_config" label="Instantiate and configure" default>
+
+```cs
+...
+
+[SerializeField]
+[Tooltip("The character to spawn")]
+private GameObject rgBotPrefab;
+
+[SerializeField]
+[Tooltip("Spawn point for RG Bots")]
+private Transform botSpawnPoint;
+
+public override GameObject SpawnBot(bool lateJoin, BotInformation botInformation)
+{
+    var bot = Instantiate(rgBotPrefab, Vector3.zero, Quaternion.identity);
+    bot.transform.position = botSpawnPoint.position;
+    // RGPlayerMoveAction is an RGAction script that we have attached to our prefab, and BotCharacterConfig
+    // is a simple serializable class that holds a "speed" field, which is populated from the bot code.
+    RGPlayerMoveAction moveAction = bot.GetComponent<RGPlayerMoveAction>();
+    BotCharacterConfig config = botInformation.ParseCharacterConfig<BotCharacterConfig>();
+    if (config != null)
+    {
+        Debug.Log($"Changed speed to ${config.speed}");
+        moveAction.speed = config.speed;
+    }
+    return bot;
+}
+
+...
+```
+</TabItem>
+</Tabs>
+
+## Overridable Virtual Methods
+
+The `RGBotSpawnManager` class has a few methods that can be overridden to further configure how a bot is loaded
+and unloaded from a game.
+
+:::caution
+
+Each of these functions provide important internal implementations that must be called in addition to your
+custom code. **Please remember to always call the super/base functions first, which will return objects that
+can be further modified.**
+
+:::
+
+### `public virtual void SeatBot(BotInformation botToSpawn)`
+
+A method that gets called before spawning a bot, but after a client has connected. This is useful for seating a 
+bot into your game before their prefab has actually spawned - for instance, when choosing a character in a character 
+selection screen. This queues the bot to be spawned by the `SpawnBots(bool)` function. You may also override configurations 
+provided by the bot using the [`BotInformation.UpdateCharacterConfig<T>(T)`](./BotInformation#public-void-updatecharacterconfigtt-newconfig) method, which sends a new config back to your bot. 
+By default, this method does nothing when not implemented.
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`botToSpawn` | [`BotInformation`](./BotInformation) | required | The id of the client, name of the bot, and a JSON string containing configuration about your bot.
+
+#### Return Value
+
+No return value
+
+
+### `public virtual void TeardownBot(uint clientId)`
+
+A method that gets called when a bot has received a teardown request (i.e. when the bot has signaled that 
+it is finished, or when `RGBotServerListener.GetInstance()?.StopGame()` is called).
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`clientId` | `uint` | required | The ID of the client that owns the bot to teardown
+
+#### Return Value
+
+No return value
+
+#### Examples
+<Tabs>
+<TabItem value="editor_prefab" label="Disconnect the character from a network when tearing down" default>
+
+```cs
+public override void TeardownBot(uint clientId)
+{
+    if (BotMap.TryRemove(clientId, out GameObject botObject))
+    {
+        try
+        {
+            NetworkObject botOnNetwork = botObject.GetComponent<NetworkObject>();
+            botOnNetwork.Despawn(true);
+        }
+        catch (Exception)
+        {
+            Debug.Log($"Player already de-spawned");
+        }
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+### `public virtual void StopGame()`
+
+A method that gets called when the game is terminated. This will remove all bots from the game. 
+In most cases, you will not need to override this method, and instead should look at `TeardownBot()`.
+
+#### Arguments
+
+No arguments
+
+#### Return Value
+
+No return value
+
+### `public virtual BotInformation SeatBot(uint clientId, string characterConfig, string botName)`
+
+A method that gets called before spawning a player, but after a client has connected. This is
+useful for seating a bot into your game before their prefab has actually spawned - for instance,
+when choosing a character in a character selection screen. This queues the bot to be spawned by
+the `SpawnBots()` function.
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`clientId` | `uint` | required | The ID of the client whose bot is connecting
+`characterConfig` | `string` | required | A JSON string that can be used to customize your bot
+`botName` | `string` | required | The name of the bot
+
+#### Return Value
+
+A [`BotInformation`](./BotInformation) object that contains the clientId, characterConfig, and botName of the connecting bot.
+
+
+## Class Methods
+
+The remaining functions mentioned here are not meant to be overridden, but are helpful when
+implementing your `SpawnBot` and `SeatBot` methods.
+
+### `public GameObject GetBot(uint clientId)`
+
+Returns the GameObject of the bot that belongs to the given `clientId`. Returns null if a bot is not found for the given `clientId`.
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`clientId` | `uint` | required | The ID of the client whose bot you want to find
+
+#### Return Value
+
+The GameObject which encapsulates the bot, or null if the bot is not found
+
+### `public bool IsBotSpawned(uint clientId)`
+
+Returns true if the bot owned by the given clientId has been spawned into the game, and false otherwise. Equivalent to
+checking if `GetBot(clientId) != null`.
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`clientId` | `uint` | required | The ID of the client whose bot you want to find
+
+### `public bool BotsHaveSpawned()`
+
+Returns true if an initial spawn of bots has occurred.
+
+#### Arguments
+
+None
+
+#### Return Value
+
+True if some bots have already been initially spawned
+
+### `public int? GetBotId(uint clientId)`
+
+Returns the Instance ID of the transform for the bot in the scene. This can be used later to reference the bot in the scene.
+
+#### Arguments
+
+Argument Name | Type | Default | Description
+---|---|---|---|
+`clientId` | `uint` | required | The ID of the client that owns the bot to find
+
+#### Return Value
+
+The ID of the bot, or null if it cannot be found

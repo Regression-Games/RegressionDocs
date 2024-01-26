@@ -73,17 +73,16 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'playersSidebar',
+            sidebarId: 'unitySidebar',
             position: 'left',
-            label: 'Players',
+            label: 'Developer Reference',
           },
           {
             type: 'docSidebar',
-            sidebarId: 'studiosSidebar',
+            sidebarId: 'automatedTesting',
             position: 'left',
-            label: 'Studios',
+            label: 'Automated Testing',
           },
-          // {to: '/blog', label: 'Blog', position: 'left'},
           {
             type: 'doc',
             docId: 'changelog',
@@ -104,12 +103,12 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'For Studios',
-                to: '/studios/unity/unity-sdk/overview',
+                label: 'Overview',
+                to: 'overview',
               },
               {
-                label: 'For Players',
-                to: '/players/account-setup',
+                label: 'Quickstart',
+                to: 'quickstart',
               },
             ],
           },
@@ -148,6 +147,12 @@ const config = {
         additionalLanguages: ['csharp'],
       },
     }),
+    scripts: [
+      {
+        src: '/js/loadposthog.js',
+        async: false,
+      },
+    ]
 };
 
 module.exports = config;
