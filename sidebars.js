@@ -82,6 +82,7 @@ const sidebars = {
   automatedTesting: [
     'automated-testing/overview',
     'automated-testing/getting-started',
+    'automated-testing/gpt-assistant-bot',
   ],
 };
 
