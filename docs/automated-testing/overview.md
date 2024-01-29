@@ -2,7 +2,12 @@
 sidebar_label: Overview
 ---
 
-# Automated Testing for Unity
+# Automated UI Testing for Unity
+
+:::info
+The Automated UI Testing package is currently a preview and we're looking for your feedback!
+Please submit feedback using our [feedback form](https://d7y6yysps34.typeform.com/to/o8U6FGtO)
+:::
 
 The Regression Games Automated Testing Package for Unity is a set of tools that help you test your game with less code. The package combines several powerful features to help you test your game:
 
