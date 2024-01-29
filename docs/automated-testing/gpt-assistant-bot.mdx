@@ -7,13 +7,13 @@ sidebar_label: GPT Assistant Bot
 In addition to the completely random "Monkey" Bot, the RegressionGames Automated UI Testing package includes a "GPT Assistant" Bot that uses [OpenAI's GPT-4 Large Language Model](https://openai.com/gpt-4) to drive a bot in your game.
 This guide will show you how to set up the GPT Assistant Bot, how to connect it to OpenAI, and how to give the bot a goal to accomplish.
 
-### Prerequisites
+## Prerequisites
 
 * You should have completed the [Getting Started Guide](./getting-started.mdx).
 * You need an OpenAI account with access to the `gpt-4-1106-preview` model. This is the ideal model for the GPT Assistant bot at this time.
 * You need to have the [OpenAI API Key](https://beta.openai.com/account/api-keys) and (optionally) Organization ID for your account.
 
-### Adding OpenAI Credentials to your game
+## Adding OpenAI Credentials to your game
 
 The GPT Assistant Bot requires an OpenAI API Key and (optionally) Organization ID to connect to OpenAI's API.
 In order to provide these, you need to create an "OpenAI Credentials" Asset in your game.
@@ -33,7 +33,7 @@ We're working on a system to store this value outside of your project in the fut
 
 ![The OpenAI Credentials Asset Inspector](./img/gpt-assistant-bot/openai-credentials-inspector.png)
 
-### Adding the GPT Assistant Bot to your game
+## Adding the GPT Assistant Bot to your game
 
 The GPT Assistant Bot works a little differently than the "Monkey" Bot we added in the [Getting Started Guide](./getting-started.mdx).
 The Monkey Bot is provided entirely by our package, and is automatically available in the Regression Games UI Overlay.
@@ -60,7 +60,7 @@ Then, drag the OpenAI Credentials asset you created in the previous step on to t
 
 ![An animation showing the user dragging an asset named "OpenAICredentials" from the Unity Project window to the "Open Ai Credentials" field in the Inspector for the prefab](./img/gpt-assistant-bot/recording-set-openai-credentials.gif)
 
-### Setting a Goal for the GPT Assistant Bot
+## Setting a Goal for the GPT Assistant Bot
 
 In order for the bot to actually do anything, you need to give it a Goal to accomplish.
 For this guide, we'll use the following goal:
@@ -73,7 +73,7 @@ Fill in the Goal field on the GPT Assistant component with the goal you want the
 
 ![The "Goal" field of the GPT Assistant component with the example goal provided above](./img/gpt-assistant-bot/goal-field.png)
 
-### Attach the bot to the UI Overlay
+## Attach the bot to the UI Overlay
 
 Now, we need to provide a way to spawn the bot we just created.
 If you've been following this guide on the Boss Room sample, you'll want to open the `MainMenu` scene.
@@ -84,7 +84,7 @@ Drag the Prefab we created in to that new entry.
 
 ![An animation showing the user adding the new bot to the Overlay Menu component's "Available Bots" list](./img/gpt-assistant-bot/recording-set-new-bot-on-overlay.gif)
 
-### Run the bot
+## Run the bot
 
 :::info
 Make sure you save your scene before launching!
@@ -97,7 +97,7 @@ Select that bot and click "Start Bot"
 Check the Console for logs that indicate the progress the bot is making.
 If you want to stop the bot, you can click the "Stop Bot" button in the UI Overlay, or simply stop your game.
 
-### Writing a good goal
+## Writing a good goal
 
 Writing a good goal is important to an effective bot.
 The GPT Assistant Bot is a very powerful tool, but it's not magic and it takes some work to get good results.
