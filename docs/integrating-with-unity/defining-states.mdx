@@ -111,6 +111,27 @@ In addition to the [core](#core-state-properties) state properties, this GameObj
 |-------------|---------------------------|-------------------------------------------------------------------|
 | `KingState` | `RGStateEntity_KingState` | The properties of the KingState MonoBehaviour on this GameObject. |
 
+How to access this state from bot code...
+```cs
+public override void ProcessTick(RG rgObject)
+{
+    // find a my player which has `KingState`
+    var player = rgObject.GetMyPlayer();
+    if (player == null)
+    {
+        return;
+    }
+    
+    // Using non-typed lookups (These do NOT require `using`s specific to your generated code)
+    var nonTypedAccessOfKingState = player.GetField("KingState") as IRGStateEntity;
+    var nonTypedHealthLookup = nonTypedAccessOfKingState?.GetField<int>("Health");
+    
+    // OR...  Using typed lookups (These DO require `using`s specific to your generated code)
+    var typedAccessOfKingState = player.GetFields<RGStateEntity_KingState>().FirstOrDefault();
+    var typedHealthLookup = typedAccessOfKingState?.Health;
+}
+```
+
 Also note that if any Behaviour on a GameObject indicates that `isPlayer` is `true` as this example does, then the [core](#core-state-properties) state for that GameObject will show the value
 of `isPlayer` as `true`.
 
@@ -171,6 +192,27 @@ Note that this property name uses the specified `typeName` from the `[RGStateTyp
 | Name            | Type                      | Description                                                       |
 |-----------------|---------------------------|-------------------------------------------------------------------|
 | `mockPawnState` | `RGStateEntity_PawnState` | The properties of the PawnState MonoBehaviour on this GameObject. |
+
+How to access this state from bot code...
+```cs
+public override void ProcessTick(RG rgObject)
+{
+    // find a my player which has `mockPawnState`
+    var player = rgObject.GetMyPlayer();
+    if (player == null)
+    {
+        return;
+    }
+    
+    // Using non-typed lookups (These do NOT require `using`s specific to your generated code)
+    var nonTypedAccessOfState = player.GetField("mockPawnState") as IRGStateEntity;
+    var nonTypedHealthLookup = nonTypedAccessOfState?.GetField<int>("Health");
+    
+    // OR...  Using typed lookups (These DO require `using`s specific to your generated code)
+    var typedAccessOfState = player.GetFields<RGStateEntity_PawnState>().FirstOrDefault();
+    var typedHealthLookup = typedAccessOfState?.Health;
+}
+```
 
 Also note that if any Behaviour on a GameObject indicates that `isPlayer` is `true` as this example does, then the [core](#core-state-properties) state for that GameObject will show the value
 of `isPlayer` as `true`.
@@ -297,7 +339,26 @@ In addition to the [core](#core-state-properties) state properties, this GameObj
 |-----------------|-------------------------------|-----------------------------------------------------------------------|
 | `WandererState` | `RGStateEntity_WandererState` | The properties of the WandererState MonoBehaviour on this GameObject. |
 
-
+How to access this state from bot code...
+```cs
+public override void ProcessTick(RG rgObject)
+{
+    // find a my player which has `WandererState`
+    var player = rgObject.GetMyPlayer();
+    if (player == null)
+    {
+        return;
+    }
+    
+    // Using non-typed lookups (These do NOT require `using`s specific to your generated code)
+    var nonTypedAccessOfState = player.GetField("WandererState") as IRGStateEntity;
+    var nonTypedCharTypeLookup = nonTypedAccessOfState?.GetField<string>("charType");
+    
+    // OR...  Using typed lookups (These DO require `using`s specific to your generated code)
+    var typedAccessOfState = player.GetFields<RGStateEntity_WandererState>().FirstOrDefault();
+    var typedCharTypeLookup = typedAccessOfState?.charType;
+}
+```
 
 #### `[RGState]` Example 2
 This example shows using `[RGState]` while also using `[RGStateType]`.
@@ -356,6 +417,26 @@ In addition to the [core](#core-state-properties) state properties, this GameObj
 |---------|----------------------------|--------------------------------------------------------------------|
 | `nomad` | `RGStateEntity_NomadState` | The properties of the NomadState MonoBehaviour on this GameObject. |
 
+How to access this state from bot code...
+```cs
+public override void ProcessTick(RG rgObject)
+{
+    // find a my player which has `nomad`
+    var player = rgObject.GetMyPlayer();
+    if (player == null)
+    {
+        return;
+    }
+    
+    // Using non-typed lookups (These do NOT require `using`s specific to your generated code)
+    var nonTypedAccessOfState = player.GetField("nomad") as IRGStateEntity;
+    var nonTypedHealthLookup = nonTypedAccessOfState?.GetField<int>("Health");
+    
+    // OR...  Using typed lookups (These DO require `using`s specific to your generated code)
+    var typedAccessOfState = player.GetFields<RGStateEntity_NomadState>().FirstOrDefault();
+    var typedHealthLookup = typedAccessOfState?.Health;
+}
+```
 
 ### 4 - `RGActionBehaviour` MonoBehaviour
 By adding a Behaviour that extends `RGActionBehaviour` to a GameObject, that GameObject will be included in the state.
