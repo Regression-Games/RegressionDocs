@@ -4,7 +4,7 @@ sidebar_label: Custom Bots and Discoverers
 
 # Custom Bots and Discoverers
 
-If the built in Bot and Discoverer components aren't sufficient for your testing needs, you can also create your own with just a few steps and some code.
+If the built-in Bot and Discoverer components aren't sufficient for your testing needs, you can also create your own with just a few steps and some code.
 
 ## Building a Custom Discoverer
 
@@ -15,7 +15,10 @@ If your game has other entities you want to be able to automate, you can build a
 
 ### What is an Entity?
 
-An Entity represents a component in the scene that can be automated.
+An Entity represents a component in the scene that can be automated by a bot.
+When the bot executes, it is given access to a list of Entities in the scene.
+Since the bot is a GameObject, it doesn't have to be limited to interacting with Entities,
+but Entities represent things that are **specifically intended** to be automated by a bot.
 Usually, an Entity maps to a single GameObject, but there's no requirement that there be an underlying GameObject for every entity.
 A single GameObject may be represented by multiple Entities, or an Entity may not be related to any GameObject at all.
 
@@ -30,7 +33,7 @@ They are represented by:
 * A set of Actions representing things the bot can _do_ with the entity.
 
 A State is a simple key/value pair that represents some value that will be relevant to a bot.
-For example, a Canvas Group exposes it's `interactable` property as a state value, to allow a bot to identify if the group is interactable.
+For example, a Canvas Group exposes its `interactable` property as a state value, to allow a bot to identify if the group is interactable.
 
 An Action is a function that can be called on the Entity itself.
 For example, a Button exposes a `click` action.
