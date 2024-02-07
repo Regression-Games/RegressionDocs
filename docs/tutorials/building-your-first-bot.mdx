@@ -15,7 +15,7 @@ shoot the enemy in our playground sample. This tutorial will cover:
 
 - How to integrate the RG Unity SDK into your game
 - How to add various state and actions attributes so your bot can understand the game
-- How to use a ready-to-go bot from the Bot Marketplace, and edit that bot in the Agent Builder
+- How to use a ready-to-go bot from the Bot Marketplace, and how to modify its code
 
 <div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/c4a31389df6742ba9320bf7dc0e91739?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
 
@@ -224,7 +224,7 @@ to see all the ways you can define state within your game, including grabbing al
 
 ## Implement actions your bot can take
 
-Now, similar to states, we will tag the actions that a bot can take, using [`[RGAction]`](/integrating-with-unity/defining-actions). In our case, a bot can either move or attack.
+Similar to states, we will now tag the actions that a bot can take, using [`[RGAction]`](/integrating-with-unity/defining-actions). In our case, a bot can either move or attack.
 
 Open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerInputControl.cs` file, and replace the contents with the following.
 This change does a few things:
@@ -298,135 +298,34 @@ find the `Player Input Control` component, set `Is Bot` to unchecked, and then s
 That's it for actions! A bot may now call into two actions (moving and attacking), which we will demonstrate in the section
 when we build our bot.
 
-## Starting from our template - Bot Marketplace
+## Using a ready-to-go bot from the Bot Marketplace
 
 Now that our integration is complete, our final step is to use an implementation of a bot. We will start with a template
-found in our [Bot Marketplace](https://play.regression.gg/marketplace), and then edit it further.
+found in our [Bot Marketplace](https://play.regression.gg/marketplace), and then will show you where to edit its code.
 
 Go to [this page](https://play.regression.gg/marketplace/1) to see the existing bot, and click "Create Bot" to create a copy 
-of the bot. On the bot creation page, give it a name such as "DemoBot", and then click "Create Bot". You will then be
+of the bot. On the bot creation page, give it a name such as "KitingBot", and then click "Create Bot". You will then be
 taken to the Agent Builder tool; feel free to click around and see how the bot works!
+
+![Screenshot of the bot creation page.](./img/building-your-first-bot/marketplace_bot.png)
 
 ![Screenshot of the bot creation page.](./img/building-your-first-bot/create_bot_9.png)
 
 ![Screenshot of the agent builder configuration for this bot.](./img/building-your-first-bot/agent_builder.png)
 
 Go back to Unity, and within the **Regression Games** menu in the menu bar, click **Synchronize Bots with RG**. This will pull your new
-bot into your Unity project. At this point, you can click play, and then select the Regression Games overlay button in the bottom
+bot into your Unity project. 
+
+![Screenshot of the agent builder configuration for this bot.](./img/building-your-first-bot/synchronize_bots.png)
+
+At this point, you can click play, and then select the Regression Games overlay button in the bottom
 right of your game screen. Use the dropdown to select the bot you just created, and then click "Start Bot". The bot will begin to
 run around and shoot the enemy!
 
 ![Screenshot of the bot creation page.](./img/building-your-first-bot/start_bot_10.png)
 
-## Editing the bot in the Agent Builder
-
-Now that we have the bot working, let's extend its behavior to instead circle around the enemy and shoot every
-500 ticks.
-
-Go back to the Agent Builder page for your bot, and remove the nodes underneath the "Move logic" sequence node (click the node and click
-the red delete button in the editor pane). Click and drag from the small black circle at the bottom of the "Move logic" sequence node 
-towards underneath the node. Once you release the mouse, a dialog with node types will become available.
-
-First, create a `Condition` node. Give it a name of "If we are waiting to attack", and then enter the following code into
-the code editor.
-
-```csharp
-protected override NodeStatus Execute(RG rgObject)
-{
-  // Retrieve the last time we attacked
-  var lastAttackTick = GetData<long?>("lastAttackTick");
-
-  // If we have never attacked, abort the movement operation (so we can attack)
-  if (lastAttackTick == null)
-  {
-      return NodeStatus.Failure;
-  }
-
-  // If it has been less than 200 ticks since our last attack, then
-  // we can focus on moving
-  else if (rgObject.Tick - lastAttackTick < 200)
-  {
-      return NodeStatus.Success;
-  }
-  // Otherwise it has been at least 200 ticks since our last attack,
-  // so we should cancel moving and attack instead.
-  else
-  {
-      return NodeStatus.Failure;
-  }
-}
-```
-
-This will cause the bot to only complete the move sequence if it has been at least 200 ticks since we last attacked.
-Now, we will implement the code to move radially around the enemy. From the "Move logic" sequence node, click and drag
-the small black circle again and create an Action node. Give it a name of "Move radially around enemy", and then enter
-the following code into the code editor.
-
-```csharp
-protected override NodeStatus Execute(RG rgObject)
-{
-  // Find this player and the closest Enemy
-  var myPlayer = rgObject.GetMyPlayer();
-  var nearestEnemy = rgObject.FindNearestEntity("Enemy", myPlayer.position);
-  if (nearestEnemy == null)
-    return NodeStatus.Failure;
-
-  // Get a vector from the player to the enemy
-  var directionToEnemy = nearestEnemy.position - myPlayer.position;
-
-  // By default, move in a vector that is 90 degrees from the direction to the enemy
-  // This means we will move in a way that circles the enemy
-  var directionToMove = new Vector2(-directionToEnemy.z, directionToEnemy.x); 
-
-  // However, if we are too far from the enemy, move directly towards the enemy first
-  if (RG.MathFunctions.DistanceSq(myPlayer.position, nearestEnemy.position) > 10) {
-    directionToMove = new Vector2(directionToEnemy.x, directionToEnemy.z);
-  }
-
-  // Kick off the action to move towards the enemy
-  rgObject.PerformAction(new RGActionRequest("MoveInDirection", new Dictionary<string, object> { { "newMoveDirection", directionToMove } }));
-  return NodeStatus.Success;
-}
-```
-
-This code will cause the bot to move in a circle around the enemy, and then move directly towards the enemy if it is
-too far away. Finally, we will implement the code to attack the enemy. In the existing "Attack the enemy" Action node,
-copy and paste the following code:
-
-```csharp
-protected override NodeStatus Execute(RG rgObject)
-{
-  // Find this player and the closest Enemy
-  var myPlayer = rgObject.GetMyPlayer();
-  var nearestEnemy = rgObject.FindNearestEntity("Enemy", myPlayer.position);
-  if (nearestEnemy == null)
-    return NodeStatus.Failure;
-
-  // Create the arguments for our attack - we provide the enemy to attack,
-  // and the ability (0 is the default attack)
-  var actionParams = new Dictionary<string, object> { { "enemyId", nearestEnemy.id }, { "ability", 0 } };
-
-  // Kick off two actions - the attack action, and a request to stop moving
-  rgObject.PerformAction(new RGActionRequest("SelectAndAttackEnemy", actionParams));
-  rgObject.PerformAction(new RGActionRequest("MoveInDirection", new Dictionary<string, object> { { "newMoveDirection", Vector2.zero } }));
-	
-  // Finally, set a global variable that defines when we last attacked
-  // This is used in our condition for determining when to stop moving
-  SetData("lastAttackTick", rgObject.Tick);
-  return NodeStatus.Success;
-}
-```
-
-This is similar to our previous attack code, but it also sets a global variable that is read in our movement condition
-code. This variable, `lastAttackTick`, will track how long it has been since we last attacked, and will only stop the
-bot from moving to focus on attacking if it has been at least 200 ticks since we last attacked.
-
-Save this new agent by clicking **Save to Server** in the top right of the Agent Builder. Then, go back to Unity and
-click **Synchronize Bots with RG** again. Finally, click play and start the bot. The bot will now circle around the
-enemy and shoot every 200 ticks!
-
-<div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/b5de89edf51841e489d18dc0f282f6f9?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
-
+You now have a working bot, fully integrated into your game! If you want to modify the behavior of the bot, you can make edits
+within the Agent Builder, or edit the code in your Unity project at `Assets/RegressionGames/Runtime/Bots/BOTNAME/Nodes`
 
 ## Next Steps
 
@@ -437,7 +336,7 @@ we are happy to do it for you or walk you through it on a call step by step.
 
 The following guides and references are great next steps:
 
-* Check out the bot marketplace to see what bots are available for your game
-* Learn how to build your own bot using the Agent Builder
-* Learn how to setup a QA / validation testing bot
-* Learn how to get your bot up and running in a CI/CD environment such as GitHub Actions
+* Check out the [bot marketplace](https://play.regression.gg/marketplace) to see what bots are available for your game
+* Learn how to build your own bot using the [Agent Builder](/creating-bots/javascript/agent-builder)
+* Learn how to setup a [QA / validation testing bot](/session-insights/client-dashboard)
+* Learn how to get your bot up and running in a [CI/CD environment such as GitHub Actions](/tutorials/github-actions)
