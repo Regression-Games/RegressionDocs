@@ -83,6 +83,7 @@ const sidebars = {
     'automated-testing/overview',
     'automated-testing/getting-started',
     'automated-testing/gpt-assistant-bot',
+    'automated-testing/creating-custom-components',
   ],
 };
 
