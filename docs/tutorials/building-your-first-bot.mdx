@@ -10,7 +10,7 @@ This tutorial assumes a basic understanding of Unity concepts. If you get stuck,
 
 :::
 
-In this tutorial, we will get a simple bot integrated and running in a game. The bot will run to a random position and then
+In this tutorial, we will get a simple bot integrated and running in a Unity game. The bot will run to a random position and then
 shoot the enemy in our playground sample. This tutorial will cover:
 
 - How to integrate the RG Unity SDK into your game
@@ -22,7 +22,7 @@ shoot the enemy in our playground sample. This tutorial will cover:
 ## Download the sample game
 
 Feel free to follow this tutorial within your own game, but we recommend starting with a simple sample game. Clone the project
-at the [Regression-Games-Marketplace/SampleDemoScene](https://github.com/Regression-Games-Marketplace/SampleDemoScene.git) GitHub repository
+from the [Regression-Games-Marketplace/SampleDemoScene](https://github.com/Regression-Games-Marketplace/SampleDemoScene.git) GitHub repository
 and open it within Unity version 2021.3.24f1 (visit the [Unity archive](https://unity.com/releases/editor/archive) if 
 you can't find that version).
 
@@ -30,7 +30,7 @@ you can't find that version).
 git clone https://github.com/Regression-Games-Marketplace/SampleDemoScene.git
 ```
 
-Once the project is loaded, the default scene with the bots in a playground should open. If it does not, open the **Playground**
+Once the project is loaded, a default scene with bots in a playground should open. If it does not, open the **Playground**
 scene by double clicking the scene file at **Assets > FirstBotDemo > Demo > Scenes**. If you'd like, click play and use the WASD
 keys to move around the character.
 
@@ -52,9 +52,9 @@ https://github.com/Regression-Games/RGUnityBots.git#v0.0.17
 
 ![Screenshot of the package imported into the project](./img/building-your-first-bot/welcome_3.png)
 
-After importing the package, you will be greeted by a login screen. Create an account on
-[https://play.regression.gg](https://play.regression.gg) and login with these credentials. If you need to login again in the future, 
-you can enter your login info by visiting the following menu: **Edit** > **Project Settings** > **Regression Games**.
+After importing the package, you will be greeted by a login screen. Create an account at
+[https://play.regression.gg](https://play.regression.gg) and login to Unity with your account credentials. If you need to login again in the future, 
+you can enter your login info by visiting the **Edit** > **Project Settings** > **Regression Games** menu.
 
 ## Restart Unity and your IDE
 
@@ -62,13 +62,13 @@ After installing the Regression Games Unity Bots package and its dependencies in
 
 ## Add the RGOverlayCanvas
 
-The RGOverlayCanvas prefab provides a drag and drop overlay that let's you easily start and stop bots running
+The RGOverlayCanvas prefab provides a drag and drop overlay that lets you easily start and stop bots running
 in your scene. This is extremely useful when initially creating and debugging your bots.
 
 :::caution
 
-Note that this overlay is **required to be placed into your scene** for Regression Games to function. The visibility
-of the overlay can be hidden through the settings. If you have multiple scenes where a bot should be used, place
+Note that this overlay **must be present in your scene** for Regression Games to function. The visibility
+of the overlay can be hidden through the settings. If you have multiple scenes where you want bots to run, then place
 this into each scene - the SDK will ensure that only one instance is present.
 
 :::
@@ -79,7 +79,7 @@ scene in the object hierarchy.
 
 ![Screenshot of the search pane for the RGOverlayCanvas.](./img/building-your-first-bot/overlay_4.png)
 
-Once you have this overlay available, you can click play to see this in action! A
+Once you have this overlay available, you can click play to see it in action! The
 Regression Games logo will appear at the bottom of your screen. Click this button to see a dropdown for your bots. You
 likely will not have any bots yet - that's alright, we will make one soon!
 
@@ -97,7 +97,7 @@ _You only need to do this if you plan on interacting with the canvas_.
 
 The [RGBotSpawnManager](/integrating-with-unity/seating-and-spawning-bots) is the primary point of configuration for how your bots are spawned into the game. This component
 provides a few methods that can be overridden to control how bots are spawned into the scene, how they are seated into
-your game logic before spawning, how they are destroyed, etc... For this particular tutorial, we need to define one
+your game logic before spawning, how they are destroyed, etc. For this particular tutorial, we need to define one
 method, [`SpawnBot()`](/integrating-with-unity/seating-and-spawning-bots#canbenull-public-abstract-gameobject-spawnbotbool-latejoin-botinformation-botinformation). 
 This method will define how our bot prefab is spawned into the scene.
 
@@ -157,11 +157,11 @@ public class CharacterBotSpawnManager : RGBotSpawnManager
 ```
 
 Once this component is implemented, create an empty object within the scene, rename it to `RGBotSpawner` (just so we can find it later),
-and attach this `CharacterBotSpawnManager` component to that object. Position it within the scene wherever you want to spawn your bot 
+and attach this `CharacterBotSpawnManager` component to the `RGBotSpawner`. Position the `RGBotSpawner` within the scene wherever you want your bot to spawn 
 (**make sure to set the Y coordinate to 0 so your bot does not float!**), and drag `RGBotSpawner`'s own Transform into the 
 **Bot Spawn Point** entry of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the 
-**Player** prefab provided by the sample project (located within `Assets/FirstBotDemo/Demo/Prefabs/Player.prefab`), and drag 
-this into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the 
+**Player** prefab under `Assets > FirstBotDemo > Demo > Prefabs` and drag 
+it into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the 
 scene.
 
 ![Screenshot of the RGOverlayCanvas.](./img/building-your-first-bot/spawner_6.png)
@@ -173,12 +173,12 @@ We are onto the final parts of the integration! We need to indicate the followin
 * What game state our bots can see
 * What actions our bots can perform
 
-First, let's add the state information. Regression Games marks states for bot consumption using the 
+First, let's define some state information. Regression Games marks states for bot consumption using the 
 [`[RGState]` attribute](/integrating-with-unity/defining-states#3---rgstate-fieldpropertymethod-attribute).
 This attribute can be applied to any public method that returns a value or any variable within a `MonoBehaviour`, and
 it will automatically be sent to the bot.
 
-First, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file, and add the following method to the class, which
+First, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file, and add the following method to the class. This
 will allow our bot to know when it is currently in an attack animation (make sure to import any missing imports, with
 `using RegressionGames;`):
 
@@ -220,17 +220,17 @@ public int GetTotalHp()
 
 That's it! The bot will now be able to see the current and max
 health of the enemy, and whether or not the player is attacking. See the full [state documentation](/integrating-with-unity/defining-states)
-to see all the ways you can define state within your game, including grabbing all of the state from a MonoBehaviour.
+for more information on defining states within your game.
 
 ## Implement actions your bot can take
 
 Similar to states, we will now tag the actions that a bot can take, using [`[RGAction]`](/integrating-with-unity/defining-actions). In our case, a bot can either move or attack.
 
-Open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerInputControl.cs` file, and replace the contents with the following.
+Open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerInputControl.cs` file, and replace its contents with the following.
 This change does a few things:
 
-1. Adds an editor field that allows us to mark a specific prefab instance as being a bot (vs a character controlled by a real player).
-2. Uses that field to ensure that keyboard/input handling only applies to non-bot game objects.
+1. Adds an editor field that allows us to mark a specific prefab instance as being controlled by a bot (versus a real player).
+2. Ensures that physical inputs from mouse and keyboard are ignored by bots (so that you can play alongside your bot without interfering with its movements)
 3. Marks the movement method as being an action that the bot can perform.
 
 ```csharp
@@ -274,8 +274,8 @@ namespace FirstBotDemo
 }
 ```
 
-Then, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file again, and add the following method to the class,
-which defines an action that allows a bot to target an enemy and use an ability:
+Then, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file again, and add the following method to the class.
+This defines an action that allows the bot to target an enemy and use an ability on that enemy:
 
 ```csharp
 [RGAction]
@@ -324,14 +324,14 @@ run around and shoot the enemy!
 
 ![Screenshot of the bot creation page.](./img/building-your-first-bot/start_bot_10.png)
 
-You now have a working bot, fully integrated into your game! If you want to modify the behavior of the bot, you can make edits
+You now have a working bot, fully integrated into your game! If you want to modify the bot's behavior, you can make edits
 within the Agent Builder, or edit the code in your Unity project at `Assets/RegressionGames/Runtime/Bots/BOTNAME/Nodes`
 
 ## Next Steps
 
 Congratulations, you've now experienced the integration process for bots! Using this guide and our reference material,
 you can now integrate bots into your own game. If you have any questions, please reach out to us on our 
-[Discord](https://discord.com/invite/925SYVse2H). Please note that we offer **dedicated support** for your integration, 
+[Discord](https://discord.com/invite/925SYVse2H). Please note that we offer **dedicated support** for your integration. 
 we are happy to do it for you or walk you through it on a call step by step.
 
 The following guides and references are great next steps:
