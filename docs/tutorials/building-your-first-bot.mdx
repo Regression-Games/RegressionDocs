@@ -165,8 +165,8 @@ additional configuration options.
 
 Once this component is implemented, create an empty object within the scene, rename it to `RGBotSpawner` (just so we can find it later),
 and attach this `CharacterBotSpawnManager` component to the `RGBotSpawner`. Position the `RGBotSpawner` within the scene wherever you want your bot to spawn 
-(**make sure to set the Y coordinate to 0 so your bot does not float!**), and drag `RGBotSpawner`'s own Transform into the 
-**Bot Spawn Point** entry of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the 
+(**make sure to set the Y coordinate to 0 so your bot does not float!**). Drag `RGBotSpawner`'s own Transform into the 
+**Bot Spawn Point** property of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the 
 **Player** prefab under `Assets > FirstBotDemo > Demo > Prefabs` and drag 
 it into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the 
 scene.
@@ -255,10 +255,12 @@ namespace FirstBotDemo
         [Header("Movement Settings")]
         public bool analogMovement;
 
+        # See bullet #1 above
         [Header("BotSettings")] public bool isBot = true;
 
         private void Update()
         {
+            # See bullet #2 above
             if (!isBot)
             {
                 MoveInput(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
@@ -266,6 +268,7 @@ namespace FirstBotDemo
             }
         }
         
+        # See bullet #3 above
         [RGAction("MoveInDirection")]
         public void MoveInput(Vector2 newMoveDirection)
         {
@@ -297,7 +300,7 @@ public void SelectAndAttackEnemy(int enemyId, int ability)
 As a last step here, in the player input code, you will see that we introduced an `isBot` field to the `PlayerInputControl` component.
 This will allow our player to be controlled by the bot logic when it is set to true. However, there is an existing `Player`
 GameObject in the scene, which we want to control using our manual input controls. Click this `Player` in the object hierarchy,
-find the `Player Input Control` component, set `Is Bot` to unchecked, and then save (you may find that it is already unchecked).
+find the `Player Input Control` component, set `Is Bot` to `false` (unchecked), and then save (you may find that it is already unchecked).
 
 ![Screenshot of the player prefab with the components added.](./img/building-your-first-bot/is_bot.png)
 
