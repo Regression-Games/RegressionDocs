@@ -199,17 +199,13 @@ Then, within the `Assets/FirstBotDemo/Demo/Scripts/EnemyController.cs` file, add
 and `GetTotalHp()` methods:
 
 ```csharp
-/*
-* Gets the enemies current hp
-* Note: The state will be accessible to the bot as "CurrentHealth", rather than "GetCurrentHp", as we are overriding
-*       the name of the state within the RGState attribute.
-*/
+// Near line 18
 [RGState("CurrentHealth")]
-public int GetCurrentHp()
-{
-    return _currentHp;
-}
+private int _currentHp;
 
+....
+
+// Near line 138
 /*
 * Gets the enemy's total HP from its assigned info
 */
