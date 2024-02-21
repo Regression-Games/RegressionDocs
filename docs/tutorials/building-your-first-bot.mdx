@@ -30,7 +30,7 @@ git clone https://github.com/Regression-Games-Marketplace/SampleDemoScene.git
 
 Open it within Unity version 2021.3.24f1 (visit the [Unity archive](https://unity.com/releases/editor/whats-new/2021.3.24) if 
 you can't find that version from Unity Hub). Once the project is loaded, a default scene with bots in a playground should open. If it does not, 
-then find the **Playground** scene under **Assets > FirstBotDemo > Demo > Scenes** and open it manually. If you'd like, you can 
+then find the **Playground** scene under **Assets** > **FirstBotDemo** > **Demo** > **Scenes** and open it manually. If you'd like, you can 
 click play now to see how the characters move.
 
 ![Screenshot of the playground scene](./img/building-your-first-bot/start_0.png)
@@ -38,7 +38,7 @@ click play now to see how the characters move.
 ## Import the Regression Games Unity Bots package
 
 You can find [our package on GitHub](https://github.com/Regression-Games/RGUnityBots). Import the package into your Unity project by opening 
-the **Package Manager** window (`Window > Package Manager`) and click **Add package from git URL**. Then, paste the following URL:
+the **Package Manager** window (**Window** > **Package Manager**) and click **Add package from git URL**. Then, paste the following URL:
 
 ```
 https://github.com/Regression-Games/RGUnityBots.git#v0.0.17
@@ -72,14 +72,15 @@ in your scene. This is extremely useful when initially creating and debugging yo
 :::caution
 
 Note that this overlay **must be present in your scene** for Regression Games to function. The visibility
-of the overlay can be hidden through the settings. If you have multiple scenes where a bot will be used,
-place this into each scene. The SDK will ensure that only one instance is present across scenes or on scene transitions.
+of the overlay can be hidden through the Regression Games settings pane under **Edit** > **Project Settings** > 
+**Regression Games**. If you have multiple scenes where a bot will be used, place this into each scene. 
+The SDK will ensure that only one instance is present across scenes or on scene transitions.
 
 :::
 
-You can find this prefab by navigating to the **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** folder,
-named as `RGOverlayCanvas`. Drag this overlay onto your scene in the object hierarchy. Make sure that the canvas is at the top of
-the hierarchy, so that it is always visible and interactable.
+Find the `RGOverlayCanvas` prefab by navigating to **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** and
+drag it into your scene's object hierarchy. Make sure that the canvas is at the top of the hierarchy, so that it is always 
+visible and interactable.
 
 ![Screenshot of the search pane for the RGOverlayCanvas.](./img/building-your-first-bot/overlay_4.png)
 
@@ -105,8 +106,8 @@ your game logic before spawning, how they are destroyed, etc. For this particula
 method, [`SpawnBot()`](/integrating-with-unity/seating-and-spawning-bots#canbenull-public-abstract-gameobject-spawnbotbool-latejoin-botinformation-botinformation). 
 This method will define how our bot prefab is spawned into the scene.
 
-First, create a `RegressionGames/Runtime/` folder in your `Assets` folder (these folder and file names are what we recommend, 
-but they are not required to be named that way). Then, create a file called `CharacterBotSpawnManager.cs`.
+First, create a folder under `Assets` where we'll add runtime scripts for defining and configuring your bots (we recommend
+naming this folder `RegressionGames/Runtime/`). Then, create a file within your new folder named `CharacterBotSpawnManager.cs`.
 Double click that file to open it within your editor of choice (we recommend Rider or Visual Studio). We highly recommend
 that the file is opened as part of the solution / project as a whole, so that code completion is available.
 
@@ -167,7 +168,7 @@ Once this component is implemented, create an empty object within the scene, ren
 and attach this `CharacterBotSpawnManager` component to the `RGBotSpawner`. Position the `RGBotSpawner` within the scene wherever you want your bot to spawn 
 (**make sure to set the Y coordinate to 0 so your bot does not float!**). Drag `RGBotSpawner`'s own Transform into the 
 **Bot Spawn Point** property of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the 
-**Player** prefab under `Assets > FirstBotDemo > Demo > Prefabs` and drag 
+**Player** prefab under **Assets** > **FirstBotDemo** > **Demo** > **Prefabs** and drag 
 it into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the 
 scene.
 
@@ -180,7 +181,7 @@ We are onto the final parts of the integration! We now need to indicate what inf
 
 First, let's define some state information. Regression Games marks states for bot consumption using the 
 [`[RGState]` attribute](/integrating-with-unity/defining-states#3---rgstate-fieldpropertymethod-attribute).
-This attribute can be applied to any public method that returns a value or any variable within a `MonoBehaviour`.
+This attribute can be applied to any public method that returns a value or any public variable within a `MonoBehaviour`.
 Any values designated this way are automatically passed to your bots.
 
 First, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file, and add the following method to the class. This
@@ -201,7 +202,7 @@ and `GetTotalHp()` methods:
 ```csharp
 // Near line 18
 [RGState("CurrentHealth")]
-private int _currentHp;
+public int _currentHp; // CHANGE THIS TO PUBLIC - fields and methods must be public for Regression Games to see them
 
 ....
 
@@ -336,7 +337,8 @@ within the Agent Builder, or edit the code in your Unity project at `Assets/Regr
 Congratulations, you've now experienced the integration process for bots! Using this guide and our reference material,
 you can now integrate bots into your own game. If you have any questions, please reach out to us on our 
 [Discord](https://discord.com/invite/925SYVse2H). Please note that we offer **dedicated support** for your integration. 
-we are happy to do it for you or walk you through it on a call step by step.
+We are happy to work directly on your project with you, or walk you step-by-step through the integration process over a
+call.
 
 The following guides and references are great next steps:
 
