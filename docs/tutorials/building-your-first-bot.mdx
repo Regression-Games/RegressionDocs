@@ -41,7 +41,7 @@ You can find [our package on GitHub](https://github.com/Regression-Games/RGUnity
 the **Package Manager** window (**Window** > **Package Manager**) and click **Add package from git URL**. Then, paste the following URL:
 
 ```
-https://github.com/Regression-Games/RGUnityBots.git#v0.0.17
+https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots
 ```
 
 :::info
@@ -67,7 +67,7 @@ resolve the new packages even after Unity recompiles the scripts.
 ## Add the RGOverlayCanvas
 
 The RGOverlayCanvas prefab provides a drag and drop overlay that lets you easily start and stop bots running
-in your scene. This is extremely useful when initially creating and debugging your bots.
+in your scene. This is useful when initially creating and debugging your bots.
 
 :::caution
 
@@ -232,9 +232,10 @@ Similar to states, we will now tag the actions that a bot can take, using [`[RGA
 Open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerInputControl.cs` file, and replace its contents with the following.
 This change does a few things:
 
-1. Adds an editor field that allows us to mark a specific prefab instance as being controlled by a bot (versus a real player).
-2. Ensures that physical inputs from mouse and keyboard are ignored by bots (so that you can play alongside your bot without interfering with its movements)
-3. Designates the movement method as being an action that the bot can perform.
+1. Marks the `PlayerInputControl` component as being a bot that can be controlled.
+2. Adds an editor field that allows us to mark a specific prefab instance as being controlled by a bot (versus a real player).
+3. Ensures that physical inputs from mouse and keyboard are ignored by bots (so that you can play alongside your bot without interfering with its movements)
+4. Designates the movement method as being an action that the bot can perform.
 
 ```csharp
 using RegressionGames;
@@ -242,6 +243,9 @@ using UnityEngine;
 
 namespace FirstBotDemo
 {
+
+    // See bullet #1 above
+    [RGStateType(IsPlayer = true)]
     public class PlayerInputControl : MonoBehaviour
     {
         [Header("Character Input Values")]
@@ -252,12 +256,12 @@ namespace FirstBotDemo
         [Header("Movement Settings")]
         public bool analogMovement;
 
-        # See bullet #1 above
+        // See bullet #2 above
         [Header("BotSettings")] public bool isBot = true;
 
         private void Update()
         {
-            # See bullet #2 above
+            // See bullet #3 above
             if (!isBot)
             {
                 MoveInput(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
@@ -265,7 +269,7 @@ namespace FirstBotDemo
             }
         }
         
-        # See bullet #3 above
+        // See bullet #4 above
         [RGAction("MoveInDirection")]
         public void MoveInput(Vector2 newMoveDirection)
         {
@@ -330,7 +334,7 @@ run around and shoot the enemy!
 ![Screenshot of the bot creation page.](./img/building-your-first-bot/start_bot_10.png)
 
 You now have a working bot, fully integrated into your game! If you want to modify the bot's behavior, you can make edits
-within the Agent Builder, or edit the code in your Unity project at `Assets/RegressionGames/Runtime/Bots/BOTNAME/Nodes`
+within the Agent Builder, or edit the code in your Unity project at `Assets/RegressionGames/Runtime/Bots/BOTNAME/Nodes`.
 
 ## Next Steps
 
