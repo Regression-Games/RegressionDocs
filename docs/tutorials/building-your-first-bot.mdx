@@ -195,17 +195,18 @@ public bool IsAttacking()
 }
 ```
 
-Then, within the `Assets/FirstBotDemo/Demo/Scripts/EnemyController.cs` file, add the following attributes to the existing `GetCurrentHp()`
-and `GetTotalHp()` methods:
+Then, within the `Assets/FirstBotDemo/Demo/Scripts/EnemyController.cs` file, add the following attributes to the existing `CurrentHp` field
+and `GetTotalHp()` method. _Note that these attributes can only be used on public fields, properties, or methods_.
 
 ```csharp
-// Near line 18
+// Near line 19
 [RGState("CurrentHealth")]
-public int _currentHp; // CHANGE THIS TO PUBLIC - fields and methods must be public for Regression Games to see them
+[NonSerialized]
+public int CurrentHp;
 
 ....
 
-// Near line 138
+// Near line 141
 /*
 * Gets the enemy's total HP from its assigned info
 */
