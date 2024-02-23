@@ -227,7 +227,9 @@ Review the full [state documentation](/integrating-with-unity/defining-states) f
 
 ## Define the actions your bot can take
 
-Similar to states, we will now tag the actions that a bot can take, using [`[RGAction]`](/integrating-with-unity/defining-actions). In our case, a bot can either move or attack.
+Similar to states, we will now tag the actions that a bot can take, using [`[RGAction]`](/integrating-with-unity/defining-actions), as well
+as indicating that the game object is controlled via a bot by using [`[RGStateType(IsPlayer = true)]`](/integrating-with-unity/defining-states#2---rgstatetype-class-level-attribute). 
+In our case, a bot can either move or attack.
 
 Open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerInputControl.cs` file, and replace its contents with the following.
 This change does a few things:
