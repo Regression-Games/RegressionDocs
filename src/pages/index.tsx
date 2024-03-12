@@ -25,6 +25,12 @@ const HomepageHeader = () => (
                 Full Reference
               </Link>
             </div>
+            <div style={{marginTop: "16px"}}>
+              Get started immediately by adding the package to Unity:
+              <div style={{marginTop: "16px", fontSize: 12}}>
+                <pre style={{display: "inline"}}>https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.16</pre>
+              </div>
+            </div>
           </div>
           <div className="col">
             <img src={require('@site/static/img/demo.gif').default} alt="Regression Games" style={{borderRadius: "12px"}}/>
