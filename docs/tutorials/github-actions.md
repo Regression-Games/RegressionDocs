@@ -13,7 +13,7 @@ This tutorial will walk you through the following steps to create a QA Bot for y
 4. Learn how to view test results.
 
 This tutorial assumes you have some familiarity with GitHub Actions, and that you have a working 
-bot within your game (see more on this in the [Creating Bots in JavaScript section](../creating-bots/javascript/configuration)).
+bot within your game (see more on this in the [Creating Bots in C# section](../creating-bots/csharp/adaptive-bots)).
 By the end of this tutorial, every push to your GitHub repo will build your Unity project and start bots for testing.
 You can find a working example in [our sample repository](https://github.com/Regression-Games/RGUnitySample), which has
 a GitHub Action configuration and Unity Test Runner file incorporating the ideas of this tutorial.
@@ -191,11 +191,17 @@ open that file and replace it with the contents below, which will include Regres
     ]
 }
 ```
-
 You can learn more about the Test Runner and setup instructions [here](https://docs.unity.cn/560/Documentation/Manual/testing-editortestsrunner.html).
 
-### Create an `RGBotTests` File to Run Your Bot
 
+### Create an `RGBotTests` File to Run Your Bot
+:::warning
+=============================================================================
+
+!!!!! The content of this section is outdated and will be updated soon !!!!!
+
+=============================================================================
+:::
 Within the `Tests` folder, create a new file called `RGBotTests.cs` and copy the following contents into the file.
 
 :::caution
@@ -356,10 +362,15 @@ At a high level, this test is doing the following:
    until the timeout is reached.
 
 ### Test it out with an Existing Bot
+:::warning
+=============================================================================
 
+!!!!! The content of this section is outdated and will be updated soon !!!!!
+
+=============================================================================
+:::
 Our test is now setup! Before we commit and push our changes, let's test it out locally with an existing bot. To do this, you can
-follow the [first bot guide](../tutorials/building-your-first-bot) or [creating bots reference](../creating-bots/javascript/configuration)
-to create and configure a bot. As a quick test, you can make a bot that simply waits for a few seconds before completing its test. Note
+follow the [first bot guide](../tutorials/building-your-first-bot) to create and configure a bot. As a quick test, you can make a bot that simply waits for a few seconds before completing its test. Note
 that **having your bot call `rg.complete()` is extremely important! Without this line of code, your bot will run forever!**
 
 ```javascript
@@ -395,7 +406,13 @@ You should see that the bot successfully started and executed!
 ![Build step](img/github-actions/build-step.png)
 
 ## Viewing Test Results
+:::warning
+=============================================================================
 
+!!!!! The content of this section is outdated and will be updated soon !!!!!
+
+=============================================================================
+:::
 Once your tests have completed, you can view their results on Regression Games by navigating to the **History** section of the
 [Running Bots](https://play.regression.gg/running-bots) tab. From this page you can download bot logs for the test session which 
 contain output from your bot-code. You can also download in-game replay data which can be loaded in the Unity Editor to watch the 
