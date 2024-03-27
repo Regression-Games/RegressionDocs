@@ -34,38 +34,16 @@ const sidebars = {
     'authenticating-with-api-keys',
     {
       type: 'category',
-      label: 'Integrating with Unity',
-      items: [
-        'integrating-with-unity/defining-states',
-        'integrating-with-unity/defining-actions',
-        'integrating-with-unity/BotInformation',
-        'integrating-with-unity/seating-and-spawning-bots',
-      ]
-    },
-    {
-      type: 'category',
       label: 'Creating Bots',
       items: [
         {
           type: 'category',
           label: 'C# Reference',
           items: [
-            'creating-bots/csharp/configuration',
-            'creating-bots/csharp/adaptive-bots',
-            'creating-bots/csharp/scenario-testing',
-            'creating-bots/csharp/utilities'
+            'creating-bots/csharp/csharp-unity-bots',
+            'creating-bots/csharp/scenario-testing'
           ]
-        },
-        {
-          type: 'category',
-          label: 'JavaScript Reference',
-          items: [
-            'creating-bots/javascript/configuration',
-            'creating-bots/javascript/adaptive-bots',
-            'creating-bots/javascript/scenario-testing',
-            'creating-bots/javascript/agent-builder'
-          ]
-        },
+        }
       ]
     },
     'pre-made-bots',
