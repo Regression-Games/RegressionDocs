@@ -11,7 +11,7 @@ Defining a Unity Bot in C# is as simple as creating a MonoBehaviour that impleme
 The IRGBot interface has no methods, but is used by the Regression Games SDK to identify bots that can be started from the in game overlay.
 
 <Tabs>
-<TabItem value="runTurn_Bot" label="Perform actions on players and NPCs" default>
+<TabItem value="sample_Bot" label="Perform actions on players and NPCs" default>
 
 ```csharp
 /**
@@ -20,8 +20,9 @@ The IRGBot interface has no methods, but is used by the Regression Games SDK to 
  *  - Select a random nearby player or enemy if one exists
  *    - Follow that entity at distance 2f
  *    - Perform a skill targeting that entity and position
+ * Note: This bot code works with the Unity multiplayer sample project fork @ https://github.com/Regression-Games/RGBossRoom
  */
-public class RunTurnBot: MonoBehaviour, IRGBot
+public class SampleBot: MonoBehaviour, IRGBot
 {
     private float _lastUpdate = -1f;
     private static readonly float _updateEveryXSeconds = 2.0f;

@@ -36,14 +36,8 @@ const sidebars = {
       type: 'category',
       label: 'Creating Bots',
       items: [
-        {
-          type: 'category',
-          label: 'C# Reference',
-          items: [
-            'creating-bots/csharp/csharp-unity-bots',
-            'creating-bots/csharp/scenario-testing'
-          ]
-        }
+          'creating-bots/csharp/csharp-unity-bots',
+          'creating-bots/csharp/scenario-testing'
       ]
     },
     'pre-made-bots',
