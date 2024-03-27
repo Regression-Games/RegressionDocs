@@ -30,15 +30,11 @@ these channels, send an e-mail to [aaron@regression.gg](mailto:aaron@regression.
 
 The table below details and links to documentation for the features implemented on our platform.
 
-| **Feature**                    | **Description**                                                                                                   | **Documentation**                                        |
-|--------------------------------|-------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| Unity Integration              | A set of scripts and interfaces are provided to easily send state and actions between bots and your game objects. | [Link](integrating-with-unity/seating-and-spawning-bots) |
-| Timeline/Replay                | All bot actions and states are preserved, with a timeline/replay feature available within Unity.                  | [Link](session-insights/in-editor-replay)                |
-| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](creating-bots/csharp/configuration)               |
-| JavaScript SDK                 | A JavaScript SDK for implementing bots remotely in Regression Games.                                              | [Link](creating-bots/javascript/configuration)           |
-| Live Reloading                 | Reload bots almost instantly without rebuilding your game, managed via GitHub.                                    | _Docs coming soon_                                       |
-| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](creating-bots/javascript/agent-builder)           |
-| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                                       |  
+| **Feature**                    | **Description**                                                                                                   | **Documentation**                              |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
+| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](creating-bots/csharp/csharp-unity-bots) |
+| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](creating-bots/csharp/agent-builder)     |
+| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                             |  
 
 ## Importing the Regression Games Unity Bots package
 

@@ -36,7 +36,8 @@ const sidebars = {
       type: 'category',
       label: 'Creating Bots',
       items: [
-          'creating-bots/csharp/csharp-unity-bots',
+          'creating-bots/csharp/agent-builder',
+          'creating-bots/csharp/adaptive-bots',
           'creating-bots/csharp/scenario-testing'
       ]
     },
