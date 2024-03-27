@@ -21,45 +21,48 @@ The IRGBot interface has no methods, but is used by the Regression Games SDK to 
  *    - Follow that entity at distance 2f
  *    - Perform a skill targeting that entity and position
  */
-private float _lastUpdate = -1f;
-private static readonly float _updateEveryXSeconds = 2.0f;
-
-public void Update()
+public class RunTurnBot: MonoBehaviour, IRGBot
 {
-    var time = Time.time;
-    if (time - _lastUpdate > _updateEveryXSeconds)
+    private float _lastUpdate = -1f;
+    private static readonly float _updateEveryXSeconds = 2.0f;
+
+    public void Update()
     {
-        HandleUpdate(this.gameObject);
-        _lastUpdate = time;
-    }
-}
-
-public void HandleUpdate(GameObject spawnedGameObject)
-{
-    var entities = FindObjectsByType<ServerCharacter>(FindObjectsSortMode.None);
-
-    if (entities.Length > 0)
-    {
-        // default to friendly ability
-        var skillId = 0;
-
-        GameObject target = entities[new Random().Next(entities.Length)].gameObject;
-        spawnedGameObject.GetComponent<RGFollowObjectAction>().FollowObject(target.transform, 2f);
-
-
-        if (target.GetComponent<RGEnemyState>() != null)
+        var time = Time.time;
+        if (time - _lastUpdate > _updateEveryXSeconds)
         {
-            // if enemy.. set ability to 1
-            skillId = 1;
+            HandleUpdate(this.gameObject);
+            _lastUpdate = time;
         }
-
-        var targetPosition = target.transform.position;
-
-        spawnedGameObject.GetComponent<RGPerformSkillAction>().PerformSkill(skillId, target.GetInstanceID(), targetPosition);
     }
-    else
+
+    public void HandleUpdate(GameObject spawnedGameObject)
     {
-        RGDebug.LogWarning("No entities found...");
+        var entities = FindObjectsByType<ServerCharacter>(FindObjectsSortMode.None);
+
+        if (entities.Length > 0)
+        {
+            // default to friendly ability
+            var skillId = 0;
+
+            GameObject target = entities[new Random().Next(entities.Length)].gameObject;
+            spawnedGameObject.GetComponent<RGFollowObjectAction>().FollowObject(target.transform, 2f);
+
+
+            if (target.GetComponent<RGEnemyState>() != null)
+            {
+                // if enemy.. set ability to 1
+                skillId = 1;
+            }
+
+            var targetPosition = target.transform.position;
+
+            spawnedGameObject.GetComponent<RGPerformSkillAction>().PerformSkill(skillId, target.GetInstanceID(), targetPosition);
+        }
+        else
+        {
+            RGDebug.LogWarning("No entities found...");
+        }
     }
 }
 ```
