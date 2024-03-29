@@ -66,7 +66,7 @@ resolve the new packages even after Unity recompiles the scripts.
 
 ## Add the RGOverlayCanvas
 
-The RGOverlayCanvas prefab provides a drag and drop overlay that lets you easily start and stop bots running
+The RGOverlayCanvasV2 prefab provides a drag and drop overlay that lets you easily start and stop bots running
 in your scene. This is useful when initially creating and debugging your bots.
 
 :::caution
@@ -77,7 +77,7 @@ of the overlay can be hidden through the Regression Games settings pane under **
 
 :::
 
-Find the `RGOverlayCanvas` prefab by navigating to **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** and
+Find the `RGOverlayCanvasV2` prefab by navigating to **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** and
 drag it into your scene's object hierarchy. Make sure that the canvas is at the top of the hierarchy, so that it is always 
 visible and interactable.
 
@@ -97,221 +97,9 @@ If you are using the sample scene we provide, this is already included.
 
 ![Screenshot of the RGOverlayCanvas.](./img/building-your-first-bot/overlay_5.png)
 
-## Implement the RGBotSpawnManager
-
-The [RGBotSpawnManager](/integrating-with-unity/seating-and-spawning-bots) is the primary point of configuration for how your bots are spawned into the game. This component
-provides a few methods that can be overridden to control how bots are spawned into the scene, how they are seated into
-your game logic before spawning, how they are destroyed, etc. For this particular tutorial, we need to define one
-method, [`SpawnBot()`](/integrating-with-unity/seating-and-spawning-bots#canbenull-public-abstract-gameobject-spawnbotbool-latejoin-botinformation-botinformation). 
-This method will define how our bot prefab is spawned into the scene.
-
-First, create a folder under `Assets` where we'll add runtime scripts for defining and configuring your bots (we recommend
-naming this folder `RegressionGames/Runtime/`). Then, create a file within your new folder named `CharacterBotSpawnManager.cs`.
-Double click that file to open it within your editor of choice (we recommend Rider or Visual Studio). We highly recommend
-that the file is opened as part of the solution / project as a whole, so that code completion is available.
-
-Copy and paste the following code into this file. This component will allow us to specify a prefab to represent our bot 
-as well as a specific spawn location.
-
-```cs
-using UnityEngine;
-
-using RegressionGames;
-using RegressionGames.Types;
-
-public class CharacterBotSpawnManager : RGBotSpawnManager
-{
-    
-    // Expose a field in the editor for the prefab to spawn as a bot
-    [SerializeField]
-    [Tooltip("The character to spawn")]
-    private GameObject rgBotPrefab;
-
-    // Expose a field in the editor to define where the bot should spawn
-    [SerializeField]
-    [Tooltip("Spawn point for RG Bots")]
-    private Transform botSpawnPoint;
-
-    public override GameObject SpawnBot(bool lateJoin, BotInformation botInformation)
-    {
-        // Loads the bot prefab and spawns it into the scene
-        var bot = Instantiate(rgBotPrefab, botSpawnPoint.position, Quaternion.identity);
-        return bot;
-    }
-    
-    void Start()
-    {
-        // Prepares the RG SDK for spawning bots
-        RGBotServerListener.GetInstance()?.StartGame();
-        RGBotServerListener.GetInstance()?.SpawnBots();
-    }
-
-    private void OnDestroy()
-    {
-        // Stops all bots and cleans up the RG SDK
-        RGBotServerListener.GetInstance()?.StopGame();
-    }
-
-}
-```
-
-:::info
-
-Some bots may need additional information such as a character class, starting items, or other special spawn logic. 
-See the [full reference for seating and spawning bots](/integrating-with-unity/seating-and-spawning-bots) for 
-additional configuration options.
-
-:::
-
-Once this component is implemented, create an empty object within the scene, rename it to `RGBotSpawner` (just so we can find it later),
-and attach this `CharacterBotSpawnManager` component to the `RGBotSpawner`. Position the `RGBotSpawner` within the scene wherever you want your bot to spawn 
-(**make sure to set the Y coordinate to 0 so your bot does not float!**). Drag `RGBotSpawner`'s own Transform into the 
-**Bot Spawn Point** property of the RGBotSpawner's `CharacterBotSpawnManager` component. Finally, find the 
-**Player** prefab under **Assets** > **FirstBotDemo** > **Demo** > **Prefabs** and drag 
-it into the **Rg Bot Prefab** entry. Regression Games now knows how to load and unload bots from your scene! Make sure to save the 
-scene.
-
-![Screenshot of the RGOverlayCanvas.](./img/building-your-first-bot/spawner_6.png)
-
-## Define the game state
-
-We are onto the final parts of the integration! We now need to indicate what information the bot has access to in the game 
-(referred to here as the game's "state"), and which actions the bot can perform.
-
-First, let's define some state information. Regression Games marks states for bot consumption using the 
-[`[RGState]` attribute](/integrating-with-unity/defining-states#3---rgstate-fieldpropertymethod-attribute).
-This attribute can be applied to any public method that returns a value or any public variable within a `MonoBehaviour`.
-Any values designated this way are automatically passed to your bots.
-
-First, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file, and add the following method to the class. This
-will allow our bot to know when it is currently in an attack animation (make sure to import any missing imports, with
-`using RegressionGames;`):
-
-```csharp
-[RGState]
-public bool IsAttacking()
-{
-    return !string.IsNullOrEmpty(_attackAnimation) && _animator.GetBool(_attackAnimation);
-}
-```
-
-Then, within the `Assets/FirstBotDemo/Demo/Scripts/EnemyController.cs` file, add the following attributes to the existing `CurrentHp` field
-and `GetTotalHp()` method. _Note that these attributes can only be used on public fields, properties, or methods_.
-
-```csharp
-// Near line 19
-[RGState("CurrentHealth")]
-[NonSerialized]
-public int CurrentHp;
-
-....
-
-// Near line 141
-/*
-* Gets the enemy's total HP from its assigned info
-*/
-[RGState("MaxHealth")]
-public int GetTotalHp()
-{
-    if (!enemyInfo)
-    {
-        Debug.LogError($"{gameObject.name} is missing entity info. Please check the inspector and assign missing fields");
-        return default;
-    }
-    return enemyInfo.hp;
-}
-```
-
-That's it! The bot will now be able to tell when it is attacking the enemy, and what the enemy's current and max health values are.
-Review the full [state documentation](/integrating-with-unity/defining-states) for more information on defining states within your game.
-
-## Define the actions your bot can take
-
-Similar to states, we will now tag the actions that a bot can take, using [`[RGAction]`](/integrating-with-unity/defining-actions), as well
-as indicating that the game object is controlled via a bot by using [`[RGStateType(IsPlayer = true)]`](/integrating-with-unity/defining-states#2---rgstatetype-class-level-attribute). 
-In our case, a bot can either move or attack.
-
-Open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerInputControl.cs` file, and replace its contents with the following.
-This change does a few things:
-
-1. Marks the `PlayerInputControl` component as being a bot that can be controlled.
-2. Adds an editor field that allows us to mark a specific prefab instance as being controlled by a bot (versus a real player).
-3. Ensures that physical inputs from mouse and keyboard are ignored by bots (so that you can play alongside your bot without interfering with its movements)
-4. Designates the movement method as being an action that the bot can perform.
-
-```csharp
-using RegressionGames;
-using UnityEngine;
-
-namespace FirstBotDemo
-{
-
-    // See bullet #1 above
-    [RGStateType(IsPlayer = true)]
-    public class PlayerInputControl : MonoBehaviour
-    {
-        [Header("Character Input Values")]
-        public Vector2 move;
-        public Vector2 look;
-        public bool jump;
-
-        [Header("Movement Settings")]
-        public bool analogMovement;
-
-        // See bullet #2 above
-        [Header("BotSettings")] public bool isBot = true;
-
-        private void Update()
-        {
-            // See bullet #3 above
-            if (!isBot)
-            {
-                MoveInput(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
-                JumpInput(Input.GetButtonDown("Jump"));
-            }
-        }
-        
-        // See bullet #4 above
-        [RGAction("MoveInDirection")]
-        public void MoveInput(Vector2 newMoveDirection)
-        {
-            move = newMoveDirection;
-        }
-        
-        public void JumpInput(bool newJumpState)
-        {
-            jump = newJumpState;
-        }
-    }
-}
-```
-
-Then, open the `Assets/FirstBotDemo/Demo/Scripts/Player/PlayerAttack.cs` file again, and add the following method to the class.
-This defines an action that allows the bot to target an enemy and use an ability on that enemy:
-
-```csharp
-[RGAction]
-public void SelectAndAttackEnemy(int enemyId, int ability)
-{
-    var enemy = RGFindUtils.Instance.FindOneByInstanceId<EnemyController>(enemyId);
-    SelectEnemy(enemy);
-    Attack(abilities[ability]);
-}
-```
-
-
-As a last step here, in the player input code, you will see that we introduced an `isBot` field to the `PlayerInputControl` component.
-This will allow our player to be controlled by the bot logic when it is set to true. However, there is an existing `Player`
-GameObject in the scene, which we want to control using our manual input controls. Click this `Player` in the object hierarchy,
-find the `Player Input Control` component, set `Is Bot` to `false` (unchecked), and then save (you may find that it is already unchecked).
-
-![Screenshot of the player prefab with the components added.](./img/building-your-first-bot/is_bot.png)
-
-That's it for actions! A bot may now use two different actions (moving and attacking).
-
 ## Using a ready-to-go bot from the Bot Marketplace
 
-Now that our integration is complete, our final step is to use an implementation of a bot. We will start with a template
+Now that the SDK integration is complete, our final step is to use an implementation of a bot. We will start with a template
 found in our [Bot Marketplace](https://play.regression.gg/marketplace), and then will show you where to edit its code.
 
 Find the [Simple Kiting Bot in the Bot Marketplace](https://play.regression.gg/marketplace/1) and click "Create Bot" to copy 
@@ -349,6 +137,6 @@ call.
 The following guides and references are great next steps:
 
 * Check out the [bot marketplace](https://play.regression.gg/marketplace) to see what bots are available for your game
-* Learn how to build your own bot using the [Agent Builder](/creating-bots/javascript/agent-builder)
+* Learn how to build your own bot using the [Agent Builder](/creating-bots/csharp/agent-builder)
 * Learn how to setup a [QA / validation testing bot](/session-insights/client-dashboard)
 * Learn how to get your bot up and running in a [CI/CD environment such as GitHub Actions](/tutorials/github-actions)

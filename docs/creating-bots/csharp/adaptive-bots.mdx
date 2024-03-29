@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Creating Adaptive Bots'
+sidebar_label: 'Adaptive Bots'
 ---
 
 import Tabs from '@theme/Tabs';
@@ -7,162 +7,66 @@ import TabItem from '@theme/TabItem';
 
 # Defining Bots that Adapt to the Game State
 
-Your Unity integration collects state information about GameObjects and notifies the Bot runtime with the updated state at a fixed tick interval.
-Whenever the Bot runtime receives an update, Regression Games calls the `ProcessTick(RG rgObject)` method.
-This is Regression Games' entrypoint into your Bot logic, where you will describe how your Bot makes decisions and reacts to the current game state.
-
-The `RG` object passed to `ProcessTick` exposes the Regression Games API which contains methods for evaluating the game state and queueing behaviors that you've defined as an `RGAction`.
-This API is defined in the sections below.
-
-In-game state and `RGAction` usages are automatically recorded during each session. 
-These logs can be loaded into the Unity Bot Replay utility which allows you to re-watch the session and debug Bot behaviors tick-by-tick. 
-API methods that filter state objects and check conditions will record additional decision results. 
-These are displayed side-by-side with Bot actions in the Replay utility to help debug your Bot by showing which decisons led to resulting behaviors.  
-
-:::info
-If you are using the [`[RGAction]` attribute](../../integrating-with-unity/defining-actions) to generate your actions, then there are also typed `RGActionRequest` classes generated for that action.  The snippets below provide examples for using both typed and untyped actions.
-:::
-
-:::caution
-Commands within `ProcessTick` interact with the game state represented by the current tick only.
-This contrasts with [Scenario Bots](./scenario-testing), which can delay execution of commands for several ticks until expected conditions are met.
-:::
+Defining a Unity Bot in C# is as simple as creating a MonoBehaviour that implements the IRGBot interface.
+The IRGBot interface has no methods, but is used by the Regression Games SDK to identify bots that can be started from the in game overlay.
 
 <Tabs>
-<TabItem value="runTurn_coopBot" label="Follow and support a human player as an NPC" default>
+<TabItem value="sample_Bot" label="Perform actions on players and NPCs" default>
 
-```javascript
-public override void ConfigureBot(RG rgObject)
-{
-    rgObject.CharacterConfig = new Dictionary<string, object>() {
-        { "role", "Warrior" }
-    };
-}
-
+```csharp
 /**
- * Outline of our Bot algorithm. For every tick:
- *  - If the Bot is standing on a switch that is holding a door open, then do nothing
- *  - If the switch is within a range of sqrt(30) units from the Bot, move onto the switch
- *  - If the Bot is not near the player, move within range of the player
- *  - If an enemy is within a certain distance of a player, attack that enemy
+ * Outline of this Bot algorithm. For every update:
+ *  - If enough time has passed for the bot to process a new update, handle the update.
+ *  - Select a random nearby player or enemy if one exists
+ *    - Follow that entity at distance 2f
+ *    - Perform a skill targeting that entity and position
+ * Note: This bot code works with the Unity multiplayer sample project fork @ https://github.com/Regression-Games/RGBossRoom
  */
-public override void ProcessTick(RG rgObject)
+public class SampleBot: MonoBehaviour, IRGBot
 {
+    private float _lastUpdate = -1f;
+    private static readonly float _updateEveryXSeconds = 2.0f;
 
-    if (rgObject.SceneName != "Dungeon")
+    public void Update()
     {
-        return;
-    }
-
-    var currentPosition = (Vector3)rgObject.GetMyPlayers()[0].position;
-
-    var floorSwitch = rgObject.FindEntities("FloorSwitch");
-    if (floorSwitch.Count > 0 && rgObject.EntityHasAttribute(floorSwitch[0], "isOn", true))
-    {
-        return;
-    }
-
-    if (floorSwitch.Count > 0 && MathFunctions.DistanceSq(currentPosition, (Vector3)floorSwitch[0].position) < 30)
-    {
-        return;
-    }
-
-    var humanPlayer = rgObject.FindEntities("HumanPlayer");
-    if (humanPlayer.Count > 0 &&
-        MathFunctions.DistanceSq(currentPosition, (Vector3)humanPlayer[0].position) > 10)
-    {
-        // Untyped action request
-        rgObject.PerformAction(new RGActionRequest("ApproachObject", new Dictionary<string, object>()
+        var time = Time.time;
+        if (time - _lastUpdate > _updateEveryXSeconds)
         {
-            { "targetId", humanPlayer[0].id },
-            { "range", 2}
-        }));
+            HandleUpdate(this.gameObject);
+            _lastUpdate = time;
+        }
     }
 
-    var enemy = rgObject.FindNearestEntity(null, currentPosition,
-        (entity) => 1.Equals(entity.GetField("team")) && !true.Equals(entity.GetField("broken")));
-    if (enemy != null && 0.CompareTo(enemy.GetField("Health")) < 0)
+    public void HandleUpdate(GameObject spawnedGameObject)
     {
-        /*
-         * Typed action request
-         *
-         *  Using Generated Class ...
-            public class RGActionRequest_PerformSkill : RGActionRequest
+        var entities = FindObjectsByType<ServerCharacter>(FindObjectsSortMode.None);
+
+        if (entities.Length > 0)
+        {
+            // default to friendly ability
+            var skillId = 0;
+
+            GameObject target = entities[new Random().Next(entities.Length)].gameObject;
+            spawnedGameObject.GetComponent<RGFollowObjectAction>().FollowObject(target.transform, 2f);
+
+
+            if (target.GetComponent<RGEnemyState>() != null)
             {
-                public RGActionRequest_PerformSkill(int skillId, int targetId, Vector3 position)
-                {
-                    action = "PerformSkill";
-                    Input = new ()
-                    {{"skillId", skillId}, {"targetId", targetId}, {"position", position}, };
-                }
-            } 
-         *
-         */
-        rgObject.PerformAction(new RGActionRequest_PerformSkill(1, enemy.id, enemy.position));
+                // if enemy.. set ability to 1
+                skillId = 1;
+            }
+
+            var targetPosition = target.transform.position;
+
+            spawnedGameObject.GetComponent<RGPerformSkillAction>().PerformSkill(skillId, target.GetInstanceID(), targetPosition);
+        }
+        else
+        {
+            RGDebug.LogWarning("No entities found...");
+        }
     }
 }
 ```
-</TabItem>
-
-<TabItem value="runTurn_menuBot" label="Click buttons to start the game">
-
-```javascript
-protected override bool GetIsSpawnable()
-{
-    return false;
-}
-
-protected override RGBotLifecycle GetBotLifecycle()
-{
-    return RGBotLifecycle.PERSISTENT;
-}
-
-// flags for clicking the buttons we need to click to start the game
-private readonly Dictionary<string, bool> _stateFlags = new()
-{
-    { "SelectGameModeButton", false },
-    { "ChooseArcherButton", false },
-    { "StartGameButton", false }
-};
-
-/** 
- * Click buttons to get us from the Main Menu into the dungeon.
- * Once we enter the dungeon, this Bot has completed its tasks.
- */
-public override void ProcessTick(RG rgObject)
-{
-    if(rgObject.SceneName == "MainMenu")
-    {
-        var selectGameModeButton = rgObject.GetInteractableButton("SelectGameModeButton");
-        if (selectGameModeButton != null && !_stateFlags["SelectGameModeButton"])
-        {
-            rgObject.PerformAction(new RGActionRequest_ClickButton(selectGameModeButton.id) );
-            _stateFlags["SelectGameModeButton"] = true;
-            return;
-        }
-
-        var chooseArcherButton = rgObject.GetInteractableButton("ChooseArcherButton");
-        if (chooseArcherButton != null && _stateFlags["SelectGameModeButton"] && !_stateFlags["ChooseArcherButton"])
-        {
-            rgObject.PerformAction(new RGActionRequest_ClickButton(chooseArcherButton.id));
-            _stateFlags["ChooseArcherButton"] = true;
-            return;
-        }
-
-        var startGameButton = rgObject.GetInteractableButton("StartGameButton");
-        if (startGameButton != null && _stateFlags["ChooseArcherButton"] && !_stateFlags["StartGameButton"])
-        {
-            rgObject.PerformAction(new RGActionRequest_ClickButton(startGameButton.id));
-            _stateFlags["StartGameButton"] = true;
-            return;
-        }
-
-    } else {
-        rgObject.Complete();
-    }
-}
-```
-
 </TabItem>
 </Tabs>
 
