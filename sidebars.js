@@ -49,6 +49,15 @@ const sidebars = {
           'session-insights/client-dashboard',
           'session-insights/in-editor-replay'
       ]
+    },
+    {
+      type: 'category',
+      label: 'Gameplay Sessions',
+      items: [
+          'gameplay-sessions/gameplay-sessions-getting-started',
+          'gameplay-sessions/gameplay-sessions-usage',
+          'gameplay-sessions/gameplay-sessions-reference'
+      ]
     }
   ],
 
