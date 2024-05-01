@@ -5,21 +5,21 @@ sidebar_label: 'Gameplay Sessions Technical Reference'
 # Gameplay Sessions Technical Reference
 
 Although developers on Regression Games will often interact with the Gameplay Sessions through the web interface or
-within the SDK itself, you may be interested in viewing and understanding the data directly. This document will provide
-a technical overview of the Gameplay Sessions system, as well as more technical details and FAQ.
+within the SDK itself, you may be interested in viewing and understanding the data directly. This document provides a
+technical overview of the Gameplay Sessions system, as well as more technical details and FAQ.
 
 ## Overview of the Schema
 
 ### Folder and File Structure
 
-When a Gameplay Session is recorded, all data is first stored on disk within two folders:
+When a Gameplay Session is recorded, all data is stored on disk within two folders:
 
 * `~/unity_videos/run_{#}/screenshots` - A folder with screenshots for each recorded tick of the session. Each
   screenshot is named with the format `{tick#}.jpg`, where `tick#` is the in-game tick from the start of the session.
 * `~/unity_videos/run_{#}/data` - A folder with the state and input data for each recorded tick of the session. Each
   tick is stored in a JSON file named with the format `{tick#}.json`.
 
-After you are done recording, you will not see these folders, because they will be compressed into zip files
+After a recording is finished, you will not see these folders, because they will be compressed into zip files
 (`data.zip` and `screenshots.zip` within the `run_{#}` folder).
 
 Additionally, there is a `thumbnail.jpg` file stored in this run folder, which is the screenshot from the middle of
@@ -69,7 +69,7 @@ Each `{tick}.json` file contains the following information:
 #### GameStateObject Schema
 
 Within the `state` field, an array of objects represents the state of game objects on this tick. Depending on the
-[options you have configured](google.com) for recording, some objects and state in your scene may not be present in this
+[options you have configured](/gameplay-sessions/gameplay-sessions-usage#advanced-options) for recording, some objects and state in your scene may not be present in this
 list. Each object has the following schema:
 
 ```json
@@ -166,8 +166,16 @@ schema:
 ### Key Frames
 
 Key frames are a way to mark important moments in your gameplay session. They are represented as an array of strings in
-the `keyFrame` field of the `{tick}.json` file.
+the `keyFrame` field of the `{tick}.json` file. The possible key frames are:
 
+* `FIRST_FRAME` - Indicates that this tick is the first tick of the gameplay session.
+* `SCENE` - Indicates that this tick is the first tick of a scene that is different from the previous tick's scene.
+* `GAME_ELEMENT` - Indicates that a visible game element was changed this tick.
+* `GAME_ELEMENT_RENDERER_COUNT` - Indicates that a visible game element changed its number of renderers this tick.
+* `UI_ELEMENT` - Indicates that a visible UI element was changed this tick.
+* `UI_PIXELHASH` - Indicates that the screen pixels changed this tick.
+
+Any time one of these events occurs on a tick, the corresponding key frame will be added to the `keyFrame` array.
 
 #### Full Example of a Tick JSON File
 
@@ -327,12 +335,13 @@ the `keyFrame` field of the `{tick}.json` file.
 }
 ```
 
-## Recording Options
-
 ## How GameObjects are scraped
 
 ## How performance information is scraped
 
-## How input is scraped
+Performance information, such as fps, render time, and object stats are either calculated frame-by-frame, or use
+the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class. Since
+UnityStats is an editor-only feature, some performance information, specifically that of `engineStats`, is only
+available when running in the Unity Editor.
 
-## What is a key frame?
+## How input is scraped

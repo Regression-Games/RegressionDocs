@@ -2,11 +2,16 @@
 sidebar_label: 'Using Gameplay Sessions'
 ---
 
+import OverlayPartial from '../partials/_add-overlay-partial.mdx';
+
 # Using Gameplay Sessions
 
 ## Preparing the Overlay
 
-First, add the RGOverlayCanvas perfab to your scene (follow these instructions (INSERT LINK) if you have not done this already).
+First, add the RGOverlayCanvas prefab to your scene, which is the UI that allows us to record and play gameplay
+sessions.
+
+<OverlayPartial />
 
 ## Recording Gameplay
 
@@ -78,22 +83,23 @@ of the game state. If true, all renderers are collapsed into their top level gam
 exists that has colliders/renderers/animators/etc at multiple levels, they will all be represented by a single entry in
 the state. This defaults to checked as it is normally desired to see each player, car, building, etc as a single entry
 in the state. However, it can be useful to set this to false in cases where you want to validate individual render
-bounds, colliders, rigibodies, etc on individual armatures, weapons, or other components that are children in the
+bounds, colliders, rigid bodies, and more on individual armatures, weapons, or other components that are children in the
 hierarchy.
 
 #### Include Only On Camera Objects
 
-The **Include Only On Camera Objects** checkbox dictates whether or not the recorder should collect all objects in the
+The **Include Only On Camera Objects** checkbox dictates whether the recorder should collect all objects in the
 scene as part of the game state, or only those that appear in the viewport of the camera. This defaults to checked, as
 in many cases, objects that are not on camera are not relevant to the test or playback. If you do need to see all
 objects in the scene, uncheck this field.
 
 #### Collect State from Behaviours
 
-The **Collect State from Behaviours** checkbox dictates whether or not the recorder should collect fields and property
+The **Collect State from Behaviours** checkbox dictates whether the recorder should collect fields and property
 values from Behaviours attached to the game objects. For recording playback, this is not always needed, but for testing
 specific states within your game objects, this is extremely useful. This is unchecked by default, and note that
 enabling this can introduce a performance impact.
 
 ![Various options for scraping game objects from the scene](img/base_options_finder.png)
 
+To learn more about the data format and intricacies of this tool, visit the next page for a technical reference.
