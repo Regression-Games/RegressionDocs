@@ -8,98 +8,116 @@ import OverlayPartial from '../partials/_add-overlay-partial.mdx';
 
 ## Preparing the Overlay
 
-First, add the RGOverlayCanvas prefab to your scene, which is the UI that allows us to record and play gameplay
-sessions.
+The Regression Games SDK's `RGOverlayCanvasV2` prefab is a UI component that will allow you to record and replay Gameplay
+Sessions.
 
 <OverlayPartial />
 
 ## Recording Gameplay
 
-Recording can be started by clicking the red record button in the overlay under the Regression Games icon.
-Once clicked, the SDK will begin recording your gameplay. Click the pulsing red record button again to stop the
-recording, at which point all data collected will be saved to your device and uploaded to your Regression Games account.
+Once the overlay has been added to your scene(s), click play.
+The Regression Games logo at the bottom of the Scene View will display recording and playback controls.
+
+Recording can be started by clicking the red "record" button below the logo.
+Once clicked, the SDK will begin recording your gameplay. You can tell that recording is active when the red button begins pulsing.
+Clicking the button again will stop the recording and sync the Gameplay Session to your Regression Games account.
 
 ![Start a recording](img/record.png)
 
 ## Playing Back a Recording
 
-A recording can be played back by selecting the menu button underneath the Regression Games icon in the overlay. A file
-selector will appear, with a default location of the recordings folder on your device. Navigate into the folder of the
-run you'd like to use, select the `data.zip` file, and click "Load Replay".
-
-After the replay is selected, click the Play button underneath the Regression Games icon to begin the playback.
+A recording can be replayed by initiating "play" mode from your Unity editor and selecting the menu button below the Regression Games logo.
+This will launch a file explorer at the location of the recordings folder on your device.
+Navigate into the folder of the recording you'd like to replay, select its `data.zip` file, and then click "Load Replay".
+Once you've selected a replay, click the Play button below the Regression Games logo to begin playback.
 
 ![Open the Gameplay Session Selector](img/overlay_click_load.png)
 ![Select the Gameplay Session](img/overlay_choose_session.png)
 
 ## Advanced Options
 
-### Ignoring objects in your Scene
-
-In certain scenarios, you may want to ignore certain objects in your recordings, such as regions of a level that are
-not relevant to the test or behavior of your recording. To ignore these game objects, follow these steps:
-
-1. Click "Add Component"
-1. Search for and add the `RG Ignore From State` component
-
-This will ignore all state from this game object as well as all children of this game object.
-
 ### Choosing an FPS for recording
 
-The **Recording Min FPS** option tells the SDK the frequency at which it should record information from the game. For
-instance, if the FPS is set to `5`, then 5 times a second the SDK will scrape the game information.
-
-If the FPS is set `0`, then the SDK will only record information when a
-[**key frame**](/gameplay-sessions/gameplay-sessions-reference#key-frames) is detected.
+The `Recording Min FPS` field under `RGOverlayCanvasV2` > `ScreenRecorder` allows you to configure
+how often the SDK scrapes the game for state data.
+Its default value is 0, which instructs the SDK to only record state data when it detects a
+[**key frame**](/gameplay-sessions/gameplay-sessions-reference#key-frames).
+Setting `Recording Min FPS` to a value greater than 0 will cause the SDK to record data at that frequency instead,
+regardless of whether a key frame was detected.
+For instance, a setting of `5` will result in the SDK scraping the game for state data 5 times per second.
 
 ![Change the FPS at which data is collected from the game](img/base_options_fps.png)
 
 ### Changing your recording location
 
-By default, all data is stored to a `unity_videos` directory within your home directory. This can be changed within the
-**State Recordings Directory** field.
-
-TO DISCUSS IN PR COMMENTS: How does this work when multiple people are using the project on different machines?
+By default, recorded data is stored in your home directory under `/unity_videos`.
+This directory can be overridden by changing the `State Recordings Directory` field under `RGOverlayCanvasV2` > `ScreenRecorder`.
 
 ![Change the location where data is saved](img/base_options_location.png)
 
 ### Input threshold options
 
-In some cases, different devices may report spammy key clicks when a key is actually being held down. This threshold
-defines a maximum amount of time that must exist between key clicks to be considered clicks rather than a key being
-held. This defaults to 0.1 seconds, and often should not have to be changed. If you do experience key click spamming,
-you can change this value to a higher number within the **Key Held Threshold Seconds** field.
+Some devices might recognize holding down a key as spamming key presses for that key instead.
+The `Key Held Threshold Seconds` field under `RGOverlayCanvasV2` > `Keyboard Input Action Observer`
+allows you to configure the threshold for how long a key must be released
+between presses before each press is considered a distinct event.
+This setting defaults to 0.1 seconds, and often should not need to be changed.
+If you do experience key-press spam, increase the value.
 
 ![Change the threshold for held key inputs](img/base_options_threshold.png)
 
-### Game object finder configurations
+### Configuring game-state collection
 
-The SDK traverses the game object tree of a game to collect state relevant for both recording playback and testing.
-In addition to ignore certain objects as described above, there are also a few other ways that this can be configured.
+The Regression Games SDK scrapes the game for state data by traversing the game's GameObject hierarchy
+and recording any data it considers relevant to playing back recordings or running tests.
 
-#### Collapsing Renderers
+#### Excluding objects from recordings
 
-The **Collapse Renderers into Top Level Game Object** checkbox dictates how renderer game objects are collected as part
-of the game state. If true, all renderers are collapsed into their top level gameObject. If a gameObject hierarchy
-exists that has colliders/renderers/animators/etc at multiple levels, they will all be represented by a single entry in
-the state. This defaults to checked as it is normally desired to see each player, car, building, etc as a single entry
-in the state. However, it can be useful to set this to false in cases where you want to validate individual render
-bounds, colliders, rigid bodies, and more on individual armatures, weapons, or other components that are children in the
-hierarchy.
+Adding the `RGExcludeFromState` component to a GameObject will prevent its state data from being recorded.
+This can be useful for ignoring irrelevant regions of a level
+or other objects that are not relevant to your playback or testing.
+Children of an excluded GameObject are also excluded from the recording, effectively ignoring the entire hierarchy.
 
-#### Include Only On Camera Objects
+#### Collapsing renderers
 
-The **Include Only On Camera Objects** checkbox dictates whether the recorder should collect all objects in the
-scene as part of the game state, or only those that appear in the viewport of the camera. This defaults to checked, as
-in many cases, objects that are not on camera are not relevant to the test or playback. If you do need to see all
-objects in the scene, uncheck this field.
+By default, the SDK collapses a child GameObject's data into its respective top-level GameObject.
+If a GameObject hierarchy has colliders/renderers/animators/etc. at multiple levels,
+they will be represented together as a single "entity" in the recorded state.
+This is generally desirable, as it allows you to treat each player (for example) as a complete entity in the state
+rather than visualizing individual child components as their own entities.
 
-#### Collect State from Behaviours
+However, it can also be useful to disable this behaviour in cases where you'd like to validate
+render bounds, colliders, rigid bodies, etc. for individual armatures, weapons, or other components
+on children in the hierarchy.
 
-The **Collect State from Behaviours** checkbox dictates whether the recorder should collect fields and property
-values from Behaviours attached to the game objects. For recording playback, this is not always needed, but for testing
-specific states within your game objects, this is extremely useful. This is unchecked by default, and note that
-enabling this can introduce a performance impact.
+The `Collapse Renderers into Top Level Game Object` checkbox under `RGOverlayCanvasV2` > `In Game Object Finder`
+controls this behaviour, where checking the box forces collapsing and unchecking the box disables collapsing.
+
+#### Include off-camera objects
+
+By default, the SDK only records state data for GameObjects that are within the main camera's viewport.
+In many cases, this is desirable because off-camera GameObjects are not relevant to playback or applicable test scenarios.
+Off-camera objects can be included in recordings by toggling the
+`Include Only On Camera Objects` checkbox under `RGOverlayCanvasV2` > `In Game Object Finder`.
+Checking this box limits state collection to on-camera objects
+and unchecking the box enables state collection for off-camera objects.
+
+#### Collect state from behaviours
+
+By default, the SDK only records state data from GameObjects themselves, and does not record
+fields or property values from attached Behaviours.
+These are generally not needed for playing back recordings, but can be extremely useful for test scenarios.
+
+The `Collect State from Behaviours` checkbox under `RGOverlayCanvasV2` > `In Game Object Finder`
+dictates whether recordings include data from Behaviours attached to a GameObject.
+Checking this box will include all fields and properties from all Behaviours attached to a GameObject in the recorded state,
+and unchecking the box will exclude them.
+
+:::info Note
+
+Recording state from Behaviours may incur an impact on performance.
+
+:::
 
 ![Various options for scraping game objects from the scene](img/base_options_finder.png)
 

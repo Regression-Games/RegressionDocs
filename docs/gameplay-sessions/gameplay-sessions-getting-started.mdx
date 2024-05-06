@@ -8,39 +8,38 @@ sidebar_label: 'Getting Started with Gameplay Sessions'
 
 <br />
 
-**Gameplay Sessions** are recordings of a play-through within your game. The Regression Games SDK captures
-information from the game during the play-through, including:
+A **Gameplay Session** is a recorded snippet of gameplay from your game.
+The Regression Games SDK records the following information during gameplay:
 
 - Entities and their state (e.g. position, behaviours, colliders)
 - Performance information (e.g. frame rate, memory usage)
 - User input (e.g. keyboard, mouse, gamepad)
 - Screenshots
 
-These recordings are used for two purposes:
+This recorded information allows the Regression Games SDK to automatically replay a given session
+and run user-defined test scenarios against new data captured during the replay.
+This effectively brings the power of automated testing to the world of game development.
 
-1. Capturing data from the game that is useful for testing, such as validating state, performance information, etc...
-2. Replaying the session automatically as an automated test scenario.
-
-A Gameplay Sessions recording can be started either through the the Regression Games Overlay or programmatically. The
-recording is saved locally to your device, but is later uploaded to your Regression Games account. A saved recording
-can be selected through the overlay or programmatically to play back as an automation.
+A Gameplay Session can be recorded within Unity either programmatically or through an overlay provided by the SDK.
+The recording is saved locally to your device as you record, and is synced to your Regression Games account when you stop recording.
+A saved recording can be loaded to reproduce inputs and capture new information from the replay.
 
 ## Strengths of the Gameplay Session system
 
-- **Easy to use**: Start and stop recordings with a single click. No additional code setup is needed, and instantly
-  start scraping in-depth information about your game.
-- **Performance**: Extra care has been taking to ensure that the SDK introduces minimal performance load on the
-  gameplay. This is something we are constantly improving.
-- **Customization**: In some cases, you may want to ignore certain parts of your game's state. The SDK makes this easy
-  by providing a component that can be added to any game object or tree of objects to ignore those objects from the
-  scraping step.
+- **Easy to use**: Start and stop recordings with a single click. Instantly start scraping in-depth information about your game
+  with minimal integration.
+- **Performance**: We've taken extra care to ensure that our SDK introduces minimal load on gameplay performance.
+  This is something we are constantly improving.
+- **Customization**: In some cases, you may want to ignore certain parts of your game's state. The SDK makes it easy
+  to exclude a GameObject and its children from recorded data.
 
 ## Known Limitations
 
-We are constantly iterating on and improving our tools! If you have additional limitations, bugs, or feature requests
-you'd like to send along, please fill out [this feedback form.](https://d7y6yysps34.typeform.com/to/MYieIsHV)
+We are constantly iterating on and improving our tools!
+If you'd like to report any additional limitations, bugs, or if you'd like to request a feature,
+please fill out [this feedback form.](https://d7y6yysps34.typeform.com/to/MYieIsHV)
 
-- **Old vs New Unity Input System** - For **playback specifically**, only games using the new Unity Input System are
-  supported, as the old Unity Input System does not easily support input simulation.
+- **Old vs New Unity Input System** - Playback of recordings is only supported for games using the new Unity Input System,
+  as the old system does not easily allow for input simulation.
 
 Learn more about how to use this powerful recording and playback feature by clicking the **Next** button below.
