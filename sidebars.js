@@ -12,51 +12,56 @@
 
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
-
   unitySidebar: [
-    'overview',
-    'quickstart',
+    "overview",
+    "quickstart",
     {
-      type: 'category',
-      label: 'Tutorials',
-      items: [
-        'tutorials/building-your-first-bot',
-        'tutorials/github-actions'
-      ],
+      type: "category",
+      label: "Tutorials",
+      items: ["tutorials/building-your-first-bot", "tutorials/github-actions"],
     },
     {
       // horizontal divider
-      type: 'html',
-      value: '<span style="border-top: 1px solid var(--ifm-color-light-gray); display: block;" />',
+      type: "html",
+      value:
+        '<span style="border-top: 1px solid var(--ifm-color-light-gray); display: block;" />',
       defaultStyle: true,
-      className: 'horizontal-divider'
+      className: "horizontal-divider",
     },
-    'authenticating-with-api-keys',
+    "authenticating-with-api-keys",
     {
-      type: 'category',
-      label: 'Creating Bots',
+      type: "category",
+      label: "Creating Bots",
       items: [
-          'creating-bots/csharp/agent-builder',
-          'creating-bots/csharp/adaptive-bots',
-          'creating-bots/csharp/scenario-testing'
-      ]
+        "creating-bots/csharp/agent-builder",
+        "creating-bots/csharp/adaptive-bots",
+        "creating-bots/csharp/scenario-testing",
+      ],
     },
-    'pre-made-bots',
+    "pre-made-bots",
     {
-      type: 'category',
-      label: 'Session Insights',
+      type: "category",
+      label: "Session Insights",
       items: [
-          'session-insights/client-dashboard',
-          'session-insights/in-editor-replay'
-      ]
-    }
+        "session-insights/client-dashboard",
+        "session-insights/in-editor-replay",
+      ],
+    },
+    {
+      type: "category",
+      label: "Validations",
+      items: [
+        "validations/validations-getting-started",
+        "validations/validations-scenario-builder-reference",
+      ],
+    },
   ],
 
   automatedTesting: [
-    'automated-testing/overview',
-    'automated-testing/getting-started',
-    'automated-testing/gpt-assistant-bot',
-    'automated-testing/creating-custom-components',
+    "automated-testing/overview",
+    "automated-testing/getting-started",
+    "automated-testing/gpt-assistant-bot",
+    "automated-testing/creating-custom-components",
   ],
 };
 

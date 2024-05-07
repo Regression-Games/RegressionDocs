@@ -1,0 +1,35 @@
+---
+sidebar_label: 'Scenario Builder Reference'
+---
+
+# Scenario Builder Reference
+
+Scenarios are composed of one or more steps that can be asserted throughout a gameplay recording. Steps are asserted in the order they appear in the Scenario, and if any step fails, the Scenario will fail.
+
+Aside from waiting for specific game states, you can also store values to be used in later steps.
+
+## Step Types
+
+### Wait for Scene
+
+Wait for a specific scene to be loaded to be loaded or unloaded.
+
+### Wait for Key
+
+Wait for one or more keys to be pressed or released.
+
+### Wait for Mouse
+
+Wait for a mouse button to be pressed or released.
+
+### Wait for Existence
+
+Wait for a specified number of game objects, of a specific type, to exist or not exist.
+
+### Wait for State
+
+Wait for a specified number of game objects, of a specific type, to have state values that match a comparison. This comparison can either be a manually input value, or a stored value from a previous step.
+
+### Store Value
+
+Store a game object's state value to be used in later steps.
