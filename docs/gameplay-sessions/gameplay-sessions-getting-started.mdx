@@ -1,0 +1,45 @@
+---
+sidebar_label: 'Getting Started with Gameplay Sessions'
+---
+
+# Gameplay Sessions
+
+<div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/e3220a1c6aa849f6801d8a7aa769c4f9?sid=5c454eed-d69c-4b81-ac52-689aed01f0bc" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
+
+<br />
+
+A **Gameplay Session** is a recorded snippet of gameplay from your game.
+The Regression Games SDK captures the following information during gameplay:
+
+- Entities and their state (e.g. position, behaviours, colliders)
+- Performance information (e.g. frame rate, memory usage)
+- User input (e.g. keyboard, mouse, gamepad)
+- Screenshots
+
+This recorded information allows the Regression Games SDK to automatically replay a given session
+and run user-defined test scenarios against new data captured during the replay.
+This effectively brings the power of automated testing to the world of game development.
+
+A Gameplay Session can be recorded within Unity either programmatically or through an overlay provided by the SDK.
+The recording is saved locally to your device as you record, and is synced to your Regression Games account when you stop recording.
+A saved recording can be loaded to reproduce inputs and capture new information from the replay.
+
+## Strengths of the Gameplay Session system
+
+- **Easy to use**: Start and stop recordings with a single click. Instantly start scraping in-depth information about your game
+  with minimal integration.
+- **Performance**: We've taken extra care to ensure that our SDK introduces minimal load on gameplay performance.
+  This is something we are constantly improving.
+- **Customization**: In some cases, you may want to ignore certain parts of your game's state. The SDK makes it easy
+  to exclude a GameObject and its children from recorded data.
+
+## Known Limitations
+
+We are constantly iterating on and improving our tools!
+If you'd like to report any additional limitations, bugs, or if you'd like to request a feature,
+please fill out [this feedback form.](https://d7y6yysps34.typeform.com/to/MYieIsHV)
+
+- **Old vs New Unity Input System** - Playback of recordings is currently supported only for games using the new Unity
+  Input System. _We are investigating the possibility of supporting the old Unity Input System_.
+
+Learn more about how to use this powerful recording and playback feature by clicking the **Next** button below.

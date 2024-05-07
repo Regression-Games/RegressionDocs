@@ -34,16 +34,6 @@ const sidebars = {
       defaultStyle: true,
       className: 'horizontal-divider'
     },
-    'authenticating-with-api-keys',
-    {
-      type: 'category',
-      label: 'Custom Bots',
-      items: [
-          // DISABLED For MVP Launch.
-          // 'creating-bots/csharp/agent-builder',
-          'creating-bots/csharp/adaptive-bots',
-      ]
-    },
     // DISABLED For MVP Launch.
     // 'pre-made-bots',
     // {
@@ -54,6 +44,25 @@ const sidebars = {
     //       'session-insights/in-editor-replay'
     //   ]
     // }
+    {
+      type: 'category',
+      label: 'Gameplay Sessions',
+      items: [
+        'gameplay-sessions/gameplay-sessions-getting-started',
+        'gameplay-sessions/gameplay-sessions-usage',
+        'gameplay-sessions/gameplay-sessions-reference'
+      ]
+    },
+    'authenticating-with-api-keys',
+    {
+      type: 'category',
+      label: 'Custom Bots',
+      items: [
+        // DISABLED For MVP Launch.
+        // 'creating-bots/csharp/agent-builder',
+        'creating-bots/csharp/adaptive-bots',
+      ]
+    },
   ],
   automatedTesting: [
     'automated-testing/overview',

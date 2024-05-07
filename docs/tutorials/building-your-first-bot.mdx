@@ -2,36 +2,34 @@
 sidebar_label: 'Writing your first automation and test'
 ---
 
+import OverlayPartial from '../partials/_add-overlay-partial.mdx';
+
 # Writing your first automation and bot
 
-:::info
-
-This tutorial assumes a basic understanding of Unity concepts. If you get stuck, join our [Discord](https://discord.com/invite/925SYVse2H) and we can help you out!
-
-:::
-
-In this tutorial, we will get a simple bot integrated and running in a Unity game. The bot will run to a random position and then
-shoot the enemy in our playground sample. This tutorial will cover:
+In this tutorial, we will get a simple automated test working in Unity using Regression Games. We will show you:
 
 - How to integrate the RG Unity SDK into your game
-- How to add various state and actions attributes so your bot can understand the game
-- How to use a ready-to-go bot from the Bot Marketplace, and how to modify its code
+- Record a gameplay session as an automated test
+- Create a test scenario and run that against future test runs
 
 <div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/c4a31389df6742ba9320bf7dc0e91739?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
 
 ## Download the sample game
 
-Feel free to follow this tutorial within your own game, but we recommend starting with a simple sample game. Clone the project
-from the [Regression-Games-Marketplace/SampleDemoScene](https://github.com/Regression-Games-Marketplace/SampleDemoScene.git) GitHub repository.
+Feel free to follow this tutorial within your own game, but we recommend starting with a sample game. Our team often uses
+BossRoom, a simple multiplayer game created by Unity. However, you can also start with any game of your choosing!
 
-```
-git clone https://github.com/Regression-Games-Marketplace/SampleDemoScene.git
-```
+Download the BossRoom sample from the [official GitHub repository.](https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop)
 
-Open it within Unity version 2021.3.24f1 (visit the [Unity archive](https://unity.com/releases/editor/whats-new/2021.3.24) if 
-you can't find that version from Unity Hub). Once the project is loaded, a default scene with bots in a playground should open. If it does not, 
-then find the **Playground** scene under **Assets** > **FirstBotDemo** > **Demo** > **Scenes** and open it manually. If you'd like, you can 
-click play now to see how the characters move.
+:::info
+
+Note that there are some limitations of the package that may not work with your game. For instance, our framework
+works best with the New Unity Input System and games that use standard UI canvas elements and game objects. Learn
+more about these limitations in our [Gameplay Session recording docs]().
+
+Open it within Unity version 2022.3 (visit the [Unity archive](https://unity.com/releases/editor/whats-new/2022.3.27) if
+you can't find that version from Unity Hub). Once the project is loaded, open the **MainMenu** scene within
+**Assets** > **Scenes** > **MainMenu**.
 
 ![Screenshot of the playground scene](./img/building-your-first-bot/start_0.png)
 
@@ -69,33 +67,20 @@ resolve the new packages even after Unity recompiles the scripts.
 The RGOverlayCanvasV2 prefab provides a drag and drop overlay that lets you easily start and stop bots running
 in your scene. This is useful when initially creating and debugging your bots.
 
-:::caution
+<OverlayPartial />
 
-Note that this overlay **must be present in your scene** for Regression Games to function. The visibility
-of the overlay can be hidden through the Regression Games settings pane under **Edit** > **Project Settings** > 
-**Regression Games**. If you have multiple scenes where a bot will be used, place this into each scene. 
-
-:::
-
-Find the `RGOverlayCanvasV2` prefab by navigating to **Packages** > **Regression Games Unity Bots** > **Runtime** > **Prefabs** and
-drag it into your scene's object hierarchy. Make sure that the canvas is at the top of the hierarchy, so that it is always 
-visible and interactable.
-
-![Screenshot of the search pane for the RGOverlayCanvas.](./img/building-your-first-bot/overlay_4.png)
-
-Once you have this overlay available, you can click play to see it in action! The
-Regression Games logo will appear at the bottom of your Scene View. Click this logo to see a dropdown for your bots. You
-likely will not have any bots yet - that's alright, we will make one soon!
+Once the overlay has been added to your scene(s), you can click play to see it in action!
+Click the Regression Games logo at the bottom of the Scene View to open the overlay.
 
 :::info
 
-Your scene must have an EventSystem to make interaction with the overlay possible. You can add one by 
-right-clicking in your scene's Hierarchy and selecting **GameObject** > **UI** > **Event System**. 
+Your scene must have an EventSystem to make interaction with the overlay possible. You can add one by
+right-clicking in your scene's Hierarchy and selecting **GameObject** > **UI** > **Event System**.
 If you are using the sample scene we provide, this is already included.
 
 :::
 
-![Screenshot of the RGOverlayCanvas.](./img/building-your-first-bot/overlay_5.png)
+![Screenshot of the RGOverlayCanvas.](../partials/img/overlay_5.png)
 
 ## Using a ready-to-go bot from the Bot Marketplace
 
