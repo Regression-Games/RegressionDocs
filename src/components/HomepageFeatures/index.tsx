@@ -14,7 +14,7 @@ const FeatureList: FeatureItem[] = [
     image: require('@site/static/img/ai_1.png').default,
     description: (
       <>
-        Regression Games is building the best platform for AI agent development with replay features, 
+        Regression Games is building the best platform for game test automation with replay features,
         validation libraries, CI/CD integration, and more.
       </>
     ),
@@ -24,8 +24,8 @@ const FeatureList: FeatureItem[] = [
     image: require('@site/static/img/ai (3).png').default,
     description: (
       <>
-        Whether you are building an MMORPG or a simple 2D platformer, the Regression Games SDK
-        follows a simple integration pattern to get you up and running quickly.
+          Ease of integration is one of our top priorities, and it shows. As soon as you add the SDK, data and deep
+          state info is collected, without custom code needed.
       </>
     ),
   },
@@ -34,8 +34,8 @@ const FeatureList: FeatureItem[] = [
     image: require('@site/static/img/ai (2).png').default,
     description: (
       <>
-        Bots on Regression Games can click through menus, control spawned characters, play test with humans, 
-        validate behaviors, and more.
+          Regression Games interfaces are built for a variety of teams, even those who may not have code access. Our
+          intuitive functional testing builder allows anyone to make tests.
       </>
     ),
   },

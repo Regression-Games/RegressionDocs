@@ -14,16 +14,19 @@
 const sidebars = {
 
   unitySidebar: [
-    'overview',
-    'quickstart',
-    {
-      type: 'category',
-      label: 'Tutorials',
-      items: [
-        'tutorials/building-your-first-bot',
-        'tutorials/github-actions'
-      ],
-    },
+    // DISABLED For MVP Launch.
+    // 'overview',
+    // 'quickstart',
+    'tutorials/building-your-first-bot',
+    // DISABLED For MVP Launch.
+    // {
+    //   type: 'category',
+    //   label: 'Tutorials',
+    //   items: [
+    //     'tutorials/building-your-first-bot',
+    //     'tutorials/github-actions'
+    //   ],
+    // },
     {
       // horizontal divider
       type: 'html',
@@ -34,24 +37,24 @@ const sidebars = {
     'authenticating-with-api-keys',
     {
       type: 'category',
-      label: 'Creating Bots',
+      label: 'Custom Bots',
       items: [
-          'creating-bots/csharp/agent-builder',
+          // DISABLED For MVP Launch.
+          // 'creating-bots/csharp/agent-builder',
           'creating-bots/csharp/adaptive-bots',
-          'creating-bots/csharp/scenario-testing'
       ]
     },
-    'pre-made-bots',
-    {
-      type: 'category',
-      label: 'Session Insights',
-      items: [
-          'session-insights/client-dashboard',
-          'session-insights/in-editor-replay'
-      ]
-    }
+    // DISABLED For MVP Launch.
+    // 'pre-made-bots',
+    // {
+    //   type: 'category',
+    //   label: 'Session Insights',
+    //   items: [
+    //       'session-insights/client-dashboard',
+    //       'session-insights/in-editor-replay'
+    //   ]
+    // }
   ],
-
   automatedTesting: [
     'automated-testing/overview',
     'automated-testing/getting-started',
