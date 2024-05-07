@@ -43,7 +43,7 @@ how often the SDK scrapes the game for state data.
 Its default value is 0, which instructs the SDK to only record state data when it detects a
 [**key frame**](/gameplay-sessions/gameplay-sessions-reference#key-frames). In most cases, this should be set to 0, as most games will only require state collection on key frames.
 Setting `Recording Min FPS` to a value greater than 0 will cause the SDK to record data at that frequency instead,
-regardless of whether a key frame was detected.
+in addition to recording any key frame that was detected.
 For instance, a setting of `5` will result in the SDK scraping the game for state data 5 times per second.
 
 ![Change the FPS at which data is collected from the game](img/base_options_fps.png)
