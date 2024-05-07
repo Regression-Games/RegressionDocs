@@ -14,10 +14,11 @@ technical overview of the Gameplay Sessions system, as well as more technical de
 
 When a Gameplay Session is recorded, all data is stored on disk within two folders:
 
-* `~/unity_videos/run_{#}/screenshots` - A folder with screenshots for each recorded tick of the session. Each
-  screenshot is named with the format `{tick#}.jpg`, where `tick#` is the in-game tick from the start of the session.
-* `~/unity_videos/run_{#}/data` - A folder with the state and input data for each recorded tick of the session. Each
-  tick is stored in a JSON file named with the format `{tick#}.json`.
+* `~/unity_videos/{Application.productName}/run_{#}/screenshots` - A folder with screenshots for each recorded tick of
+  the session. Each screenshot is named with the format `{tick#}.jpg`, where `tick#` is the in-game tick from the start
+  of the session.
+* `~/unity_videos/{Application.productName}/run_{#}/data` - A folder with the state and input data for each recorded
+  tick of the session. Each tick is stored in a JSON file named with the format `{tick#}.json`.
 
 After a recording is finished, you will not see these folders, because they will be compressed into zip files
 (`data.zip` and `screenshots.zip` within the `run_{#}` folder).
@@ -25,9 +26,9 @@ After a recording is finished, you will not see these folders, because they will
 Additionally, there is a `thumbnail.jpg` file stored in this run folder, which is the screenshot from the middle of
 your gameplay session.
 
-### Structure of {tick}.json Files
+### Structure of {tick#}.json Files
 
-Each `{tick}.json` file contains the following information:
+Each `{tick#}.json` file contains the following information:
 
 * Timing information (e.g. tick number, time, time scale)
 * Screen size information
@@ -35,149 +36,30 @@ Each `{tick}.json` file contains the following information:
 * Information about inputs on that tick (i.e. keyboard, mouse)
 * Key frames on this tick (explained below)
 
-#### Top Level Schema
-
-```json
-{
-  "tickNumber": number, // An integer representing the tick number of this tick
-  "keyFrame": [string], // An array of strings representing the key frames on this tick
-  "time": number, // A float representing the time in seconds since the start of the session
-  "timeScale": number, // A float representing the time scale of the game
-  "screenSize": {
-    "x": number, // An integer representing the width of the screen
-    "y": number // An integer representing the height of the screen
-  },
-  "performance": {
-    "previousTickTime": number, // A float representing the time in seconds since the previous tick
-    "framesSincePreviousTick": number, // An integer representing the number of frames since the previous tick
-    "fps": number, // A float representing the frames per second
-    "engineStats": {
-      "frameTime": number, // A float representing the time in seconds to render the frame
-      "renderTime": number, // A float representing the time in seconds to render the frame
-      "triangles": number, // An integer representing the number of triangles rendered
-      "vertices": number, // An integer representing the number of vertices rendered
-      "setPassCalls": number, // An integer representing the number of set pass calls
-    }
-  },
-  "state": GameObjectState[], // An array of objects holding the state of game objects (see following section)
-  "inputs": {
-    "keyboard": KeyboardInput[], // An array of objects holding keyboard input (see following section)
-    "mouse": MouseInput[] // An array of objects holding mouse input (see following section)
-  }
-```
-
-#### GameStateObject Schema
+#### Game Object State
 
 Within the `state` field, an array of objects represents the state of game objects on this tick. Depending on the
-[options you have configured](/gameplay-sessions/gameplay-sessions-usage#advanced-options) for recording, some objects and state in your scene may not be present in this
-list. Each object has the following schema:
+[options you have configured](/gameplay-sessions/gameplay-sessions-usage#advanced-options) for recording, some objects
+and state in your scene may not be present in this list.
 
-```json
-{
-  "id": number, // An integer representing the unique identifier of this object
-  "path": string, // A string representing the path of this object in the scene hierarchy
-  "scene": string, // A string representing the scene this object is in
-  "tag": string, // A string representing the tag of this object
-  "layer": string, // A string representing the layer of this object
-  "rendererCount": number, // An integer representing the number of renderers on this object
-  "screenSpaceBounds": {
-    "center": {
-      "x": number, // A float representing the x coordinate of the center of the bounds
-      "y": number, // A float representing the y coordinate of the center of the bounds
-      "z": number // A float representing the z coordinate of the center of the bounds
-    },
-    "extents": {
-      "x": number, // A float representing the x coordinate of the extents of the bounds
-      "y": number, // A float representing the y coordinate of the extents of the bounds
-      "z": number // A float representing the z coordinate of the extents of the bounds
-    }
-  },
-  "worldSpaceBounds": {
-    "center": {
-      "x": number, // A float representing the x coordinate of the center of the bounds
-      "y": number, // A float representing the y coordinate of the center of the bounds
-      "z": number // A float representing the z coordinate of the center of the bounds
-    },
-    "extents": {
-      "x": number, // A float representing the x coordinate of the extents of the bounds
-      "y": number, // A float representing the y coordinate of the extents of the bounds
-      "z": number // A float representing the z coordinate of the extents of the bounds
-    }
-  },
-  "position": {
-    "x": number, // A float representing the x coordinate of the position of the object
-    "y": number, // A float representing the y coordinate of the position of the object
-    "z": number // A float representing the z coordinate of the position of the object
-  },
-  "rotation": {
-    "x": number, // A float representing the x component of the rotation of the object
-    "y": number, // A float representing the y component of the rotation of the
-    "z": number, // A float representing the z component of the rotation of the object
-    "w": number // A float representing the w component of the rotation of the object
-  },
-  "rigidbodies": Rigidbody[], // An array of objects representing the rigidbodies on this object
-  "colliders": Collider[], // An array of objects representing the colliders on this object
-  "behaviours": Behaviour[] // An array of objects representing the behaviours on this object
-}
-```
+#### Key Frames
 
-#### KeyboardInput Schema
-
-Within the `inputs` field, an array of objects represents the keyboard input on this tick. Each object has the following
-schema:
-
-```json
-{
-  "startTime": number, // A float representing the time in seconds since the start of the session when this input started
-  "key": string // A string representing the key that was pressed
-}
-```
-
-#### MouseInput Schema
-
-Within the `inputs` field, an array of objects represents the mouse input on this tick. Each object has the following
-schema:
-
-```json
-{
-  "startTime": number, // A float representing the time in seconds since the start of the session when this input started
-  "position": {
-    "x": number, // A float representing the x coordinate of the mouse position
-    "y": number // A float representing the y coordinate of the mouse position
-  },
-  "worldPosition": {
-    "x": number, // A float representing the x coordinate of the world position of the mouse
-    "y": number, // A float representing the y coordinate of the world position of the mouse
-    "z": number // A float representing the z coordinate of the world position of the mouse
-  },
-  "leftButton": boolean, // A boolean representing whether the left mouse button was pressed
-  "middleButton": boolean, // A boolean representing whether the middle mouse button was pressed
-  "rightButton": boolean, // A boolean representing whether the right mouse button was pressed
-  "forwardButton": boolean, // A boolean representing whether the forward mouse button was pressed
-  "backButton": boolean, // A boolean representing whether the back mouse button was pressed
-  "scroll": {
-    "x": number, // A float representing the x component of the scroll
-    "y": number // A float representing the y component of the scroll
-  },
-  "clickedObjectIds": [number] // An array of integers representing the unique identifiers of the objects clicked
-}
-```
-
-### Key Frames
-
-Key frames are a way to mark important moments in your gameplay session. They are represented as an array of strings in
-the `keyFrame` field of the `{tick}.json` file. The possible key frames are:
+Key frames is how the SDK marks important moments in your gameplay session. They are represented as an array of strings
+in the `keyFrame` field of the `{tick#}.json` file. The possible key frames are:
 
 * `FIRST_FRAME` - Indicates that this tick is the first tick of the gameplay session.
-* `SCENE` - Indicates that this tick is the first tick of a scene that is different from the previous tick's scene.
-* `GAME_ELEMENT` - Indicates that a visible game element was changed this tick.
+* `SCENE` - Indicates that the scenes visible in this tick are different from the scenes visible in the previous tick.
+* `GAME_ELEMENT` - Indicates that a game element became visible to the camera or went off camera this tick. This could
+                   be from spawning, de-spawning, movement, or camera rotation/movement.
 * `GAME_ELEMENT_RENDERER_COUNT` - Indicates that a visible game element changed its number of renderers this tick.
-* `UI_ELEMENT` - Indicates that a visible UI element was changed this tick.
-* `UI_PIXELHASH` - Indicates that the screen pixels changed this tick.
+* `UI_ELEMENT` - Indicates that a visible UI element became visible to the camera or went off camera this tick. This
+                 could be from spawning, de-spawning, or UI component or canvas group visibility changes.
+* `UI_PIXELHASH` - Indicates that the screen pixels of a UI component changed this tick. This value is only relevant
+                   when using 3rd party UI system like Coherent GameFace.
 
 Any time one of these events occurs on a tick, the corresponding key frame will be added to the `keyFrame` array.
 
-### Full Example of a Tick JSON File
+### Example of a Tick JSON File
 
 ```json
 {
@@ -335,13 +217,9 @@ Any time one of these events occurs on a tick, the corresponding key frame will 
 }
 ```
 
-## How GameObjects are scraped
-
 ## How performance information is scraped
 
 Performance information, such as fps, render time, and object stats are either calculated frame-by-frame, or use
 the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class. Since
 UnityStats is an editor-only feature, some performance information, specifically that of `engineStats`, is only
 available when running in the Unity Editor.
-
-## How input is scraped
