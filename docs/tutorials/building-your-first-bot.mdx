@@ -25,13 +25,15 @@ Download the BossRoom sample from the [official GitHub repository.](https://gith
 
 Note that there are some limitations of the package that may not work with your game. For instance, our framework
 works best with the New Unity Input System and games that use standard UI canvas elements and game objects. Learn
-more about these limitations in our [Gameplay Session recording docs]().
+more about these limitations in our [Gameplay Session recording docs](/gameplay-sessions/gameplay-sessions-getting-started#known-limitations).
+
+:::
 
 Open it within Unity version 2022.3 (visit the [Unity archive](https://unity.com/releases/editor/whats-new/2022.3.27) if
 you can't find that version from Unity Hub). Once the project is loaded, open the **MainMenu** scene within
 **Assets** > **Scenes** > **MainMenu**.
 
-![Screenshot of the playground scene](./img/building-your-first-bot/start_0.png)
+![Screenshot of the playground scene](./img/building-your-first-bot/bossroom.png)
 
 ## Import the Regression Games Unity Bots package
 
@@ -39,7 +41,7 @@ You can find [our package on GitHub](https://github.com/Regression-Games/RGUnity
 the **Package Manager** window (**Window** > **Package Manager**) and click **Add package from git URL**. Then, paste the following URL:
 
 ```
-https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots
+https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.19
 ```
 
 :::info
@@ -54,7 +56,7 @@ https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity
 
 After importing the package, you will be greeted by a login screen. Create an account at
 [https://play.regression.gg](https://play.regression.gg) and login to Unity with your account credentials. If you need to login again in the future, 
-you can enter your login info by visiting the **Edit** > **Project Settings** > **Regression Games** menu.
+you can enter your login info by visiting the **Regression Games** > **Getting Started** menu.
 
 ## Restart Unity and your IDE
 
@@ -62,10 +64,15 @@ After installing the Regression Games Unity Bots package and its dependencies in
 and your code editor (e.g. Rider or Visual Studio). Without this step, Unity and your code editor may not properly 
 resolve the new packages even after Unity recompiles the scripts.
 
-## Add the RGOverlayCanvas
+## Record a gameplay session
 
-The RGOverlayCanvasV2 prefab provides a drag and drop overlay that lets you easily start and stop bots running
-in your scene. This is useful when initially creating and debugging your bots.
+The first step in automating a test is to record a gameplay session. This feature allows you to record real gameplay
+and play it back later as an automated test. Regression Games does offer other utilities for dynamic bots, but to get
+started with a simple example, we will record a click-through that verifies the functionality of the UI in BossRoom.
+
+### Add the RGOverlayCanvas
+
+The RGOverlayCanvasV2 prefab provides an overlay that allows you to begin recording gameplay sessions.
 
 <OverlayPartial />
 
@@ -82,46 +89,9 @@ If you are using the sample scene we provide, this is already included.
 
 ![Screenshot of the RGOverlayCanvas.](../partials/img/overlay_5.png)
 
-## Using a ready-to-go bot from the Bot Marketplace
+### Click record and click through the UI
 
-Now that the SDK integration is complete, our final step is to use an implementation of a bot. We will start with a template
-found in our [Bot Marketplace](https://play.regression.gg/marketplace), and then will show you where to edit its code.
+We will start with a simple test scenario:
 
-Find the [Simple Kiting Bot in the Bot Marketplace](https://play.regression.gg/marketplace/1) and click "Create Bot" to copy 
-it to your Regression Games account. On the bot creation page, give it a name such as "KitingBot", and then click "Create Bot". 
-You will then be taken to the Agent Builder tool; feel free to click around and see how the bot works!
+* Click the
 
-![Screenshot of the bot creation page.](./img/building-your-first-bot/marketplace_bot.png)
-
-![Screenshot of the bot creation page.](./img/building-your-first-bot/create_bot_9.png)
-
-![Screenshot of the agent builder configuration for this bot.](./img/building-your-first-bot/agent_builder.png)
-
-Go back to Unity, and within the **Regression Games** menu in the menu bar, click **Synchronize Bots with RG**. This will pull your new
-bot into your Unity project. 
-
-![Screenshot of the agent builder configuration for this bot.](./img/building-your-first-bot/synchronize_bots.png)
-
-At this point, you can click play, and then select the Regression Games overlay button in the bottom
-right of your Scene View. Use the dropdown to select the bot you just created, and then click "Start Bot". The bot will begin to
-run around and shoot the enemy!
-
-![Screenshot of the bot creation page.](./img/building-your-first-bot/start_bot_10.png)
-
-You now have a working bot, fully integrated into your game! If you want to modify the bot's behavior, you can make edits
-within the Agent Builder, or edit the code in your Unity project at `Assets/RegressionGames/Runtime/Bots/BOTNAME/Nodes`.
-
-## Next Steps
-
-Congratulations, you've now experienced the integration process for bots! Using this guide and our reference material,
-you can now integrate bots into your own game. If you have any questions, please reach out to us on our 
-[Discord](https://discord.com/invite/925SYVse2H). Please note that we offer **dedicated support** for your integration. 
-We are happy to work directly on your project with you, or walk you step-by-step through the integration process over a
-call.
-
-The following guides and references are great next steps:
-
-* Check out the [bot marketplace](https://play.regression.gg/marketplace) to see what bots are available for your game
-* Learn how to build your own bot using the [Agent Builder](/creating-bots/csharp/agent-builder)
-* Learn how to setup a [QA / validation testing bot](/session-insights/client-dashboard)
-* Learn how to get your bot up and running in a [CI/CD environment such as GitHub Actions](/tutorials/github-actions)
