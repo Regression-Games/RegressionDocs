@@ -19,11 +19,6 @@ const HomepageHeader = () => (
                 to="tutorials/building-your-first-bot">
                 Get Started
               </Link>
-              <Link
-                className="button button--secondary button--lg margin-left--md"
-                to="overview">
-                Full Reference
-              </Link>
             </div>
             <div style={{marginTop: "16px"}}>
               Get started immediately by adding the package to Unity:
