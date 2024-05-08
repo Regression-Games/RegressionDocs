@@ -55,7 +55,7 @@ in your GitHub repository.
 ### Add the Workflow File to Your Project
 
 The workflow file is a GitHub Action that will build your Unity project and start a test that will run a bot. From step 2 above,
-you should have a `.github/workflows` folder inside of your project/repository. Inside of this folder, create a new file called 
+you should have a `.github/workflows` folder inside your project/repository. Inside of this folder, create a new file called 
 `qa-bot.yml` and paste the contents below. You can also download the file directly from [here](https://raw.githubusercontent.com/Regression-Games/RGUnitySample/main/.github/workflows/main.yml).
 
 ```yaml
@@ -163,7 +163,7 @@ Once you are done adding these secrets, your secrets section should look similar
 The bots are started via the Unity Test Runner in [Play Mode](https://docs.unity3d.com/2019.1/Documentation/Manual/PlaymodeTestFramework.html),
 In this testing mode, the game starts as if you are playing it, and then terminates once the function finishes.
 
-Complete the following steps to setup the required test - feel free to skip some of these steps if you have existing Play tests
+Complete the following steps to set up the required test - feel free to skip some of these steps if you have existing Play tests
 in your Unity project.
 
 ### Add Your Scenes to Your Build
@@ -358,7 +358,7 @@ At a high level, this test is doing the following:
 1. Loading the scene, and waiting for it to start up before activating bots
 2. Queuing up a task that will start a bot and spawn it into the scene
 3. The test then waits for at least one bot to connect. If a bot does not connect within one minute, the test will fail.
-4. Once at least one bot is connected, the test runs until all bots complete their tasks (i.e the bot calls `rg.complete()`), or
+4. Once at least one bot is connected, the test runs until all bots complete their tasks (i.e. the bot calls `rg.complete()`), or
    until the timeout is reached.
 
 ### Test it out with an Existing Bot

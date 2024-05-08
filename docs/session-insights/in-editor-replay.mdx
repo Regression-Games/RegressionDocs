@@ -27,7 +27,7 @@ This replay process will dynamically create objects within the currently loaded 
  
 Don't worry !
  
-These objects will automatically be removed when running, saving, or building the scene. You may occassionally be prompted to save the scene because it has been changed. It is safe to save; the Bot replay objects will be removed from the scene before the save processes.
+These objects will automatically be removed when running, saving, or building the scene. You may occasionally be prompted to save the scene because it has been changed. It is safe to save; the Bot replay objects will be removed from the scene before the save processes.
 ::: 
 
 ![timeline feature](img/replay/timeline.png)
@@ -38,7 +38,7 @@ The first step in using the Bot Replay Window is loading a replay data Zip file.
 ### Tick Inspector: Controlling The Current Tick
 After loading the file, the data for game ticks recorded by the Bot will be available for playback. 
 
-The tick rate at which the data was recorded is shown, followed by the tick rate for playback. By default, the playback tick rate will match the recorded tick rate, but it can be modified for faster or slower plaback.
+The tick rate at which the data was recorded is shown, followed by the tick rate for playback. By default, the playback tick rate will match the recorded tick rate, but it can be modified for faster or slower playback.
 
 The current tick and the total tick count are shown next to buttons for controlling the replay. You can Play the replay which will automatically update the editor at the playback tick rate. You can also manually jump to a specific tick number, or manually step forward or back 1 tick at a time.
 
@@ -62,7 +62,7 @@ For the entity in the tick representing the Bot Instance that the replay data wa
 Shows any command(s) that the Bot sent to the game for the current tick. These could be movements, performed abilities, object interactions, etc
 
 #### Validations
-Shows any validation(s) that the Bot performed on the current tick. These are normally test cases coded into the Bot to validate that the tick data changed as expected based on prior actions or other factors in the game state. See Validation Bots ([C#](../creating-bots/csharp/scenario-testing)) for more information.
+Shows any validation(s) that the Bot performed on the current tick. These are normally test cases coded into the Bot to validate that the tick data changed as expected based on prior actions or other factors in the game state. See the [validation](../validations/quickstart) docs for more information.
 
 ### Registering Custom Models For Replay Objects
 When viewing a replay, entities that are dynamically spawned into the scene (not defined in the scene itself) need to be told what model to render with. By default they will load as a pink capsule, but they can be configured with a specific model based on their type.
