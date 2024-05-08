@@ -81,7 +81,7 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'automatedTesting',
             position: 'left',
-            label: 'Automated UI Testing',
+            label: 'Experimental Packages',
           },
           {
             type: 'doc',

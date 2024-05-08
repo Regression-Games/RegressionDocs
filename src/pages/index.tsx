@@ -11,8 +11,8 @@ const HomepageHeader = () => (
       <div className="container" style={{textAlign: "left"}}>
         <div className="row">
           <div className="col margin-vert--lg margin-right--md">
-            <h1 className="hero__title">Improve quality and reduce costs with AI agents</h1>
-            <p className="hero__subtitle">Regression Games helps game developers go from zero to one with AI agent development</p>
+            <h1 className="hero__title">Make better games through automated testing</h1>
+            <p className="hero__subtitle">Regression Games helps game developers go from zero to one with automated game testing</p>
             <div className={styles.buttons} style={{justifyContent: "left"}}>
               <Link
                 className="button button--primary button--outline button--lg"
@@ -28,15 +28,14 @@ const HomepageHeader = () => (
             <div style={{marginTop: "16px"}}>
               Get started immediately by adding the package to Unity:
               <div style={{marginTop: "16px", fontSize: 12}}>
-                <pre style={{display: "inline"}}>https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.18</pre>
+                <pre style={{display: "inline"}}>https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.19</pre>
               </div>
             </div>
           </div>
           <div className="col">
             <img src={require('@site/static/img/demo.gif').default} alt="Regression Games" style={{borderRadius: "12px"}}/>
             <div style={{color: "gray", paddingRight: "24px", fontStyle: "italic"}}>
-              Demo of bots validating abilities in <a href="https://unity.com/demos/small-scale-coop-sample" target="_blank">Boss Room</a> (created by Unity), 
-              the timeline feature, and the automated Agent Builder.</div>
+              Demo of our recording and validation features. Automatically extract game state and begin writing functional tests in minutes.</div>
           </div>
         </div>
       </div>

@@ -1,41 +1,40 @@
 ---
-sidebar_label: 'Integrating and Building Your First Bot'
+sidebar_label: 'Writing Your First Automated Test'
 ---
 
 import OverlayPartial from '../partials/_add-overlay-partial.mdx';
 
-# Integrating and Building Your First Bot
+# Writing Your First Automated Test
 
-:::info
-
-This tutorial assumes a basic understanding of Unity concepts. If you get stuck, join our [Discord](https://discord.com/invite/925SYVse2H) and we can help you out!
-
-:::
-
-In this tutorial, we will get a simple bot integrated and running in a Unity game. The bot will run to a random position and then
-shoot the enemy in our playground sample. This tutorial will cover:
+In this tutorial, we will get a simple automated test working in Unity using Regression Games. We will show you:
 
 - How to integrate the RG Unity SDK into your game
-- How to add various state and actions attributes so your bot can understand the game
-- How to use a ready-to-go bot from the Bot Marketplace, and how to modify its code
+- Record a [Gameplay Session](/gameplay-sessions/gameplay-sessions-getting-started) as an automated test
+- Create a [Validation Suite](/validations/validations-getting-started) and run that against future test runs
 
 <div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/c4a31389df6742ba9320bf7dc0e91739?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
 
-## Download the sample game
+## (Optional) Download a sample game
 
-Feel free to follow this tutorial within your own game, but we recommend starting with a simple sample game. Clone the project
-from the [Regression-Games-Marketplace/SampleDemoScene](https://github.com/Regression-Games-Marketplace/SampleDemoScene.git) GitHub repository.
+Feel free to follow this tutorial within your own game, but we recommend starting with a sample game if you do not have
+a game available. Our team often uses BossRoom, a simple multiplayer game created by Unity. However, you can start
+with any game of your choosing!
 
-```
-git clone https://github.com/Regression-Games-Marketplace/SampleDemoScene.git
-```
+Download the BossRoom sample from the [official GitHub repository.](https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop)
 
-Open it within Unity version 2021.3.24f1 (visit the [Unity archive](https://unity.com/releases/editor/whats-new/2021.3.24) if 
-you can't find that version from Unity Hub). Once the project is loaded, a default scene with bots in a playground should open. If it does not, 
-then find the **Playground** scene under **Assets** > **FirstBotDemo** > **Demo** > **Scenes** and open it manually. If you'd like, you can 
-click play now to see how the characters move.
+:::info
 
-![Screenshot of the playground scene](./img/building-your-first-bot/start_0.png)
+Note that there are some limitations of the package that may not work with your game. For instance, our framework
+works best with the New Unity Input System and games that use standard UI canvas elements and game objects. Learn
+more about these limitations in our [Gameplay Session recording docs](/gameplay-sessions/gameplay-sessions-getting-started#known-limitations).
+
+:::
+
+Open it within Unity version 2022.3 (visit the [Unity archive](https://unity.com/releases/editor/whats-new/2022.3.27) if
+you can't find that version from Unity Hub). Once the project is loaded, open the **MainMenu** scene within
+**Assets** > **Scenes** > **MainMenu**.
+
+![Screenshot of the playground scene](./img/building-your-first-bot/bossroom.png)
 
 ## Import the Regression Games Unity Bots package
 
@@ -43,7 +42,7 @@ You can find [our package on GitHub](https://github.com/Regression-Games/RGUnity
 the **Package Manager** window (**Window** > **Package Manager**) and click **Add package from git URL**. Then, paste the following URL:
 
 ```
-https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots
+https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.19
 ```
 
 :::info
@@ -54,11 +53,13 @@ https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity
 
 :::
 
-![Screenshot of the package imported into the project](./img/building-your-first-bot/welcome_3.png)
+![Gif of the package imported into the project](./img/building-your-first-bot/installing-sdk.gif)
 
 After importing the package, you will be greeted by a login screen. Create an account at
 [https://play.regression.gg](https://play.regression.gg) and login to Unity with your account credentials. If you need to login again in the future, 
-you can enter your login info by visiting the **Edit** > **Project Settings** > **Regression Games** menu.
+you can enter your login info by visiting the **Regression Games** > **Getting Started** menu.
+
+![Screenshot of the package imported into the project](./img/building-your-first-bot/welcome_3.png)
 
 ## Restart Unity and your IDE
 
@@ -66,15 +67,18 @@ After installing the Regression Games Unity Bots package and its dependencies in
 and your code editor (e.g. Rider or Visual Studio). Without this step, Unity and your code editor may not properly 
 resolve the new packages even after Unity recompiles the scripts.
 
-## Add the RGOverlayCanvas
+## Record a gameplay session
 
-The RGOverlayCanvasV2 prefab provides a drag and drop overlay that lets you easily start and stop bots running
-in your scene. This is useful when initially creating and debugging your bots.
+The first step in automating a test is to record a [gameplay session](/gameplay-sessions/gameplay-sessions-getting-started).
+This feature allows you to record real gameplay and play it back later as an automated test. Regression Games does
+offer other utilities for dynamic bots, but to get started with a simple example, we will record a click-through that
+verifies the functionality of the UI in BossRoom.
+
+### Add the RGOverlayCanvas
+
+The RGOverlayCanvasV2 prefab provides an overlay that allows you to begin recording gameplay sessions.
 
 <OverlayPartial />
-
-Once the overlay has been added to your scene(s), you can click play to see it in action!
-Click the Regression Games logo at the bottom of the Scene View to open the overlay.
 
 :::info
 
@@ -84,48 +88,92 @@ If you are using the sample scene we provide, this is already included.
 
 :::
 
-![Screenshot of the RGOverlayCanvas.](../partials/img/overlay_5.png)
+### Record a gameplay session as an automated test
 
-## Using a ready-to-go bot from the Bot Marketplace
+Once the overlay has been added to your scene(s), it's time to start a gameplay session recording! Our goal is to
+**record gameplay that can later be used as an automated test**. More specifically, we will test the following
+simple scenario (feel free to come up with your own if you are not using Boss Room):
 
-Now that the SDK integration is complete, our final step is to use an implementation of a bot. We will start with a template
-found in our [Bot Marketplace](https://play.regression.gg/marketplace), and then will show you where to edit its code.
+* The game loads into the main menu
+* We use the mouse to click the Volume Settings button
+* We verify that the Volume Settings panel is displayed
+* Finally, we close the volume settings panel
 
-Find the [Simple Kiting Bot in the Bot Marketplace](https://play.regression.gg/marketplace/1) and click "Create Bot" to copy 
-it to your Regression Games account. On the bot creation page, give it a name such as "KitingBot", and then click "Create Bot". 
-You will then be taken to the Agent Builder tool; feel free to click around and see how the bot works!
+These actions are **recorded** and can be **played back** later as an automated test. As the test is run, data from the
+game is collected, which will then be used within validations.
 
-![Screenshot of the bot creation page.](./img/building-your-first-bot/marketplace_bot.png)
+As shown in the short video below, follow these steps:
 
-![Screenshot of the bot creation page.](./img/building-your-first-bot/create_bot_9.png)
+1. Click the play button in the editor to start the game.
+1. Click the red record button in the bottom right to start recording.
+1. Click the Volume Settings button near the top right of the main menu.
+1. Click the close button on the Volume Settings panel.
+1. Click the rec recording button in the bottom right to stop recording.
+1. When finished recording, click the hamburger menu next to the record button to open up a dialog for loading your
+   recording. You can find the recordings within your home directory, under
+   `~/unity_videos/{application name}/unity_videos/run#/data.zip`. Select the `data.zip` file and click **Load Replay**.
+1. Click the play button under the Regression Games logo to see your recording play back!
 
-![Screenshot of the agent builder configuration for this bot.](./img/building-your-first-bot/agent_builder.png)
+<div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/1a88ffcad1ff49d6940473d5637e35ed?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
 
-Go back to Unity, and within the **Regression Games** menu in the menu bar, click **Synchronize Bots with RG**. This will pull your new
-bot into your Unity project. 
+## Create a Validation Suite
 
-![Screenshot of the agent builder configuration for this bot.](./img/building-your-first-bot/synchronize_bots.png)
+With your first gameplay session saved, we can now write a functional test that validates the behaviour of this
+scenario! Visit https://play.regression.gg/validations to begin creating a new
+[validation suite](/validations/validations-getting-started) using this session.
 
-At this point, you can click play, and then select the Regression Games overlay button in the bottom
-right of your Scene View. Use the dropdown to select the bot you just created, and then click "Start Bot". The bot will begin to
-run around and shoot the enemy!
+### Creating the test scenario
 
-![Screenshot of the bot creation page.](./img/building-your-first-bot/start_bot_10.png)
+Click **Create Suite**, enter a name for yor validation suite, and select the gameplay session you just recorded (if
+you don't see it, try refreshing the page). You may notice that there are two or more sessions; these include both
+the original test session and the sessions created through the automated playback, so make sure to select the one
+lowest in the list, which is the first one created. Click **Create Suite** in the bottom right.
 
-You now have a working bot, fully integrated into your game! If you want to modify the bot's behavior, you can make edits
-within the Agent Builder, or edit the code in your Unity project at `Assets/RegressionGames/Runtime/Bots/BOTNAME/Nodes`.
+![Screenshot of the validation suite creation](./img/building-your-first-bot/create-validation-suite.png)
+
+Once the suite is created, you'll be able to select it within the Validation Suites Dashboard. Select your suite, and
+click **Create Scenario** in the bottom right to start creating your first functional test.
+
+The editor you see here is the `Scenario Editor`. It features a screenshot scrubber to see your game in action, as well
+as a state panel to see in-depth information scraped from your game, including not only position information, but also
+Monobehaviour properties and fields, as well as keyboard and mouse inputs. For example, for a user interface, you can
+see information such as image sources and text values.
+
+![Screenshot the scenario builder](./img/building-your-first-bot/create-validation-suite.png)
+
+Enter a name for your scenario (we used `Verify that the volume mixer opens`), and hover over the pane on the left to
+see a list of options for validation. For this scenario, we will verify that:
+
+1. The scene loads properly
+2. The volume settings panel appears
+
+This tools allows a wide variety of test scenarios, including mouse and key press detection, state assertions, and
+storing values for comparison (learn more in the [documentation for validations](/validations/validations-scenario-builder-reference)).
+For now, we will keep it simple, and the two steps listed above. See the screenshot above and the video below to see
+how to add these steps (the search feature can be helpful for finding relevant elements in your scene).
+
+<div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/3575d3ef72ae4ebc87dc4eab668d3284?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
+
+Once you are done creating these steps, click **Create Scenario** to save it. Back on the Validation Suite page, you
+can click the options menu next to the scenario you just created to run it, by selecting the **Run Scenario** option.
+This will immediately run this scenario on the original gameplay session and provide you with the results.
+
+![Screenshot of results from a scenario](./img/building-your-first-bot/run-scenario.png)
+
+### Run the Validation Suite on new automated runs
+
+Now that this validation suite exists, we can run it on the other runs conducted by the automated test! In the top
+right of the Validation Suite, click the **Run Suite** button, and select a more recent gameplay session to validate.
+Once the test is run, you can click the result within the list of runs to see a detailed view of the passed and failed
+scenarios.
+
+![Screenshot of the validation suite runs](./img/building-your-first-bot/many-runs.png)
+
+![Screenshot of results from a run](./img/building-your-first-bot/run-details.png)
 
 ## Next Steps
 
-Congratulations, you've now experienced the integration process for bots! Using this guide and our reference material,
-you can now integrate bots into your own game. If you have any questions, please reach out to us on our 
-[Discord](https://discord.com/invite/925SYVse2H). Please note that we offer **dedicated support** for your integration. 
-We are happy to work directly on your project with you, or walk you step-by-step through the integration process over a
-call.
-
-The following guides and references are great next steps:
-
-* Check out the [bot marketplace](https://play.regression.gg/marketplace) to see what bots are available for your game
-* Learn how to build your own bot using the [Agent Builder](/creating-bots/csharp/agent-builder)
-* Learn how to setup a [QA / validation testing bot](/session-insights/client-dashboard)
-* Learn how to get your bot up and running in a [CI/CD environment such as GitHub Actions](/tutorials/github-actions)
+We now have a repeatable automated gameplay session that can be verified using the validation tool! If you got stuck
+during this tutorial, or want to brainstorm how to get the most of this tool, please
+[join our active Discord community.](https://discord.com/invite/925SYVse2H). We are excited to make the best automation
+tools for game QA, and would love your feedback!
