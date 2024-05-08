@@ -6,7 +6,9 @@ sidebar_label: 'Scenario Builder Reference'
 
 Scenarios are composed of one or more steps that can be asserted throughout a gameplay recording. Steps are asserted in the order they appear in the Scenario, and if any step fails, the Scenario will fail.
 
-Aside from waiting for specific game states, you can also store values to be used in later steps.
+Additionally, each scenario is also executed in the order that they are present within the Validation Suite. However,
+if a particular scenario fails, the following scenarios will still be executed. Each scenario always starts at the
+tick that the last scenario left off at.
 
 ## Step Types
 
@@ -32,4 +34,5 @@ Wait for a specified number of game objects, of a specific type, to have state v
 
 ### Store Value
 
-Store a game object's state value to be used in later steps.
+Store a game object's state value to be used in later steps. Note that the value and entity must be present when this
+step is executed, so be sure to place this step after a step that asserts the existence of the entity.
