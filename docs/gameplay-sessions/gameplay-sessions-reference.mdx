@@ -14,14 +14,14 @@ technical overview of the Gameplay Sessions system, as well as more technical de
 
 When a Gameplay Session is recorded, all data is stored on disk within two folders:
 
-* `~/unity_videos/{Application.productName}/run_{#}/screenshots` - A folder with screenshots for each recorded tick of
+* `~/unity_videos/{Application.productName}/recording_{date}_{time}_{sessionId}/screenshots` - A folder with screenshots for each recorded tick of
   the session. Each screenshot is named with the format `{tick#}.jpg`, where `tick#` is the in-game tick from the start
   of the session.
-* `~/unity_videos/{Application.productName}/run_{#}/data` - A folder with the state and input data for each recorded
+* `~/unity_videos/{Application.productName}/recording_{date}_{time}_{sessionId}/data` - A folder with the state and input data for each recorded
   tick of the session. Each tick is stored in a JSON file named with the format `{tick#}.json`.
 
 After a recording is finished, you will not see these folders, because they will be compressed into zip files
-(`data.zip` and `screenshots.zip` within the `run_{#}` folder).
+(`data.zip` and `screenshots.zip` within the `recording_{date}_{time}_{sessionId}` folder).
 
 Additionally, there is a `thumbnail.jpg` file stored in this run folder, which is the screenshot from the middle of
 your gameplay session.
@@ -219,7 +219,10 @@ Any time one of these events occurs on a tick, the corresponding key frame will 
 
 ## How performance information is scraped
 
-Performance information, such as fps, render time, and object stats are either calculated frame-by-frame, or use
-the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class. Since
-UnityStats is an editor-only feature, some performance information, specifically that of `engineStats`, is only
-available when running in the Unity Editor.
+Performance information like fps is calculated tick by tick.
+
+Performance information like cpuTimeSincePreviousTick, memory, and gcMemory are captured using Unity ProfilerRecorder.
+
+Performance information like render time object stats are captured using the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class.
+Since UnityStats is an editor-only feature, some performance information, specifically the `engineStats` section of the state, is only available when running in the Unity Editor.
+

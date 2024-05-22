@@ -133,3 +133,13 @@ Recording state from Behaviours may incur an impact on performance.
 ![Various options for scraping game objects from the scene](img/base_options_finder.png)
 
 To learn more about the data format and intricacies of this tool, visit the next page for a technical reference.
+
+### Configuring session replay
+
+When replaying a gameplay session recording, the SDK uses key frame information from the original recording.
+
+When processing the replay, there are different modes for how the SDK can enforce keyframe detection.
+- The default mode is `Delta` which is tolerant of non-exact UI element transitions by ensuring that tracked UI elements increase/decrease/etc by at least the recorded amount from one tick to the next.
+- The other mode is `Strict` which requires exact match of the objects in the recorded state to the current state.  This mode works well for some games, but can fail when objects are created/destroyed based on timed events that don't consistently align on the same frame boundaries.
+
+This can be configured using the `UI Replay Enforcement` dropdown of the `Replay Data Playback Controller` Behaviour.  This Behaviour is located on the `RGOverlayCanvasV2/Recording Toolbar` GameObject.
