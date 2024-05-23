@@ -16,9 +16,9 @@ Sessions.
 ## Recording Gameplay
 
 Once the overlay has been added to your scene(s), click play.
-The Regression Games logo at the bottom of the Scene View will display recording and playback controls.
+The Regression Games toolbar at the bottom of the Scene View will display recording and playback controls.
 
-Recording can be started by clicking the red "record" button below the logo.
+Recording can be started by clicking the red "record" button on the right side of the toolbar.
 Once clicked, the SDK will begin recording your gameplay. You can tell that recording is active when the red button begins pulsing.
 Clicking the button again will stop the recording and sync the Gameplay Session to your Regression Games account.
 
@@ -26,13 +26,38 @@ Clicking the button again will stop the recording and sync the Gameplay Session 
 
 ## Playing Back a Recording
 
-A recording can be replayed by initiating "play" mode from your Unity editor and selecting the menu button below the Regression Games logo.
+### Loading a Recording
+A recording can be replayed by initiating "play" mode from your Unity editor and selecting the menu button on the Regression Games toolbar.
 This will launch a file explorer at the location of the recordings folder on your device.
 Navigate into the folder of the recording you'd like to replay, select its `data.zip` file, and then click "Load Replay".
-Once you've selected a replay, click the Play button below the Regression Games logo to begin playback.
 
 ![Open the Gameplay Session Selector](img/overlay_click_load.png)
 ![Select the Gameplay Session](img/overlay_choose_session.png)
+
+### Playing a Recording
+Once you've selected a replay, click either the Loop or Play button below on the Regression Games toolbar to begin playback.
+- The Loop function will continue to play the recording over and over until a failure occurs.
+  - For looped playback, it is important to make the recording such that it returns to the expected starting state before finishing.
+- The Play function will play the recording only one time.
+- The Stop button can be used at any time to stop and unload the current recording.
+
+![Play the Recording](img/overlay_click_play.png)
+
+### Successful Playback
+When playback succeeds, a green indicator will be shown on the Play button.
+
+![Successful Playback](img/overlay_playback_success.png)
+
+### Loop Counter
+When looping a recording, a counter is shown indicating the current loop iteration in progress.
+
+![Loop Counter](img/overlay_loop_count.png)
+
+### Errors During Playback
+Sometimes an error can occur during playback where the expected state for the next key frame does not happen.  The SDK will show a yellow
+warning icon on the toolbar and list out the paths of game objects in unexpected states.  The Stop button can be used to clear the error and unload the recording.
+
+![Errors During Playback](img/overlay_playback_error.png)
 
 ## Advanced Options
 
@@ -133,3 +158,13 @@ Recording state from Behaviours may incur an impact on performance.
 ![Various options for scraping game objects from the scene](img/base_options_finder.png)
 
 To learn more about the data format and intricacies of this tool, visit the next page for a technical reference.
+
+### Configuring session replay
+
+When replaying a gameplay session recording, the SDK uses key frame information from the original recording.
+
+When processing the replay, there are different modes for how the SDK can enforce keyframe detection.
+- The default mode is `Delta` which is tolerant of non-exact UI element transitions by ensuring that tracked UI elements increase/decrease/etc by at least the recorded amount from one tick to the next.
+- The other mode is `Strict` which requires exact match of the objects in the recorded state to the current state.  This mode works well for some games, but can fail when objects are created/destroyed based on timed events that don't consistently align on the same frame boundaries.
+
+This can be configured using the `UI Replay Enforcement` dropdown of the `Replay Data Playback Controller` Behaviour.  This Behaviour is located on the `RGOverlayCanvasV2/Recording Toolbar` GameObject.
