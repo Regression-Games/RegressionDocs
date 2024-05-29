@@ -34,6 +34,55 @@ Once you've selected a replay, click the Play button below the Regression Games 
 ![Open the Gameplay Session Selector](img/overlay_click_load.png)
 ![Select the Gameplay Session](img/overlay_choose_session.png)
 
+## Programmatically Playing a Recording
+
+A recorded gameplay session can also be played back programmatically, using a 
+[Unity Test Runner Play Mode test](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html).
+After creating a Play Mode test file, the `RGTestUtils` class can be used to load and play a recording, which in turn
+will also record a new session for that test.
+
+:::info Note
+
+Recording `data.zip` files are saved by default to `~/unity_videos/{Application.productName}/run_{#}/`. Make sure
+to copy your recordings into a directory within your project to ensure that they are available for other machines
+that run your automated tests.
+
+:::
+
+```csharp
+public class RecordingTest
+{
+
+    [UnityTest]
+    public IEnumerator TestRecording()
+    {
+        // Allow error logs to be ignored
+        LogAssert.ignoreFailingMessages = true;
+        
+        // Define which recording to use
+        string recordingPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Assets/Tests/Runtime/Recordings/MainMenuRecording.zip");
+        
+        // Wait for the scene
+        SceneManager.LoadSceneAsync("Startup", LoadSceneMode.Single);
+        yield return RGTestUtils.WaitForScene("MainMenu");
+        
+        // Start the playback, which will also create a new recording
+        string saveLocation = null;
+        yield return RGTestUtils.StartPlaybackFromFile(recordingPath, result => saveLocation = result);
+
+        // Print out the recording path for viewing later
+        RGDebug.LogInfo("Played back and recorded the test run - saved to " + saveLocation);
+        Assert.IsNotNull(saveLocation);
+
+    }
+}
+```
+
+![Start a recording](img/test_runner.png)
+
+The full documentation for the `RGTestUtils` class can be found within the [reference page for gameplay sessions.](/gameplay-sessions/gameplay-sessions-reference#rgtestutils-class)
+
+
 ## Advanced Options
 
 ### Choosing an FPS for recording

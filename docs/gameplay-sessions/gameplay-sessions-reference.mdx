@@ -223,3 +223,37 @@ Performance information, such as fps, render time, and object stats are either c
 the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class. Since
 UnityStats is an editor-only feature, some performance information, specifically that of `engineStats`, is only
 available when running in the Unity Editor.
+
+## RGTestUtils class
+
+The `RGTestUtils` class is a utility class that provides methods for loading and playing back recordings in Unity
+Play Mode tests. This class is included in the SDK and can be used to automate the testing of your game.
+
+### API
+
+```csharp
+namespace RegressionGames
+{
+    /// <summary>
+    /// Utilities for running tests within the Unity Test Runner using Regression Games features.
+    /// </summary>
+    public class RGTestUtils
+    {
+        
+        /// <summary>
+        /// Waits until a specific scene has been loaded, and asserts that it has been loaded
+        /// </summary>
+        /// <param name="sceneName">The name of the scene to wait for</param>
+        /// <param name="timeout">The maximum time to wait for the scene to load (in seconds). Defaults to 5.</param>
+        public static IEnumerator WaitForScene(string sceneName, int timeout = 5)
+        
+        /// <summary>
+        /// Plays back an existing recording, and then returns the save location of the recording.
+        /// </summary>
+        /// <param name="recordingPath">The path to the recording to play back (the full data.zip file path)</param>
+        /// <param name="setSaveLocation">A callback that will be called with the save location of the recording</param>
+        public static IEnumerator StartPlaybackFromFile(string recordingPath, Action<string> setSaveLocation)
+        
+    }
+}
+```
