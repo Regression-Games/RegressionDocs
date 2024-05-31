@@ -64,9 +64,11 @@ public class RecordingTest
     public IEnumerator TestRecording()
     {
 
-        // ENABLE THIS ON MAC - Unity has a bug where errors are printed when taking screenshots
-        // for recordings on Mac. This will suppress those errors so the test can pass properly.
-        // LogAssert.ignoreFailingMessages = true;
+        // Unity has a bug where errors are printed when taking screenshots for recordings on Mac. This will suppress
+        // those errors so the test can pass properly.
+#if UNITY_EDITOR_OSX || UNITY_RUNTIME_OSX
+        LogAssert.ignoreFailingMessages = true;
+#endif 
         
         // Define which recording to use
         string recordingPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Assets/Tests/Runtime/Recordings/MainMenuRecording.zip");
