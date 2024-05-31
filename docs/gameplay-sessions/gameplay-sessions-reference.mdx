@@ -12,19 +12,29 @@ technical overview of the Gameplay Sessions system, as well as more technical de
 
 ### Folder and File Structure
 
-When a Gameplay Session is recorded, all data is stored on disk within two folders:
+When a Gameplay Session is recorded, all data is stored on disk within two folders inside the following parent
+directory (which we will reference as the `sessionDirectory`):
 
-* `~/unity_videos/{Application.productName}/run_{#}/screenshots` - A folder with screenshots for each recorded tick of
+```
+~/unity_videos/{Application.productName}/{replay|recording}_{date}_{time}_{currentSessionId}_{referenceSessionId}
+```
+
+`currentSessionId` is a unique ID for this particular recording, and `referenceSessionId` is the ID of the Gameplay Session
+that this recording was simulated from (or equal to `currentSessionId` if this is a completely new recording not played from an 
+existing recording). The `replay` or `recording` prefix indicates whether this is an original recording or a replay from
+an existing recording.
+
+* `{sessionDirectory}/screenshots` - A folder with screenshots for each recorded tick of
   the session. Each screenshot is named with the format `{tick#}.jpg`, where `tick#` is the in-game tick from the start
   of the session.
-* `~/unity_videos/{Application.productName}/run_{#}/data` - A folder with the state and input data for each recorded
+* `{sessionDirectory}/data` - A folder with the state and input data for each recorded
   tick of the session. Each tick is stored in a JSON file named with the format `{tick#}.json`.
 
 After a recording is finished, you will not see these folders, because they will be compressed into zip files
-(`data.zip` and `screenshots.zip` within the `run_{#}` folder).
+(`data.zip` and `screenshots.zip` within the `sessionDirectory` folder).
 
-Additionally, there is a `thumbnail.jpg` file stored in this run folder, which is the screenshot from the middle of
-your gameplay session.
+Additionally, there is a `thumbnail.jpg` file stored in this `sessionDirectory`, which is the screenshot from the middle of
+your Gameplay Session.
 
 ### Structure of {tick#}.json Files
 
@@ -251,9 +261,30 @@ namespace RegressionGames
         /// Plays back an existing recording, and then returns the save location of the recording.
         /// </summary>
         /// <param name="recordingPath">The path to the recording to play back (the full data.zip file path)</param>
-        /// <param name="setSaveLocation">A callback that will be called with the save location of the recording</param>
-        public static IEnumerator StartPlaybackFromFile(string recordingPath, Action<string> setSaveLocation)
+        /// <param name="setPlaybackResult">A callback that will be called with the results of this playback</param>
+        public static IEnumerator StartPlaybackFromFile(string recordingPath, Action<PlaybackResult> setPlaybackResult)
         
     }
+}
+```
+
+Additionally, the `PlaybackResult` class contains information about the recording playback results, such as the location
+of the new recording.
+
+```csharp
+namespace RegressionGames.Types
+{
+    
+    [Serializable]
+    public class PlaybackResult
+    {
+
+        /// <summary>
+        /// The location that the playback recording is saved to on disk.
+        /// </summary>
+        public string saveLocation;
+        
+    }
+    
 }
 ```
