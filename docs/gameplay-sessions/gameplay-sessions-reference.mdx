@@ -16,13 +16,13 @@ When a Gameplay Session is recorded, all data is stored on disk within two folde
 directory (which we will reference as the `sessionDirectory`):
 
 ```
-~/unity_videos/{Application.productName}/{replay|recording}_{date}_{time}_{currentSessionId}_{referenceSessionId}
+~/unity_videos/{Application.productName}/{replay|recording}_{date}_{time}_{currentSessionId}_{referenceSessionId|currentSessionId}
 ```
 
-`currentSessionId` is a unique ID for this particular recording, and `referenceSessionId` is the ID of the Gameplay Session
-that this recording was simulated from (or equal to `currentSessionId` if this is a completely new recording not played from an 
-existing recording). The `replay` or `recording` prefix indicates whether this is an original recording or a replay from
-an existing recording.
+`currentSessionId` is a unique ID for this particular session, and if this is a session played back from an 
+existing Gameplay Session, `referenceSessionId` is the ID of the Gameplay Session that was used to simulate inputs (otherwise,
+the suffix of this path is set to the `currentSessionId`). The `replay` or `recording` prefix indicates whether this 
+is an original recording or a replay from an existing recording.
 
 The two folders within `sessionDirectory` are:
 
