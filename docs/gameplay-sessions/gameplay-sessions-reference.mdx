@@ -23,8 +23,8 @@ When a Gameplay Session is recorded, all data is stored on disk within two folde
 After a recording is finished, you will not see these folders, because they will be compressed into zip files
 (`data.zip` and `screenshots.zip` within the `recording_{date}_{time}_{sessionId}` folder).
 
-Additionally, there is a `thumbnail.jpg` file stored in this run folder, which is the screenshot from the middle of
-your gameplay session.
+Additionally, there is a `thumbnail.jpg` file stored in this `sessionDirectory`, which is the screenshot from the middle of
+your Gameplay Session.
 
 ### Structure of {tick#}.json Files
 
@@ -219,10 +219,70 @@ Any time one of these events occurs on a tick, the corresponding key frame will 
 
 ## How performance information is scraped
 
-Performance information like fps is calculated tick by tick.
+Performance information, such as fps, render time, and object stats are either calculated frame-by-frame, or use
+the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class. Since
+UnityStats is an editor-only feature, some performance information, specifically that of `engineStats`, is only
+available when running in the Unity Editor.
 
-Performance information like cpuTimeSincePreviousTick, memory, and gcMemory are captured using Unity ProfilerRecorder.
+Performance information like `fps` is calculated tick by tick.
+
+Performance information like `cpuTimeSincePreviousTick`, `memory`, and `gcMemory` are captured using Unity ProfilerRecorder.
 
 Performance information like render time object stats are captured using the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class.
 Since UnityStats is an editor-only feature, some performance information, specifically the `engineStats` section of the state, is only available when running in the Unity Editor.
 
+
+## RGTestUtils class
+
+The `RGTestUtils` class is a utility class that provides methods for loading and playing back recordings in Unity
+Play Mode tests. This class is included in the SDK and can be used to automate the testing of your game.
+
+### API
+
+```csharp
+namespace RegressionGames
+{
+    /// <summary>
+    /// Utilities for running tests within the Unity Test Runner using Regression Games features.
+    /// </summary>
+    public class RGTestUtils
+    {
+        
+        /// <summary>
+        /// Waits until a specific scene has been loaded, and asserts that it has been loaded
+        /// </summary>
+        /// <param name="sceneName">The name of the scene to wait for</param>
+        /// <param name="timeout">The maximum time to wait for the scene to load (in seconds). Defaults to 5.</param>
+        public static IEnumerator WaitForScene(string sceneName, int timeout = 5)
+        
+        /// <summary>
+        /// Plays back an existing recording, and then returns the save location of the recording.
+        /// </summary>
+        /// <param name="recordingPath">The path to the recording to play back (the full data.zip file path)</param>
+        /// <param name="setPlaybackResult">A callback that will be called with the results of this playback</param>
+        public static IEnumerator StartPlaybackFromFile(string recordingPath, Action<PlaybackResult> setPlaybackResult)
+        
+    }
+}
+```
+
+Additionally, the `PlaybackResult` class contains information about the recording playback results, such as the location
+of the new recording.
+
+```csharp
+namespace RegressionGames.Types
+{
+    
+    [Serializable]
+    public class PlaybackResult
+    {
+
+        /// <summary>
+        /// The location that the playback recording is saved to on disk.
+        /// </summary>
+        public string saveLocation;
+        
+    }
+    
+}
+```

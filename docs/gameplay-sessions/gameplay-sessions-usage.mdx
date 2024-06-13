@@ -24,8 +24,6 @@ Clicking the button again will stop the recording and sync the Gameplay Session 
 
 ![Start a recording](img/record.png)
 
-## Playing Back a Recording
-
 ### Loading a Recording
 A recording can be replayed by initiating "play" mode from your Unity editor and selecting the menu button on the Regression Games toolbar.
 This will launch a file explorer at the location of the recordings folder on your device.
@@ -58,6 +56,66 @@ Sometimes an error can occur during playback where the expected state for the ne
 warning icon on the toolbar and list out the paths of game objects in unexpected states.  The Stop button can be used to clear the error and unload the recording.
 
 ![Errors During Playback](img/overlay_playback_error.png)
+
+
+### Programmatically Playing a Recording
+
+A recorded Gameplay Session can be played back programmatically from a 
+[Unity Test Runner Play Mode test](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html).
+Create a Play Mode test file and use the `RGTestUtils` class to load and play a recording. This 
+will also record the replay as a new Gameplay Session.
+
+:::info Note
+
+Recording `data.zip` files are saved by default to [the session directory](/gameplay-sessions/gameplay-sessions-reference#folder-and-file-structure).
+Make sure to copy your recordings into a directory within your project to ensure that they are available for other machines
+that run your automated tests.
+
+:::
+
+```csharp
+using System.Collections;
+using RegressionGames;
+using RegressionGames.Types;
+using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
+
+public class RecordingTest
+{
+
+    [UnityTest]
+    public IEnumerator TestRecording()
+    {
+
+        // Unity has a bug where errors are printed when taking screenshots for recordings on Mac. This will suppress
+        // those errors so the test can pass properly.
+#if UNITY_EDITOR_OSX || UNITY_RUNTIME_OSX
+        LogAssert.ignoreFailingMessages = true;
+#endif 
+        
+        // Define which recording to use
+        string recordingPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Assets/Tests/Runtime/Recordings/MainMenuRecording.zip");
+        
+        // Wait for the scene
+        SceneManager.LoadSceneAsync("Startup", LoadSceneMode.Single);
+        yield return RGTestUtils.WaitForScene("MainMenu");
+        
+        // Start the playback, which will also create a new recording
+        PlaybackResult playbackResult = null;
+        yield return RGTestUtils.StartPlaybackFromFile(recordingPath, result => playbackResult = result);
+
+        // Print out the recording path for viewing later
+        RGDebug.LogInfo("Played back and recorded the test run - saved to " + playbackResult.saveLocation);
+        Assert.IsNotNull(playbackResult.saveLocation);
+
+    }
+}
+```
+
+![Start a recording](img/test_runner.png)
+
+The full documentation for the `RGTestUtils` class can be found within the [reference page for gameplay sessions.](/gameplay-sessions/gameplay-sessions-reference#rgtestutils-class)
 
 ## Advanced Options
 
