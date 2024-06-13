@@ -12,28 +12,16 @@ technical overview of the Gameplay Sessions system, as well as more technical de
 
 ### Folder and File Structure
 
-When a Gameplay Session is recorded, all data is stored on disk within two folders inside the following parent
-directory (which we will reference as the `sessionDirectory`):
+When a Gameplay Session is recorded, all data is stored on disk within two folders:
 
-```
-~/unity_videos/{Application.productName}/{replay|recording}_{date}_{time}_{currentSessionId}_{referenceSessionId|currentSessionId}
-```
-
-`currentSessionId` is a unique ID for this particular session, and if this is a session played back from an 
-existing Gameplay Session, `referenceSessionId` is the ID of the Gameplay Session that was used to simulate inputs (otherwise,
-the suffix of this path is set to the `currentSessionId`). The `replay` or `recording` prefix indicates whether this 
-is an original recording or a replay from an existing recording.
-
-The two folders within `sessionDirectory` are:
-
-* `{sessionDirectory}/screenshots` - A folder with screenshots for each recorded tick of
+* `~/unity_videos/{Application.productName}/recording_{date}_{time}_{sessionId}/screenshots` - A folder with screenshots for each recorded tick of
   the session. Each screenshot is named with the format `{tick#}.jpg`, where `tick#` is the in-game tick from the start
   of the session.
-* `{sessionDirectory}/data` - A folder with the state and input data for each recorded
+* `~/unity_videos/{Application.productName}/recording_{date}_{time}_{sessionId}/data` - A folder with the state and input data for each recorded
   tick of the session. Each tick is stored in a JSON file named with the format `{tick#}.json`.
 
 After a recording is finished, you will not see these folders, because they will be compressed into zip files
-(`data.zip` and `screenshots.zip` within the `sessionDirectory` folder).
+(`data.zip` and `screenshots.zip` within the `recording_{date}_{time}_{sessionId}` folder).
 
 Additionally, there is a `thumbnail.jpg` file stored in this `sessionDirectory`, which is the screenshot from the middle of
 your Gameplay Session.
@@ -235,6 +223,14 @@ Performance information, such as fps, render time, and object stats are either c
 the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class. Since
 UnityStats is an editor-only feature, some performance information, specifically that of `engineStats`, is only
 available when running in the Unity Editor.
+
+Performance information like `fps` is calculated tick by tick.
+
+Performance information like `cpuTimeSincePreviousTick`, `memory`, and `gcMemory` are captured using Unity ProfilerRecorder.
+
+Performance information like render time object stats are captured using the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class.
+Since UnityStats is an editor-only feature, some performance information, specifically the `engineStats` section of the state, is only available when running in the Unity Editor.
+
 
 ## RGTestUtils class
 
