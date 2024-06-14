@@ -21,7 +21,7 @@ When a Gameplay Session is recorded, all data is stored on disk within two folde
   tick of the session. Each tick is stored in a JSON file named with the format `{tick#}.json`.
 
 After a recording is finished, you will not see these folders, because they will be compressed into zip files
-(`data.zip` and `screenshots.zip` within the `recording_{date}_{time}_{sessionId}` folder).
+(`bot_segments.zip`, `data.zip`, and `screenshots.zip` within the `recording_{date}_{time}_{sessionId}` folder).
 
 Additionally, there is a `thumbnail.jpg` file stored in this `sessionDirectory`, which is the screenshot from the middle of
 your Gameplay Session.
@@ -258,7 +258,7 @@ namespace RegressionGames
         /// <summary>
         /// Plays back an existing recording, and then returns the save location of the recording.
         /// </summary>
-        /// <param name="recordingPath">The path to the recording to play back (the full data.zip file path)</param>
+        /// <param name="recordingPath">The path to the recording to play back (the full bot_segments.zip file path)</param>
         /// <param name="setPlaybackResult">A callback that will be called with the results of this playback</param>
         public static IEnumerator StartPlaybackFromFile(string recordingPath, Action<PlaybackResult> setPlaybackResult)
         
