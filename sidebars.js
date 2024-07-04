@@ -64,6 +64,13 @@ const sidebars = {
     "authenticating-with-api-keys",
     {
       type: "category",
+      label: "Generic Bots",
+      items: [
+        "generic-bots/monkey-bot"
+      ]
+    },
+    {
+      type: "category",
       label: "Custom Bots",
       items: [
         // DISABLED For MVP Launch.
