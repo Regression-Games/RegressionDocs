@@ -14,9 +14,9 @@ Assert that the frames per second of the gameplay recording are above a threshol
 
 ### Average Frames Per Second
 
-Assert that the average frames per second of the gameplay recording is above a threshold.
+Assert that the average frames per second of the gameplay recording is above a threshold. This average is computed
+across all frames in a gameplay recording.
 
 ### Maximum Frame Time
 
-Assert that the maximum frame time of the gameplay recording is below a threshold.
-
+Assert that the maximum frame time of the gameplay recording is below a threshold. Frame time is the amount of time spent calculating and rendering a frame, and is measured in milliseconds. If a single frame exceeds the specified threshold, the rule will be violated.
