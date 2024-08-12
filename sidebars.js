@@ -50,8 +50,8 @@ const sidebars = {
       items: [
         "gameplay-sessions/gameplay-sessions-getting-started",
         "gameplay-sessions/gameplay-sessions-usage",
-        "gameplay-sessions/gameplay-sessions-reference"
-      ]
+        "gameplay-sessions/gameplay-sessions-reference",
+      ],
     },
     {
       type: "category",
@@ -59,15 +59,14 @@ const sidebars = {
       items: [
         "validations/validations-getting-started",
         "validations/validations-scenario-builder-reference",
+        "validations/validations-rules-reference",
       ],
     },
     "authenticating-with-api-keys",
     {
       type: "category",
       label: "Generic Bots",
-      items: [
-        "generic-bots/monkey-bot"
-      ]
+      items: ["generic-bots/monkey-bot"],
     },
     {
       type: "category",
@@ -76,8 +75,8 @@ const sidebars = {
         // DISABLED For MVP Launch.
         // "creating-bots/csharp/agent-builder",
         "creating-bots/csharp/adaptive-bots",
-      ]
-    }
+      ],
+    },
   ],
   automatedTesting: [
     "automated-testing/overview",
