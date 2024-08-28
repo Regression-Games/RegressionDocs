@@ -23,7 +23,7 @@ const HomepageHeader = () => (
             <div style={{marginTop: "16px"}}>
               Get started immediately by adding the package to Unity:
               <div style={{marginTop: "16px", fontSize: 12}}>
-                <pre style={{display: "inline"}}>https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.25</pre>
+                <pre style={{display: "inline"}}>https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.26</pre>
               </div>
             </div>
           </div>
