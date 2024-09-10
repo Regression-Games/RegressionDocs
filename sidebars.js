@@ -77,6 +77,13 @@ const sidebars = {
         "creating-bots/csharp/adaptive-bots",
       ],
     },
+    {
+      type: "category",
+      label: "Guides and Tutorials",
+      items: [
+        "tutorials/screenshot-regression/screenshot-regression-test"
+      ],
+    },
   ],
   automatedTesting: [
     "automated-testing/overview",
