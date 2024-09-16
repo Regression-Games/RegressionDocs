@@ -77,6 +77,16 @@ const sidebars = {
         "creating-bots/csharp/adaptive-bots",
       ],
     },
+    {
+      type: "category",
+      label: "Computer Vision",
+      items: [
+        "computer-vision/computer-vision",
+        "computer-vision/image-match",
+        "computer-vision/text-match",
+        "computer-vision/object-detection",
+      ],
+    },
   ],
   automatedTesting: [
     "automated-testing/overview",

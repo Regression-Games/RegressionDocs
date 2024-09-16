@@ -1,0 +1,51 @@
+---
+sidebar_label: 'Overview'
+title: 'Computer Vision'
+---
+
+# Computer Vision
+
+Our Computer Vision module provides powerful tools to interact with and validate visual elements in your application or game. This functionality is crucial for automated testing, user interface verification, and interactive simulations.
+
+### What problems does it solve?
+
+Our Computer Vision capabilities allow you to find the existance of visual elements on the screen and either click on them, or use them as end criteria.
+
+We offer three approaches:
+
+1. **Image Match**: Find where the specific image exists on the screen. This is approach uses a pixel matching based algorithm and is useful when we have the image of the exact asset we are looking for.
+
+2. **Text Match**: Find where the specific text exists on the screen. This is approach uses a optical character regonition based algorithm and is useful when we have the exact text string we are looking for.
+
+3. **Object Detection [Experimental]**:  Find where the given object exists on the screen. This is approach uses a deep learning based algorithm and is useful when we know what we are looking for, say a tree, but we don't have the exact pixel match of the asset we are looking for.
+
+### Example Sequence
+
+Here is an example sequence that all three approaches. 
+
+In this example we want to test whether we can select characters, verify that the correct model is loaded and then load into the game. We want our test to validate the following steps:
+- Select a the tank class.
+- Verify that the correct model is loaded.
+- Select the archer class.
+- Verify that the model is loaded.
+- Press Ready.
+
+We can accomplish this with the following Computer Vision segments steps:
+1. Click on the tank class using the [Image Match](computer-vision/image-match.mdx) method using the tank icon. *This will look for the pixel match of the tank icon.*
+
+![The tank icon](img/tank_icon.jpg)
+
+2. Verify that the correct model is loaded using the [Object Detection](computer-vision/object-detection.mdx) with image query using a dwarf warrior concept art. *This will first identify that the concept art as a `Dwarf Warrior`, and then it will look for the existance of a `Dwarf Warrior` on the screen.*
+
+![Dwarf warrior concept art](img/dwarf_warrior_concept_art.jpg)
+
+3. Click on the archer class using the [Image Match](computer-vision/image-match.mdx) method using the archer icon. *This will look for the pixel match of the archer icon.*
+
+![The archer icon](img/archer_icon.jpg)
+
+4. Verify that the correct model is loaded using the [Object Detection](computer-vision/object-detection.mdx) with text query using the string `Toon Archer`. *This will look for the existance of a `Toon Archer` on the screen.*
+
+5. Click on the Ready button using the [Text Match](computer-vision/text-match.mdx) method using the text `READY`. *This will identify all the text on the screen, and then find the text `READY`*
+
+
+**[Click here to watch this sequence in action](https://www.loom.com/share/391d9aba528a4bc18a9b0fae43850177?sid=150c6a82-3968-404e-b83f-42f06ecb3b35)** (Currently there is no commentary, will add if we decide to go with this approach.)
