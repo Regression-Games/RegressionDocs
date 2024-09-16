@@ -157,52 +157,20 @@ In order to get the Base64 encoding of the screenshot, you can either use [this 
 COMMAND HERE
 ```
 
-Once you have your reference screenshots, you'll need to convert them to Base64 encoding. This allows for easy storage and comparison within your testing framework.
+Once you have your reference screenshots, you'll need to convert them to Base64 encoding. This allows for easy storage and comparison within your testing framework. Copy and paste the
+entire string into the `imageData` field, and the save the file.
 
-Use the following command to generate the Base64 encoding:
+After saving the file, zip/compress the `Assets/RegressionGames/Resources/sequences/bot_segments` folder that contains all of the JSON files.
 
-```bash
-[PLACEHOLDER_COMMAND_FOR_BASE64_ENCODING]
-```
+## Running the test
 
-## Constructing the Bot Segment JSON
+Now that we have our zip file of bot segments, we can run this as a bot sequence! Start up the game, select the hamburger menu icon in the Regression
+Games overlay, and select `{project_folder}/Assets/RegressionGames/Resources/sequences/bot_segments.zip`.
 
-After generating the Base64 encoding, you'll need to construct a bot segment JSON. This JSON will contain the necessary information for your testing framework to perform the screenshot comparison.
+Click play, and you should see the bot perform the actions for your test sequence. Before completing, in the logs you should see that it runs
+your segment related to visual regression test.
 
-Here's a placeholder for the bot segment JSON structure:
-
-```json
-{
-  "type": "screenshot_comparison",
-  "name": "Validate Main Menu",
-  "screenshotBase64": "[PLACEHOLDER_BASE64_ENCODED_SCREENSHOT]",
-  "tolerancePercentage": 2,
-  "region": {
-    "x": 0,
-    "y": 0,
-    "width": 1920,
-    "height": 1080
-  }
-}
-```
-
-## Saving the Bot Segment
-
-Save the constructed bot segment JSON in the following location:
-
-```
-[PLACEHOLDER_SAVE_LOCATION]
-```
-
-## Constructing a Bot Sequence
-
-Now that you have your bot segment, you can incorporate it into a bot sequence for automated testing. Here's how to construct a bot sequence using the screenshot comparison segment:
-
-[PLACEHOLDER_FOR_SCREENSHOT_OF_BOT_SEQUENCE_CONSTRUCTION]
-
-For a detailed walkthrough of constructing a bot sequence with screenshot comparison, watch this video:
-
-[PLACEHOLDER_FOR_LOOM_VIDEO]
+[LOOM VIDEO HERE]
 
 ## Limitations
 
