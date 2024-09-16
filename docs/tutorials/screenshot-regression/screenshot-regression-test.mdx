@@ -1,0 +1,191 @@
+---
+sidebar_label: 'Visual Regression Testing using Screenshots'
+---
+
+# Visual Regression Testing using Screenshots
+
+## What is Visual Regression Testing?
+
+Visual regression testing is a technique used to detect unintended changes in a software application's visual output. It involves capturing screenshots of the application's user interface at various points and comparing them to reference screenshots or baseline images. This process helps identify any visual differences that may indicate issues such as bugs, design changes, or configuration changes.
+
+## Why Use Screenshot Comparison?
+
+Screenshot comparison is a valuable technique in game testing for several reasons:
+
+1. **Consistency Checking**: It allows testers to quickly verify if the game's visual output remains consistent across different builds or versions.
+
+2. **Regression Detection**: By comparing current gameplay frames with known good references, testers can easily spot visual regressions or unexpected changes.
+
+3. **Automated Validation**: Screenshot comparison can be integrated into automated testing pipelines, enabling large-scale visual verification without manual intervention.
+
+4. **Low Setup Overhead**: Implementing screenshot comparison is relatively simple and doesn't require extensive programming knowledge, making it an accessible starting point for test automation.
+
+5. **Cross-Platform Verification**: It helps ensure visual consistency across different platforms or devices where the game is deployed.
+
+## High-Level Process
+
+_Before you begin, this guide assumes your project already has the Regression Games SDK installed. If you haven't set up your project yet, follow the steps in the [Getting Started guide](/tutorials/building-your-first-bot)._
+
+Here's a high-level overview of the process we will take in this guide:
+
+1. **Record a Gameplay Session**: Start by recording a gameplay session that covers the scenario you want to validate.
+
+2. **Choose Reference Screenshots**: After recording, choose the screenshot you want to use as a reference for future tests.
+
+3. **Create the Bot Segment and Sequence**: Create a bot segment and sequence that will perform the screenshot comparison.
+
+4. **Run the Bot**: Run the bot to perform the screenshot comparison.
+
+5. **Analyze the Results**: Analyze the results of the screenshot comparison to determine if the scenario is passing or failing.
+
+At the end of the guide, we will also quickly show how to run this as part of an automated Unity Test Runner test.
+
+## Recording and Capturing Reference Screenshots
+
+First, we will record a [gameplay session](gameplay-sessions/gameplay-sessions-usage) that will serve as our automation, as well as record screenshots
+that we can choose as a reference for our test.
+
+[INSERT LOOM VIDEO HERE]
+
+## Creating our Bot Segment
+
+:::note
+
+This is a temporary process until we have tools for automatically selecting an image. If you have feedback on this, [let us know](https://d7y6yysps34.typeform.com/to/MYieIsHV).
+:::
+
+### 1. Copy and unzip the bot_segments.zip file from your recording
+
+From your recording, you'll need to copy and unzip the `bot_segments.zip` file. You can find the recording in the `~/unity_videos` folder, under a folder
+that will have the date and time of the recording.
+
+Make a new folder at `Assets/RegressionGames/Resources/sequences`, and copy the zip file into the `Assets/RegressionGames/Resources/sequences` folder. Once
+copied, unzip the file so we can see the JSON files that make up the bot sequence so far. You'll find that these files are named with sequential number IDs,
+and are JSON files that instruct the system to play certain inputs when specific conditions in the game are true, such as an entity or game object being present.
+
+```json
+{
+  "name": null,
+  "description": null,
+  "sessionId": "45315e4938f84bc7b4bfc802b708b03a",
+  "apiVersion": 15,
+  "endCriteria": [
+    {
+      "type": "NormalizedPath",
+      "apiVersion": 7,
+      "transient": true,
+      "data": {
+        "path": "UI Canvas/UnityLogo/Room8Logo",
+        "apiVersion": 1,
+        "removedCount": 0,
+        "addedCount": 1,
+        "count": 1,
+        "countRule": "NonZero"
+      }
+    },
+    {
+      "type": "NormalizedPath",
+      "apiVersion": 7,
+      "transient": true,
+      "data": {
+        "path": "UI Canvas/Lobby Start Button",
+        "apiVersion": 1,
+        "removedCount": 0,
+        "addedCount": 1,
+        "count": 1,
+        "countRule": "NonZero"
+      }
+    },
+    ...
+  ],
+  "botAction": {
+    "type": "InputPlayback",
+    "apiVersion": 1,
+    "data": {
+      "apiVersion": 1,
+      "startTime": 22.2160489,
+      "inputData": {
+        "apiVersion": 1,
+        "keyboard": [],
+        "mouse": [
+          {
+            "apiVersion": 1,
+            "startTime": 22.2160489,
+            "screenSize": { "x": 1066, "y": 600 },
+            "position": { "x": 1055, "y": 16 },
+            "worldPosition": null,
+            "leftButton": false,
+            "middleButton": false,
+            "rightButton": false,
+            "forwardButton": false,
+            "backButton": false,
+            "scroll": { "x": 0, "y": 0 },
+            "clickedObjectNormalizedPaths": []
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+Create a new JSON file in this folder of existing bot segment JSON files, with the next number in the sequence (i.e. if there are 3 other JSON files, create a new JSON file named `4.json`).
+
+In this new file, we will add a new segment that will compare the current frame to a reference screenshot. Copy and paste the following JSON into your new file:
+
+```json
+{
+  "name": "Character Selection Visuals",
+  "description": "Validate that the current frame has the expected visuals",
+  "sessionId": "",
+  "endCriteria": [
+    {
+      "type": "CVImage",
+      "transient": true,
+      "data": {
+        "imageData": "/9j/4AAQSkZJRg..."
+      }
+    }
+  ],
+  "botAction": {}
+}
+```
+
+In order to get the Base64 encoding of the screenshot, you can either use [this website tool](https://base64.guru/converter/encode/image/jpg) or the following command in your terminal:
+
+```
+COMMAND HERE
+```
+
+Once you have your reference screenshots, you'll need to convert them to Base64 encoding. This allows for easy storage and comparison within your testing framework. Copy and paste the
+entire string into the `imageData` field, and the save the file.
+
+After saving the file, zip/compress the `Assets/RegressionGames/Resources/sequences/bot_segments` folder that contains all of the JSON files.
+
+## Running the test
+
+Now that we have our zip file of bot segments, we can run this as a bot sequence! Start up the game, select the hamburger menu icon in the Regression
+Games overlay, and select `{project_folder}/Assets/RegressionGames/Resources/sequences/bot_segments.zip`.
+
+Click play, and you should see the bot perform the actions for your test sequence. Before completing, in the logs you should see that it runs
+your segment related to visual regression test.
+
+[LOOM VIDEO HERE]
+
+## Limitations
+
+While screenshot comparison is a useful technique, it's important to be aware of its limitations:
+
+1. **Resolution Dependency**: The resolution of the reference screenshot and the active gameplay must be the same for accurate comparison.
+
+2. **Sensitivity to Minor Changes**: Small visual changes, such as slightly different particle effects or animations, may trigger false positives.
+
+3. **Color and Brightness Variations**: Different display settings or hardware can affect color reproduction, potentially causing false negatives or positives.
+
+4. **Dynamic Elements**: Games with highly dynamic or randomized visual elements may not be suitable for strict screenshot comparison.
+
+5. **Performance Impact**: Frequent screenshot captures and comparisons may impact game performance, especially on lower-end devices.
+
+6. **Storage Considerations**: Storing high-resolution screenshots for multiple test cases can require significant storage space.
+
+By understanding these limitations, you can effectively implement screenshot comparison as part of your game testing strategy while being aware of its constraints.
