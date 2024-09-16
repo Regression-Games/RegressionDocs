@@ -18,14 +18,14 @@ const sidebars = {
     // "quickstart",
     "tutorials/building-your-first-bot",
     // DISABLED For MVP Launch.
-    // {
-    //   type: "category",
-    //   label: "Tutorials",
-    //   items: [
-    //     "tutorials/building-your-first-bot",
-    //     "tutorials/github-actions"
-    //   ],
-    // },
+    {
+      type: "category",
+      label: "Tutorials",
+      items: [
+        "tutorials/building-your-first-bot",
+        "tutorials/github-actions"
+      ],
+    },
     // {
     //   // horizontal divider
     //   type: "html",

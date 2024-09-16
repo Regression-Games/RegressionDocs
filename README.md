@@ -37,3 +37,31 @@ This command starts a local development server and opens up a browser window. Mo
   
 ### Misc.
 * DO NOT include important headers in partials - Docusaurus won't include these in the table-of-contents for any pages they are used in.
+
+# Desired Outline
+
+The `>` indicates it is an accordion component and not an actual page in the sidebar
+
+- What is Regression Games?
+> Getting Started
+  - Installing Regression Games
+  - Creating your first automated test
+> Core Concepts
+  - Bot Segments and Bot Sequences
+  > Input Playback Capabilities
+    - Gameplay Sessions (this is a deep dive into generating a starting point for your input playback)
+  - Scripted Behavior Capabilities
+  - Computer Vision Capabilities (includes an overview and examples, I think this one page can fit everything (CVImage, CVText, CVObjectDetection))
+  - Stability and Exploratory Testing Capabilities (for now one page, talking about Monkey Bot)
+  - The In-Game Overlay
+  - Validation Suites
+  - Running Tests in Editor and in Builds
+  - Running Tests in the Unity Test Runner
+> Guides
+  - Running Tests in Editor and in Builds
+  - Writing advanced validations
+  - Interacting with UI using CV
+  - Find game-breaking bugs with stability testing
+  - Visual regression testing using screenshot comparison
+  - Writing tests that rely on a mixture of approaches
+  - Running a test within a build automatically
