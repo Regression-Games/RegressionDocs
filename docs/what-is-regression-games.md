@@ -30,11 +30,11 @@ these channels, send an e-mail to [aaron@regression.gg](mailto:aaron@regression.
 
 The table below details and links to documentation for the features implemented on our platform.
 
-| **Feature**                    | **Description**                                                                                                   | **Documentation**                                |
-|--------------------------------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](creating-bots/csharp/adaptive-bots) |
-| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](creating-bots/csharp/agent-builder)       |
-| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                               |  
+| **Feature**                    | **Description**                                                                                                   | **Documentation**                                         |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](unused-content/creating-bots/csharp/adaptive-bots) |
+| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](unused-content/creating-bots/csharp/agent-builder) |
+| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                                        |  
 
 ## Importing the Regression Games Unity Bots package
 
