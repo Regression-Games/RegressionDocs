@@ -1,0 +1,86 @@
+---
+sidebar_label: 'In-Editor Replay'
+---
+
+# Replaying Bot Behaviors in the Unity Editor
+
+Bots running on Regression Games save all states observed, all actions sent, and all validations performed for each game tick. This data can be loaded in the Unity editor for visualization and playback in the scene. This feature, combined with our validation framework, allows you to find and debug specific errors within your game.
+
+## Downloading Replay Data
+
+At the end of a Bot's lifecycle, the replay data for every game tick processed by that Bot is saved into a single Zip file. This file can be downloaded from the `History` section of the `Running Bots` tab in the Regression Games client. Click the `Download Replay Data` button for the Bot instance you want to download. This will download a file named `rg_bot_replay_data-<InstanceId>.zip`.
+
+![replay data download](./img/replay/replay-data-download.png)
+
+## The Bot Replay Window
+
+### Opening The Bot Replay Window 
+With the Regression Games SDK installed in your Unity Editor Project, you can open the Regression Games `Bot Replay Window` from the `Regression Games` menu in the top bar.
+
+![rg top menu](./img/replay/rg-top-menu.png)
+
+### Loading Your Scene
+The Bot Replay Window will render the game replay state in the currently loaded editor scene. For the best experience, make sure your gameplay scene is loaded in the editor so that all fixed scene assets will be visible and line up with the replay data.
+
+:::tip
+This replay process will dynamically create objects within the currently loaded scene.
+ 
+Don't worry !
+ 
+These objects will automatically be removed when running, saving, or building the scene. You may occasionally be prompted to save the scene because it has been changed. It is safe to save; the Bot replay objects will be removed from the scene before the save processes.
+::: 
+
+![timeline feature](./img/replay/timeline.png)
+
+### Loading Replay Data
+The first step in using the Bot Replay Window is loading a replay data Zip file. Click the `Bot Replay Zip:` button in the top left of the window. This will open a file chooser window. Choose the `rg_bot_replay_data-<InstanceId>.zip` file you downloaded from the Regression Games Client.
+
+### Tick Inspector: Controlling The Current Tick
+After loading the file, the data for game ticks recorded by the Bot will be available for playback. 
+
+The tick rate at which the data was recorded is shown, followed by the tick rate for playback. By default, the playback tick rate will match the recorded tick rate, but it can be modified for faster or slower playback.
+
+The current tick and the total tick count are shown next to buttons for controlling the replay. You can Play the replay which will automatically update the editor at the playback tick rate. You can also manually jump to a specific tick number, or manually step forward or back 1 tick at a time.
+
+### Tick Inspector: Evaluating The Current Tick
+For each tick, the Bot Replay Window will show all entities that were tracked as part of the Game State sent to Regression Games. These are sorted alphabetically with any active/enabled entities listed first.
+
+For each entity in the tick, you can use the checkboxes to enable or disable rendering its information in the scene
+- Enable or disable rendering of that entity model
+- Enable or disable rendering the path history of that entity
+- Enable or disable rendering a targeting circle around that entity
+- Enable or disable rendering action information of that entity
+
+In addition to controlling rendering, the tick inspector also highlights and shows a heart icon for "players" (entities that are controlled by humans or bots).
+
+![timeline panel](./img/replay/timeline-panel.png)
+
+### Tick Inspector: Actions And Validations
+For the entity in the tick representing the Bot Instance that the replay data was recorded from, actions and validations are shown if any were performed in that tick.
+
+#### Actions
+Shows any command(s) that the Bot sent to the game for the current tick. These could be movements, performed abilities, object interactions, etc
+
+#### Validations
+Shows any validation(s) that the Bot performed on the current tick. These are normally test cases coded into the Bot to validate that the tick data changed as expected based on prior actions or other factors in the game state. See the [validation](../validations/validations-getting-started) docs for more information.
+
+### Registering Custom Models For Replay Objects
+When viewing a replay, entities that are dynamically spawned into the scene (not defined in the scene itself) need to be told what model to render with. By default they will load as a pink capsule, but they can be configured with a specific model based on their type.
+
+When loading a replay zip, the list of entity types to replay model associations will automatically be updated with any missing entities that have `isRuntimeObject=true`. You can also manually add, edit, or remove associations at any time.
+
+![configure replay models](./img/replay/configure-replay-models.png)
+
+:::tip
+The associations from entity type to replay model are saved in your project as `Assets/RegressionGames/Editor/CustomReplayModels.asset`.
+
+You can edit this asset in the inspector directly or by using the `Configure Custom Replay Models` button in the RG Bot Replay window to open the inspector.
+:::
+
+![replay model manager](./img/replay/replay-model-manager.png)
+
+:::tip
+While the associations support any GameObject, it is best to associate just the model for your entity.
+
+The replay does not trigger animations, play sounds, process physics, or evaluate any runtime scripts on your associated object.
+:::

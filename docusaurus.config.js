@@ -78,12 +78,6 @@ const config = {
             label: 'Developer Reference',
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'automatedTesting',
-            position: 'left',
-            label: 'Experimental Packages',
-          },
-          {
             type: 'doc',
             docId: 'changelog',
             label: 'Changelog',

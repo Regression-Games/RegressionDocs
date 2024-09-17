@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Overview'
+sidebar_label: 'What is Regression Games?'
 ---
 
 # Regression Games for Unity
@@ -16,7 +16,7 @@ The team has focused on the foundation of supporting use cases and initial infra
 of our value will come from the interfaces to build bots, the scale of our infrastructure, the speed of integration, and the products
 built around these bots.
 
-![timeline feature](session-insights/img/replay/timeline.png)
+![timeline feature](unused-content/session-insights/img/replay/timeline.png)
 
 ## Availability Assurances
 
@@ -52,7 +52,8 @@ https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity
 
 ```
 https://github.com/Regression-Games/RGUnityBots/tree/main/src/gg.regression.unity.bots.ecs#v0.0.27
+```
 
-![Screenshot of the package imported into the project](tutorials/img/building-your-first-bot/tutorial-1-package.png)
+![Screenshot of the package imported into the project](getting-started/creating-your-first-automated-test/img/tutorial-1-package.png)
 
-For a full walkthrough on getting started, see the [Building Your First Bot](tutorials/building-your-first-bot) tutorial.
+For a full walkthrough on getting started, see the [Building Your First Bot](getting-started/creating-your-first-automated-test) tutorial.
