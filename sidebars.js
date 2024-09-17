@@ -53,7 +53,7 @@ const sidebars = {
           type: "category",
           label: "Bot Sequences",
           items: [
-            "core-concepts/bot-sequences/introduction-to-bot-sequences-and-segments",
+            "core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments",
             "core-concepts/bot-sequences/actions",
             "core-concepts/bot-sequences/end-criteria"
           ]
