@@ -13,7 +13,7 @@ This tutorial will walk you through the following steps to create a QA Bot for y
 4. Learn how to view test results.
 
 This tutorial assumes you have some familiarity with GitHub Actions, and that you have a working 
-bot within your game (see more on this in the [Creating Bots in C# section](../creating-bots/csharp/adaptive-bots)).
+bot within your game (see more on this in the [Creating Bots in C# section](./creating-bots/csharp/adaptive-bots)).
 By the end of this tutorial, every push to your GitHub repo will build your Unity project and start bots for testing.
 You can find a working example in [our sample repository](https://github.com/Regression-Games/RGUnitySample), which has
 a GitHub Action configuration and Unity Test Runner file incorporating the ideas of this tutorial.
@@ -148,7 +148,7 @@ the following secrets by clicking the green **New repository secret** button.
 
 1. `RG_HOST` - `https://play.regression.gg`
 2. `RG_API_KEY` - Your API key from Regression Games, which can be found in your [account settings](https://play.regression.gg/account).
-                  Full instructions for this can be found in the [Authentication docs](../authenticating-with-api-keys).
+                  Full instructions for this can be found in the [Authentication docs](../../getting-started/api-keys/authenticating-with-api-keys).
 3. `RG_BOT` - The ID of the bot you want to run. You can find this through the bot's details within the Regression Games 
               [Bot Manager page](https://play.regression.gg/bots).
 
@@ -417,7 +417,7 @@ Once your tests have completed, you can view their results on Regression Games b
 [Running Bots](https://play.regression.gg/running-bots) tab. From this page you can download bot logs for the test session which 
 contain output from your bot-code. You can also download in-game replay data which can be loaded in the Unity Editor to watch the 
 movements and actions of each bot, as well as analyze the validations they performed. See the 
-[In-Editor Replay](../session-insights/img/in-editor-replay) for instructions on how to load replay data.
+[In-Editor Replay](./session-insights/in-editor-replay) for instructions on how to load replay data.
 
 ![Downloads](img/downloads.png)
 

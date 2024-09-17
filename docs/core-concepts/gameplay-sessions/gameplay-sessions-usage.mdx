@@ -124,7 +124,7 @@ The full documentation for the `RGTestUtils` class can be found within the [refe
 The `Recording Min FPS` field under `RGOverlayCanvasV2` > `ScreenRecorder` allows you to configure
 how often the SDK scrapes the game for state data.
 Its default value is 0, which instructs the SDK to only record state data when it detects a
-[**key frame**](/gameplay-sessions/gameplay-sessions-reference#key-frames). In most cases, this should be set to 0, as most games will only require state collection on key frames.
+[**key frame**](./gameplay-sessions-reference#key-frames). In most cases, this should be set to 0, as most games will only require state collection on key frames.
 Setting `Recording Min FPS` to a value greater than 0 will cause the SDK to record data at that frequency,
 in addition to recording any key frame that was detected.
 For instance, a setting of `5` will result in the SDK scraping the game for state data 5 times per second.
