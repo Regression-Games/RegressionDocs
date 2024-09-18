@@ -1,18 +1,18 @@
 ---
-sidebar_label: 'Writing Your First Automated Test'
+sidebar_label: 'Creating Your First Automated Test'
 ---
 
-import OverlayPartial from '../partials/_add-overlay-partial.mdx';
+import OverlayPartial from '../../partials/_add-overlay-partial.mdx';
 
-# Writing Your First Automated Test
+# Creating Your First Automated Test
 
 In this tutorial, we will get a simple automated test working in Unity using Regression Games. We will show you:
 
 - How to integrate the RG Unity SDK into your game
-- Record a [Gameplay Session](/gameplay-sessions/gameplay-sessions-getting-started) as an automated test
-- Create a [Validation Suite](/validations/validations-getting-started) and run that against future test runs
+- Record a [Gameplay Session](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started) as an automated test
+- Create a [Validation Suite](../core-concepts/validation-suites/validation-suites-getting-started) and run that against future test runs
 
-![Screenshot of results from a run](./img/building-your-first-bot/run-details.png)
+![Screenshot of results from a run](./img/run-details.png)
 
 ## (Optional) Download a sample game
 
@@ -26,7 +26,7 @@ Download the BossRoom sample from the [official GitHub repository.](https://gith
 
 Note that there are some limitations of the package that may not work with your game. For instance, our framework
 works best with games that use standard UI canvas elements and game objects. Learn
-more about these limitations in our [Gameplay Session recording docs](/gameplay-sessions/gameplay-sessions-getting-started).
+more about these limitations in our [Gameplay Session recording docs](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started).
 
 :::
 
@@ -34,7 +34,7 @@ Open it within Unity version 2022.3 (visit the [Unity archive](https://unity.com
 you can't find that version from Unity Hub). Once the project is loaded, open the **MainMenu** scene within
 **Assets** > **Scenes** > **MainMenu**.
 
-![Screenshot of the playground scene](./img/building-your-first-bot/bossroom.png)
+![Screenshot of the playground scene](./img/bossroom.png)
 
 ## Import the Regression Games Unity Bots package
 
@@ -61,13 +61,13 @@ Install this package in addition to / after installing the core RGUnityBots pack
 
 :::
 
-![Gif of the package imported into the project](./img/building-your-first-bot/installing-sdk.gif)
+![Gif of the package imported into the project](./img/installing-sdk.gif)
 
 After importing the package, you will be greeted by a login screen. Create an account at
 [https://play.regression.gg](https://play.regression.gg) and login to Unity with your account credentials. If you need to login again in the future,
 you can enter your login info by visiting the **Regression Games** > **Getting Started** menu.
 
-![Screenshot of the package imported into the project](./img/building-your-first-bot/welcome_3.png)
+![Screenshot of the package imported into the project](./img/welcome_3.png)
 
 ## Restart Unity and your IDE
 
@@ -77,7 +77,7 @@ resolve the new packages even after Unity recompiles the scripts.
 
 ## Record a gameplay session
 
-The first step in automating a test is to record a [gameplay session](/gameplay-sessions/gameplay-sessions-getting-started).
+The first step in automating a test is to record a [gameplay session](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started).
 This feature allows you to record real gameplay and play it back later as an automated test. Regression Games does
 offer other utilities for dynamic bots, but to get started with a simple example, we will record a click-through that
 verifies the functionality of the UI in BossRoom.
@@ -118,8 +118,8 @@ As shown in the short video below, follow these steps:
 1. Click the close button on the Volume Settings panel.
 1. Click the rec recording button in the bottom right to stop recording.
 1. When finished recording, click the hamburger menu next to the record button to open up a dialog for loading your
-   recording. You can find the recordings within [the session directory](/gameplay-sessions/gameplay-sessions-reference#folder-and-file-structure).
-   Select the `bot_segments.zip` file and click **Load Replay**.
+recording. You can find the recordings within [the session directory](../core-concepts/gameplay-sessions/gameplay-sessions-reference#folder-and-file-structure).
+Select the `bot_segments.zip` file and click **Load Replay**.
 1. Click the play button under the Regression Games logo to see your recording play back!
 
 <div style={{position: "relative", paddingBottom: "50.40485829959515%", height: 0}}><iframe src="https://www.loom.com/embed/1a88ffcad1ff49d6940473d5637e35ed?sid=336eaf3b-208c-4ea3-a0b3-c6ad3d2d2cee" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}></iframe></div>
@@ -128,7 +128,7 @@ As shown in the short video below, follow these steps:
 
 With your first gameplay session saved, we can now write a functional test that validates the behaviour of this
 scenario! Visit https://play.regression.gg/validations to begin creating a new
-[validation suite](/validations/validations-getting-started) using this session.
+[validation suite](../core-concepts/validation-suites/validation-suites-getting-started) using this session.
 
 ### Creating the test scenario
 
@@ -137,7 +137,7 @@ you don't see it, try refreshing the page). You may notice that there are two or
 the original test session and the sessions created through the automated playback, so make sure to select the one
 lowest in the list, which is the first one created. Click **Create Suite** in the bottom right.
 
-![Screenshot of the validation suite creation](./img/building-your-first-bot/create-validation-suite.png)
+![Screenshot of the validation suite creation](./img/create-validation-suite.png)
 
 Once the suite is created, you'll be able to select it within the Validation Suites Dashboard. Select your suite, and
 click **Create Scenario** in the bottom right to start creating your first functional test.
@@ -147,7 +147,7 @@ as a state panel to see in-depth information scraped from your game, including n
 Monobehaviour properties and fields, as well as keyboard and mouse inputs. For example, for a user interface, you can
 see information such as image sources and text values.
 
-![Screenshot the scenario builder](./img/building-your-first-bot/create-validation-suite.png)
+![Screenshot the scenario builder](./img/create-validation-suite.png)
 
 Enter a name for your scenario (we used `Verify that the volume mixer opens`), and hover over the pane on the left to
 see a list of options for validation. For this scenario, we will verify that:
@@ -156,7 +156,7 @@ see a list of options for validation. For this scenario, we will verify that:
 2. The volume settings panel appears
 
 This tools allows a wide variety of test scenarios, including mouse and key press detection, state assertions, and
-storing values for comparison (learn more in the [documentation for validations](/validations/validations-scenario-builder-reference)).
+storing values for comparison (learn more in the [documentation for validations](../../core-concepts/validation-suites/validation-scenario-builder-reference)).
 For now, we will keep it simple, and the two steps listed above. See the screenshot above and the video below to see
 how to add these steps (the search feature can be helpful for finding relevant elements in your scene).
 
@@ -166,7 +166,7 @@ Once you are done creating these steps, click **Create Scenario** to save it. Ba
 can click the options menu next to the scenario you just created to run it, by selecting the **Run Scenario** option.
 This will immediately run this scenario on the original gameplay session and provide you with the results.
 
-![Screenshot of results from a scenario](./img/building-your-first-bot/run-scenario.png)
+![Screenshot of results from a scenario](./img/run-scenario.png)
 
 ### Run the Validation Suite on new automated runs
 
@@ -175,9 +175,9 @@ right of the Validation Suite, click the **Run Suite** button, and select a more
 Once the test is run, you can click the result within the list of runs to see a detailed view of the passed and failed
 scenarios.
 
-![Screenshot of the validation suite runs](./img/building-your-first-bot/many-runs.png)
+![Screenshot of the validation suite runs](./img/many-runs.png)
 
-![Screenshot of results from a run](./img/building-your-first-bot/run-details.png)
+![Screenshot of results from a run](./img/run-details.png)
 
 ## Next Steps
 

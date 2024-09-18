@@ -2,7 +2,7 @@
 sidebar_label: 'Using Gameplay Sessions'
 ---
 
-import OverlayPartial from '../partials/_add-overlay-partial.mdx';
+import OverlayPartial from '../../partials/_add-overlay-partial.mdx';
 
 # Using Gameplay Sessions
 
@@ -22,15 +22,15 @@ Recording can be started by clicking the red "record" button on the right side o
 Once clicked, the SDK will begin recording your gameplay. You can tell that recording is active when the red button begins pulsing.
 Clicking the button again will stop the recording and sync the Gameplay Session to your Regression Games account.
 
-![Start a recording](img/record.png)
+![Start a recording](./img/record.png)
 
 ### Loading a Recording
 A recording can be replayed by initiating "play" mode from your Unity editor and selecting the menu button on the Regression Games toolbar.
 This will launch a file explorer at the location of the recordings folder on your device.
 Navigate into the folder of the recording you'd like to replay, select its `bot_segments.zip` file, and then click "Load Replay".
 
-![Open the Gameplay Session Selector](img/overlay_click_load.png)
-![Select the Gameplay Session](img/overlay_choose_session.png)
+![Open the Gameplay Session Selector](./img/overlay_click_load.png)
+![Select the Gameplay Session](./img/overlay_choose_session.png)
 
 ### Playing a Recording
 Once you've selected a replay, click either the Loop or Play button below on the Regression Games toolbar to begin playback.
@@ -39,23 +39,23 @@ Once you've selected a replay, click either the Loop or Play button below on the
 - The Play function will play the recording only one time.
 - The Stop button can be used at any time to stop and unload the current recording.
 
-![Play the Recording](img/overlay_click_play.png)
+![Play the Recording](./img/overlay_click_play.png)
 
 ### Successful Playback
 When playback succeeds, a green indicator will be shown on the Play button.
 
-![Successful Playback](img/overlay_playback_success.png)
+![Successful Playback](./img/overlay_playback_success.png)
 
 ### Loop Counter
 When looping a recording, a counter is shown indicating the current loop iteration in progress.
 
-![Loop Counter](img/overlay_loop_count.png)
+![Loop Counter](./img/overlay_loop_count.png)
 
 ### Errors During Playback
 Sometimes an error can occur during playback where the expected state for the next key frame does not happen.  The SDK will show a yellow
 warning icon on the toolbar and list out the paths of game objects in unexpected states.  The Stop button can be used to clear the error and unload the recording.
 
-![Errors During Playback](img/overlay_playback_error.png)
+![Errors During Playback](./img/overlay_playback_error.png)
 
 
 ### Programmatically Playing a Recording
@@ -67,7 +67,7 @@ will also record the replay as a new Gameplay Session.
 
 :::info Note
 
-Recording files are saved by default to [the session directory](/gameplay-sessions/gameplay-sessions-reference#folder-and-file-structure).
+Recording files are saved by default to [the session directory](./gameplay-sessions-reference#folder-and-file-structure).
 Make sure to copy your recordings into a directory within your project to ensure that they are available for other machines
 that run your automated tests.
 
@@ -113,9 +113,9 @@ public class RecordingTest
 }
 ```
 
-![Start a recording](img/test_runner.png)
+![Start a recording](./img/test_runner.png)
 
-The full documentation for the `RGTestUtils` class can be found within the [reference page for gameplay sessions.](/gameplay-sessions/gameplay-sessions-reference#rgtestutils-class)
+The full documentation for the `RGTestUtils` class can be found within the [reference page for gameplay sessions.](./gameplay-sessions-reference#rgtestutils-class)
 
 ## Advanced Options
 
@@ -124,19 +124,19 @@ The full documentation for the `RGTestUtils` class can be found within the [refe
 The `Recording Min FPS` field under `RGOverlayCanvasV2` > `ScreenRecorder` allows you to configure
 how often the SDK scrapes the game for state data.
 Its default value is 0, which instructs the SDK to only record state data when it detects a
-[**key frame**](/gameplay-sessions/gameplay-sessions-reference#key-frames). In most cases, this should be set to 0, as most games will only require state collection on key frames.
+[**key frame**](./gameplay-sessions-reference#key-frames). In most cases, this should be set to 0, as most games will only require state collection on key frames.
 Setting `Recording Min FPS` to a value greater than 0 will cause the SDK to record data at that frequency,
 in addition to recording any key frame that was detected.
 For instance, a setting of `5` will result in the SDK scraping the game for state data 5 times per second.
 
-![Change the FPS at which data is collected from the game](img/base_options_fps.png)
+![Change the FPS at which data is collected from the game](./img/base_options_fps.png)
 
 ### Changing your recording location
 
 By default, recorded data is stored in your home directory under `/unity_videos`.
 This directory can be overridden by changing the `State Recordings Directory` field under `RGOverlayCanvasV2` > `ScreenRecorder`.
 
-![Change the location where data is saved](img/base_options_location.png)
+![Change the location where data is saved](./img/base_options_location.png)
 
 ### Input threshold options
 
@@ -148,7 +148,7 @@ This setting defaults to 0.1 seconds, and on Windows should not have to be chang
 Mac and other platforms that handle key repeats in a non-standard way.  If you do experience key click spamming,
 increase the value.
 
-![Change the threshold for held key inputs](img/base_options_threshold.png)
+![Change the threshold for held key inputs](./img/base_options_threshold.png)
 
 ### Configuring game-state collection
 
@@ -213,7 +213,7 @@ Recording state from Behaviours may incur an impact on performance.
 
 :::
 
-![Various options for scraping game objects from the scene](img/base_options_finder.png)
+![Various options for scraping game objects from the scene](./img/base_options_finder.png)
 
 To learn more about the data format and intricacies of this tool, visit the next page for a technical reference.
 

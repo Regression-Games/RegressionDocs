@@ -78,12 +78,6 @@ const config = {
             label: 'Developer Reference',
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'automatedTesting',
-            position: 'left',
-            label: 'Experimental Packages',
-          },
-          {
             type: 'doc',
             docId: 'changelog',
             label: 'Changelog',
@@ -104,11 +98,11 @@ const config = {
             items: [
               {
                 label: 'Overview',
-                to: 'overview',
+                to: 'what-is-regression-games',
               },
               {
                 label: 'Quickstart',
-                to: 'quickstart',
+                to: 'getting-started/creating-your-first-automated-test',
               },
             ],
           },

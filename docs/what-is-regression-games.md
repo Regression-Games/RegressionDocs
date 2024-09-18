@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Overview'
+sidebar_label: 'What is Regression Games?'
 ---
 
 # Regression Games for Unity
@@ -16,7 +16,7 @@ The team has focused on the foundation of supporting use cases and initial infra
 of our value will come from the interfaces to build bots, the scale of our infrastructure, the speed of integration, and the products
 built around these bots.
 
-![timeline feature](session-insights/img/replay/timeline.png)
+![timeline feature](unused-content/session-insights/img/replay/timeline.png)
 
 ## Availability Assurances
 
@@ -30,11 +30,11 @@ these channels, send an e-mail to [aaron@regression.gg](mailto:aaron@regression.
 
 The table below details and links to documentation for the features implemented on our platform.
 
-| **Feature**                    | **Description**                                                                                                   | **Documentation**                                |
-|--------------------------------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](creating-bots/csharp/adaptive-bots) |
-| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](creating-bots/csharp/agent-builder)       |
-| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                               |  
+| **Feature**                    | **Description**                                                                                                   | **Documentation**                                         |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](unused-content/creating-bots/csharp/adaptive-bots) |
+| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](unused-content/creating-bots/csharp/agent-builder) |
+| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                                        |  
 
 ## Importing the Regression Games Unity Bots package
 
@@ -52,7 +52,8 @@ https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity
 
 ```
 https://github.com/Regression-Games/RGUnityBots/tree/main/src/gg.regression.unity.bots.ecs#v0.0.27
+```
 
-![Screenshot of the package imported into the project](tutorials/img/building-your-first-bot/tutorial-1-package.png)
+![Screenshot of the package imported into the project](getting-started/creating-your-first-automated-test/img/tutorial-1-package.png)
 
-For a full walkthrough on getting started, see the [Building Your First Bot](tutorials/building-your-first-bot) tutorial.
+For a full walkthrough on getting started, see the [Building Your First Bot](getting-started/creating-your-first-automated-test) tutorial.

@@ -16,7 +16,7 @@ const HomepageHeader = () => (
             <div className={styles.buttons} style={{justifyContent: "left"}}>
               <Link
                 className="button button--primary button--outline button--lg"
-                to="tutorials/building-your-first-bot">
+                to="./getting-started/creating-your-first-automated-test">
                 Get Started
               </Link>
             </div>

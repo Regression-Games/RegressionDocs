@@ -13,77 +13,80 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   unitySidebar: [
-    // DISABLED For MVP Launch.
-    // "overview",
-    // "quickstart",
-    "tutorials/building-your-first-bot",
-    // DISABLED For MVP Launch.
-    // {
-    //   type: "category",
-    //   label: "Tutorials",
-    //   items: [
-    //     "tutorials/building-your-first-bot",
-    //     "tutorials/github-actions"
-    //   ],
-    // },
-    // {
-    //   // horizontal divider
-    //   type: "html",
-    //   value:
-    //     '<span style="border-top: 1px solid var(--ifm-color-light-gray); display: block;" />',
-    //   defaultStyle: true,
-    //   className: "horizontal-divider",
-    // },
-    // DISABLED For MVP Launch.
-    // "pre-made-bots",
-    // {
-    //   type: "category",
-    //   label: "Session Insights",
-    //   items: [
-    //       "session-insights/client-dashboard",
-    //       "session-insights/in-editor-replay"
-    //   ]
-    // }
+    "what-is-regression-games",
+    {
+      // horizontal divider
+      type: "html",
+      value:
+          '<span style="border-top: 1px solid var(--ifm-color-light-gray); display: block;" />',
+      defaultStyle: true,
+      className: "horizontal-divider",
+    },
+
+    // Getting Started
     {
       type: "category",
-      label: "Gameplay Sessions",
+      label: "Getting Started",
       items: [
-        "gameplay-sessions/gameplay-sessions-getting-started",
-        "gameplay-sessions/gameplay-sessions-usage",
-        "gameplay-sessions/gameplay-sessions-reference",
+        "getting-started/installing-regression-games",
+        "getting-started/api-keys/authenticating-with-api-keys",
+        "getting-started/creating-your-first-automated-test/creating-your-first-automated-test"
       ],
     },
+
+    // Core Concepts
     {
       type: "category",
-      label: "Validations",
+      label: "Core Concepts",
       items: [
-        "validations/validations-getting-started",
-        "validations/validations-scenario-builder-reference",
-        "validations/validations-rules-reference",
+        "core-concepts/the-in-game-overlay",
+        {
+          type: "category",
+          label: "Gameplay Sessions",
+          items: [
+            "core-concepts/gameplay-sessions/gameplay-sessions-getting-started",
+            "core-concepts/gameplay-sessions/gameplay-sessions-usage",
+            "core-concepts/gameplay-sessions/gameplay-sessions-reference"
+          ],
+        },
+        {
+          type: "category",
+          label: "Bot Sequences",
+          items: [
+            "core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments",
+            "core-concepts/bot-sequences/actions",
+            "core-concepts/bot-sequences/end-criteria"
+          ]
+        },
+        {
+          type: "category",
+          label: "Validation Suites",
+          items: [
+            "core-concepts/validation-suites/validation-suites-getting-started",
+            "core-concepts/validation-suites/validation-scenario-builder-reference",
+            "core-concepts/validation-suites/validation-rules-reference",
+          ],
+        },
+        "core-concepts/stability-and-exploratory-testing",
+        "core-concepts/running-tests-in-the-unity-test-runner"
       ],
     },
-    "authenticating-with-api-keys",
+
+    // Guides
     {
       type: "category",
-      label: "Generic Bots",
-      items: ["generic-bots/monkey-bot"],
-    },
-    {
-      type: "category",
-      label: "Custom Bots",
+      label: "Guides",
       items: [
-        // DISABLED For MVP Launch.
-        // "creating-bots/csharp/agent-builder",
-        "creating-bots/csharp/adaptive-bots",
+        "guides/writing-advanced-validations",
+        "guides/running-tests-in-editor-and-in-builds",
+        "guides/interacting-with-ui-using-computer-vision",
+        "guides/finding-game-breaking-bugs-with-stability-testing",
+        "guides/visual-regression-testing-using-screenshot-comparison",
+        "guides/writing-tests-that-rely-on-a-mixture-of-approaches"
       ],
     },
-  ],
-  automatedTesting: [
-    "automated-testing/overview",
-    "automated-testing/getting-started",
-    "automated-testing/gpt-assistant-bot",
-    "automated-testing/creating-custom-components",
-  ],
+    "additional-game-samples"
+  ]
 };
 
 module.exports = sidebars;

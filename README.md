@@ -4,13 +4,14 @@ This website is built using [Docusaurus 2](https://docusaurus.io/), a modern sta
 
 ## Installation
 
-```
-$ yarn
+```bash
+$ npm install yarn
+$ yarn install
 ```
 
 ## Local Development
 
-```
+```bash
 $ yarn start -p 3005
 ```
 
@@ -33,7 +34,7 @@ This command starts a local development server and opens up a browser window. Mo
 * An image is always located within an `/img` directory at a reasonable depth in relation to the md that requires that image. The idea here is to make it easy to locate and link to images, so keep them close-by.
   * Rule of thumb -> either same level as the md, or at its parent's level (`img/my-image.png` or `../img/my-image.png`)
 * If an `/img` dir contains many images or is shared by many pages, organize images into subdirectories that match the names of the markdown files they belong to.
-  * Ex. images belonging to `docs/tutorials/building-your-first-bot` should be located under `docs/tutorials/img/building-your-first-bot/` 
+  * Ex. images belonging to `docs/guides/creating-your-first-automated-test` should be located under `docs/guides/creating-your-first-automated-test/img` 
   
 ### Misc.
 * DO NOT include important headers in partials - Docusaurus won't include these in the table-of-contents for any pages they are used in.
