@@ -21,7 +21,7 @@ https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity
 - If you get a note about Unity's new input system, click **Yes** and allow the editor to restart.
 :::
 
-![Add the Regression Games core SDK to your Unity project](img/installing-sdk.gif)
+![Add the Regression Games core SDK to your Unity project](img/installing-regression-games/installing-sdk.gif)
 
 ## Add Extension Packages to Your Project
 
@@ -67,10 +67,10 @@ We recommend taking an extra moment to follow the section below.
 
 Generate a new API key through your account settings in the Regression Games client, and copy the generated value to your clipboard.
 
-![Generate a new API key](../../core-concepts/api-keys/img/create-new-api-key.gif)
+![Generate a new API key](../core-concepts/img/api-keys/create-new-api-key.gif)
 
 :::info
-To learn more about our API keys, see the [Authenticating with API Keys](../../core-concepts/api-keys/authenticating-with-api-keys) section.
+To learn more about our API keys, see the [Authenticating with API Keys](../core-concepts/authenticating-with-api-keys) section.
 :::
 
 Do not submit any information to the welcome prompt in Unity.
@@ -85,8 +85,8 @@ Without this step, Unity and your code editor may not properly resolve your new 
 ## Add the Regression Games Overlay to Your Scene
 
 Our core package provides an in-game overlay that acts as a UI for features such as performing
-[input recording and playback](../../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
-and constructing and running [Bot Sequences](../../core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments),
+[input recording and playback](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
+and constructing and running [Bot Sequences](../core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments),
 but it also drives our data collection behind-the-scenes.
 This means the overlay prefab **must** be present in each scene where you want to use any Regression Games features.
 However, you can hide the visibility of the overlay through the project settings under
@@ -97,14 +97,17 @@ Find the `RGOverlayCanvasV2` prefab by navigating to
 Make sure that the canvas is at the top of the hierarchy, so that it is always visible and interactable.
 Repeat this for each scene that must have access to Regression Games features.
 
+![Screenshot of the search pane for the RGOverlayCanvas.](../partials/img/add-overlay-to-scene.gif)
+
 :::info
 Your scene must have an EventSystem to make interaction with the overlay possible.
 You can add one by right-clicking in your scene's Hierarchy and selecting `GameObject` > `UI` > `Event System`.
 If you are using any of the sample scenes we provide in our guides, this is already included.
 :::
 
+
 ## Next Steps
 
 The Regression Games SDK is now set up and ready to be explored.
-Visit our documentation on the [Core Concepts](../../core-concepts/api-keys/authenticating-with-api-keys) that drive features in our SDK and client,
-or head over to the [Guides](../../guides/writing-advanced-validations) section for walkthroughs and examples of real-world applications.
+Visit our documentation on the [Core Concepts](../core-concepts/authenticating-with-api-keys) that drive features in our SDK and client,
+or head over to the [Guides](../guides/writing-advanced-validations) section for walkthroughs and examples of real-world applications.
