@@ -2,14 +2,17 @@
 sidebar_label: 'Installing Regression Games'
 ---
 
+import CreateAPIKey from "../partials/_create-api-key-partial.mdx"
+import SetAPIKeyInUnity from "../partials/_set-api-key-in-unity-partial.mdx"
+
 # Installing Regression Games
 
-This page covers everything you need to know to add the Regression Games SDK to your Unity project and start exploring its features.
+This guide covers everything you need to add the Regression Games SDK to your Unity project and start exploring its features.
 
 ## Add the Regression Games SDK to Your Project
 
 Our core package is [publicly available on GitHub](https://github.com/Regression-Games/RGUnityBots).
-Open your Unity project and navigate to `Window` > `Package Manager`. From here, find the `Add package from git URL` and paste the following URL:
+Open your Unity project and navigate to `Window` > `Package Manager`. From here, find the `Add package from git URL` option and paste the following URL:
 
 ```
 https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.27
@@ -50,37 +53,21 @@ This capture can be toggled on and off through the Project Settings as needed.
 https://github.com/Regression-Games/RGUnityBots?path=src/gg.regression.unity.bots.ecs#v0.0.27
 ```
 
-## Authenticate through the Regression Games SDK
-
-Once our core SDK and applicable extensions have been added to your project, close the Package Manager.
-You will be greeted by a prompt for Regression Games login details.
-
-Create a personal account through [the Regression Games website](https://play.regression.gg/signup).
-This step is simple, and will give you access to many
-features such as saving [Gameplay Sessions](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
-and creating powerful [Validation Suites](../core-concepts/validation-suites/validation-suites-getting-started).
-
-:::caution
-You can submit your new account credentials through the Unity prompt now,
-but this method is less secure than creating and using an API key.
-We recommend taking an extra moment to follow the section below.
-:::
-
-### Set an API Key
-
-Generate a new API key through your account settings in the Regression Games client, and copy the generated value to your clipboard.
-
-![Generate a new API key](../core-concepts/img/api-keys/create-new-api-key.gif)
+## Set an API Key
 
 :::info
 To learn more about our API keys, see the [Authenticating with API Keys](../core-concepts/authenticating-with-api-keys) section.
 :::
 
-Do not submit any information to the welcome prompt in Unity.
-Instead, close the prompt and navigate to `Edit` > `Project Settings` > `Regression Games`.
-Paste the key you just generated into the `RG API Key` field, then close the project settings.
+Create a personal account through [the Regression Games website](https://play.regression.gg/signup).
+This step is simple, and will give you access to many
+features such as saving [Gameplay Sessions](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
+and creating powerful [Validation Suites](../core-concepts/validation-suites/validation-suites-getting-started).
+Once you are logged in, you can find the **API Keys** manager near the bottom of your [account settings](https://play.regression.gg/account).
 
-![Set an API Key in Unity](../core-concepts/img/api-keys/set-api-key-unity.png)
+<CreateAPIKey />
+
+<SetAPIKeyInUnity />
 
 ## Restart Unity
 

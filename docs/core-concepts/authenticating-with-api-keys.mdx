@@ -2,6 +2,9 @@
 sidebar_label: 'Authenticating with API Keys'
 ---
 
+import CreateAPIKey from "../partials/_create-api-key-partial.mdx"
+import SetAPIKeyInUnity from "../partials/_set-api-key-in-unity-partial.mdx"
+
 # Authenticating with API Keys
 
 The Regression Games platform provides the ability to generate API keys, which can be used
@@ -12,17 +15,7 @@ You can find the **API Keys** manager at the bottom of your [Regression Games ac
 
 ## Generating an API Key
 
-Enter a unique name for your key and then click **Generate Key**.
-API keys have a default expiration date of 1 year.
-
-:::danger
-Make sure to copy the generated key and store it somewhere safe.
-Once the success dialog is dismissed, you will never be able to see the generated value through the Regression Games client again!
-:::
-
-
-![Create an API Key](img/api-keys/create-new-api-key.gif)
-
+<CreateAPIKey />
 
 ## Using the API Key
 
@@ -39,10 +32,7 @@ Authorization: Bearer <API_KEY>
 
 ### Unity SDK
 
-In your Unity project, navigate to `Edit` > `Project Settings` > `Regression Games`
-and paste your key into the `RG API Key` field.
-
-![Set an API Key in Unity](img/api-keys/set-api-key-unity.png)
+<SetAPIKeyInUnity />
 
 ## Revoking API Keys
 
