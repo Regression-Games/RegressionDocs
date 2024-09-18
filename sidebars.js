@@ -29,8 +29,7 @@ const sidebars = {
       label: "Getting Started",
       items: [
         "getting-started/installing-regression-games",
-        "getting-started/api-keys/authenticating-with-api-keys",
-        "getting-started/creating-your-first-automated-test/creating-your-first-automated-test"
+        "getting-started/creating-your-first-automated-test"
       ],
     },
 
@@ -39,6 +38,7 @@ const sidebars = {
       type: "category",
       label: "Core Concepts",
       items: [
+        "core-concepts/authenticating-with-api-keys",
         "core-concepts/the-in-game-overlay",
         {
           type: "category",
