@@ -5,37 +5,46 @@ sidebar_label: 'Authenticating with API Keys'
 # Authenticating with API Keys
 
 The Regression Games platform provides the ability to generate API keys, which can be used
-to authenticate against our API. This is the recommended way to authenticate with our API
+to authenticate against our API. This is the recommended way to authenticate against our API
 when connecting external systems to Regression Games.
+
+You can find the **API Keys** manager at the bottom of your [Regression Games account settings](https://play.regression.gg/account).
 
 ## Generating an API Key
 
-An API key can be generated from your [account](https://play.regression.gg/account) page. At
-the bottom of the screen within the **API Keys** section, enter a unique name for your key, and then
-click **Generate Key**. This token should be copied and stored somewhere safe - you won't be
-able to see it again after it is generated. Keys have a default expiration date of 1 year.
-
-![List of API Keys](img/api-keys/api-keys.png)
-![A generated API key](img/api-keys/copy-api-key.png)
+Enter a unique name for your key and then click **Generate Key**.
+API keys have a default expiration date of 1 year.
 
 :::danger
-
-Once the key is dismissed, you will never be able to see the API key value again! Make sure to
-copy this token and store it in a safe location.
-
+Make sure to copy the generated key and store it somewhere safe.
+Once the success dialog is dismissed, you will never be able to see the generated value through the Regression Games client again!
 :::
+
+
+![Create an API Key](img/api-keys/create-new-api-key.gif)
+
 
 ## Using the API Key
 
-Once you have generated an API key, you can use it to authenticate against our API. To do
-so, you must include the key in the `Authorization` header of your request. 
+Once you have generated an API key, you can use it to authenticate against our API.
+
+### API Requests
+
+Include the key in the `Authorization` header of your request.
 
 ```
 HEADERS
 Authorization: Bearer <API_KEY>
 ```
 
+### Unity SDK
+
+In your Unity project, navigate to `Edit` > `Project Settings` > `Regression Games`
+and paste your key into the `RG API Key` field.
+
+![Set an API Key in Unity](img/api-keys/set-api-key-unity.png)
+
 ## Revoking API Keys
 
-You can remove API Keys at any time by deleting them from the [account](https://play.regression.gg/account) page.
+You can remove API Keys at any time by deleting them from the **API Keys** manager.
 Next to each key is a delete icon, which immediately revokes the key.

@@ -43,6 +43,9 @@ Without this extension, the core SDK can still capture GameObject data in projec
 Depending on your project and its needs, this extension may not be necessary, but we highly recommend including it
 for full visibility of your game's internal state.
 
+Capturing Entities and their Component data may negatively impact runtime performance.
+This capture can be toggled on and off through the Project Settings as needed.
+
 ```
 https://github.com/Regression-Games/RGUnityBots?path=src/gg.regression.unity.bots.ecs#v0.0.27
 ```
@@ -77,6 +80,8 @@ Do not submit any information to the welcome prompt in Unity.
 Instead, close the prompt and navigate to `Edit` > `Project Settings` > `Regression Games`.
 Paste the key you just generated into the `RG API Key` field, then close the project settings.
 
+![Set an API Key in Unity](../core-concepts/img/api-keys/set-api-key-unity.png)
+
 ## Restart Unity
 
 Now is a good time to restart Unity and any code editor you may have open (e.g. Rider or Visual Studio).
@@ -92,12 +97,12 @@ This means the overlay prefab **must** be present in each scene where you want t
 However, you can hide the visibility of the overlay through the project settings under
 `Edit` > `Project Settings` > `Regression Games` if needed.
 
-Find the `RGOverlayCanvasV2` prefab by navigating to
+Find the `RGOverlayCanvas` prefab by navigating to
 `Packages` > `Regression Games Unity Bots` > `Runtime` > `Prefabs` and dragging it into your scene's object hierarchy.
 Make sure that the canvas is at the top of the hierarchy, so that it is always visible and interactable.
 Repeat this for each scene that must have access to Regression Games features.
 
-![Screenshot of the search pane for the RGOverlayCanvas.](../partials/img/add-overlay-to-scene.gif)
+![Screenshot of the search pane for the RGOverlayCanvas](../partials/img/add-overlay-to-scene.gif)
 
 :::info
 Your scene must have an EventSystem to make interaction with the overlay possible.
