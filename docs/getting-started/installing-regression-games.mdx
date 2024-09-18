@@ -41,13 +41,16 @@ https://github.com/Regression-Games/RGUnityBots?path=src/gg.regression.unity.bot
 
 ### Entity Component System (ECS) Extension
 
-Enables game state collection of Unity ECS Entities and their Components.
-Without this extension, the core SDK can still capture GameObject data in projects using ECS but will have no access to ECS Entities.
+This extension is only recommended for projects that use Unity ECS.
+
+This enables game state collection of Unity ECS Entities and their Components for projects using Unity ECS.
+Without this extension, the core SDK can still capture GameObject data but will have no access to ECS Entities.
 Depending on your project and its needs, this extension may not be necessary, but we highly recommend including it
 for full visibility of your game's internal state.
 
 Capturing Entities and their Component data may negatively impact runtime performance.
-This capture can be toggled on and off through the Project Settings as needed.
+The amount of data to capture, or whether this process runs at all, can be adjusted
+through the Project Settings to manage performance impact.
 
 ```
 https://github.com/Regression-Games/RGUnityBots?path=src/gg.regression.unity.bots.ecs#v0.0.27
@@ -63,7 +66,7 @@ Create a personal account through [the Regression Games website](https://play.re
 This step is simple, and will give you access to many
 features such as saving [Gameplay Sessions](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
 and creating powerful [Validation Suites](../core-concepts/validation-suites/validation-suites-getting-started).
-Once you are logged in, you can find the **API Keys** manager near the bottom of your [account settings](https://play.regression.gg/account).
+Once you are logged in, you can find the **API Keys** section near the bottom of your [account settings](https://play.regression.gg/account).
 
 <CreateAPIKey />
 
@@ -101,5 +104,5 @@ If you are using any of the sample scenes we provide in our guides, this is alre
 ## Next Steps
 
 The Regression Games SDK is now set up and ready to be explored.
-Visit our documentation on the [Core Concepts](../core-concepts/authenticating-with-api-keys) that drive features in our SDK and client,
-or head over to the [Guides](../guides/writing-advanced-validations) section for walkthroughs and examples of real-world applications.
+Continue reading our quick-start guide on [Creating You First Automated Test](creating-your-first-automated-test) or
+head over to the [Guides](../guides/writing-advanced-validations) section for more in-depth walkthroughs and examples of real-world applications.
