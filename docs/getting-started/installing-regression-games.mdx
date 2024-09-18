@@ -21,7 +21,7 @@ https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity
 :::info
 - This package utilizes TextMeshPro. If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
 - This package installs the [Newtonsoft Json](https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) dependency for serializing/deserializing Json message payloads.
-- If you get a note about Unity's new input system, click **Yes** and allow the editor to restart.
+- If you get a note about Unity's new input system, click **Yes** and allow the editor to restart (this will allow the new input system to be enabled).
 :::
 
 ![Add the Regression Games core SDK to your Unity project](img/installing-regression-games/installing-sdk.gif)
@@ -33,7 +33,9 @@ Each of these can be added to your project using a git url, similar to core pack
 
 ### Animation Rigging Extension
 
-Adds support for Unity Animation Rigging.
+This extension allows our SDK to capture state data for Animation Rigging components.
+Without this extension, the core SDK can still capture state data for other components in your project
+but will have no access to Animation Rigging components.
 
 ```
 https://github.com/Regression-Games/RGUnityBots?path=src/gg.regression.unity.bots.animation.rigging#v0.0.27
@@ -41,15 +43,15 @@ https://github.com/Regression-Games/RGUnityBots?path=src/gg.regression.unity.bot
 
 ### Entity Component System (ECS) Extension
 
-This extension is only recommended for projects that use Unity ECS.
-
-This enables game state collection of Unity ECS Entities and their Components for projects using Unity ECS.
-Without this extension, the core SDK can still capture GameObject data but will have no access to ECS Entities.
+This extension is for projects that use Unity's ECS framework.
+It allows our SDK to capture state data for ECS Entities and their Components.
+Without this extension, the core SDK can still capture `GameObject` data but will have no access to ECS Entities.
 Depending on your project and its needs, this extension may not be necessary, but we highly recommend including it
-for full visibility of your game's internal state.
+for full visibility of your game's internal state. This extension can be added to your project
+at any time after installing the core SDK.
 
 Capturing Entities and their Component data may negatively impact runtime performance.
-The amount of data to capture, or whether this process runs at all, can be adjusted
+The amount of data the SDK should capture, or whether this process runs at all, can be adjusted
 through the Project Settings to manage performance impact.
 
 ```
