@@ -178,6 +178,12 @@ to the **Actions** tab of your GitHub repository.
 
 ![Actions tab](img/github-actions/actions-tab.png)
 
+:::info
+
+The default runners in GitHub Actions are sometimes slow, so it may take 10 minutes or more for any output to be seen once the Play Mode tests begin.
+
+:::
+
 Once your workflow has completed, you can view the results of your test by clicking on the **Build my project** step of your workflow.
 You should see that the bot successfully started and executed!
 
