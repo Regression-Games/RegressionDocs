@@ -27,8 +27,10 @@ a Gameplay Session and that they produce expected changes in the game state.
 Steps can assert that a game scene is loaded, wait for mouse and keyboard inputs, check for the existence
 of specific game objects, and much more.
 
-Validation Scenarios execute in the same order as they appear in the Validation Suite dashboard, but order does not impact how Scenarios run.
-Each Scenario starts at the first tick of the Gameplay Session, and a Suite continues to run remaining Scenarios when one fails.
+Multiple Validation Scenarios can belong to a single Validation Suite.
+Validation Scenarios in a Suite execute in the same order as they appear in the Validation Suite dashboard.
+They run independently of each other, meaning the contents of one Scenario do not affect others at runtime.
+Each Scenario starts at the first tick of the Gameplay Session, and the Suite continues to run remaining Scenarios when one fails.
 
 ### Creating a Validation Scenario
 
