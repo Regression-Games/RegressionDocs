@@ -38,7 +38,19 @@ Open your Suite in the [Validation Suites dashboard](https://play.regression.gg/
 This opens the **Scenario Builder**, where you can view game state data and a screenshot for each tick in the Gameplay Session,
 and use this information to build steps for your Scenario.
 
-![Screenshot of a scenario](img/validation-suites/scenario-example.png)
+import ScenarioExample from "./img/validation-suites/scenario-example.png"
+
+<figure>
+    <img src={ScenarioExample} alt="Example Scenario"/>
+    <figcaption>
+        This example Scenario waits for the player to be in the Main Menu and have a match hosting dialog open.
+        Waiting for a left mouse-click event signifies that the player has clicked the "Host Match" button
+        to create a lobby and that the character selection screen should load.
+        The Scenario then waits for the Rogue character class to be selected and for a splash screen representing
+        the end of character selection to be present.
+        Finally, the Scenario asserts that the player is in the game scene with 3 Imp enemies spawned.
+    </figcaption>
+</figure>
 
 ### Validation Steps
 
