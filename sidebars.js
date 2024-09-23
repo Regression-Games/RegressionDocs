@@ -58,15 +58,7 @@ const sidebars = {
             "core-concepts/bot-sequences/end-criteria"
           ]
         },
-        {
-          type: "category",
-          label: "Validation Suites",
-          items: [
-            "core-concepts/validation-suites/validation-suites-getting-started",
-            "core-concepts/validation-suites/validation-scenario-builder-reference",
-            "core-concepts/validation-suites/validation-rules-reference",
-          ],
-        },
+        "core-concepts/validation-suites",
         "core-concepts/stability-and-exploratory-testing",
         "core-concepts/running-tests-in-the-unity-test-runner"
       ],

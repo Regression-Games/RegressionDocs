@@ -8,7 +8,7 @@ Bots running on Regression Games save all states observed, all actions sent, and
 
 ## Downloading Replay Data
 
-At the end of a Bot's lifecycle, the replay data for every game tick processed by that Bot is saved into a single Zip file. This file can be downloaded from the `History` section of the `Running Bots` tab in the Regression Games client. Click the `Download Replay Data` button for the Bot instance you want to download. This will download a file named `rg_bot_replay_data-<InstanceId>.zip`.
+At the end of a Bot's lifecycle, the replay data for every game tick processed by that Bot is saved into a single Zip file. This file can be downloaded from the `History` section of the `Running Bots` tab in the Regression Games web interface. Click the `Download Replay Data` button for the Bot instance you want to download. This will download a file named `rg_bot_replay_data-<InstanceId>.zip`.
 
 ![replay data download](./img/replay/replay-data-download.png)
 
@@ -33,7 +33,7 @@ These objects will automatically be removed when running, saving, or building th
 ![timeline feature](./img/replay/timeline.png)
 
 ### Loading Replay Data
-The first step in using the Bot Replay Window is loading a replay data Zip file. Click the `Bot Replay Zip:` button in the top left of the window. This will open a file chooser window. Choose the `rg_bot_replay_data-<InstanceId>.zip` file you downloaded from the Regression Games Client.
+The first step in using the Bot Replay Window is loading a replay data Zip file. Click the `Bot Replay Zip:` button in the top left of the window. This will open a file chooser window. Choose the `rg_bot_replay_data-<InstanceId>.zip` file you downloaded from the Regression Games web interface.
 
 ### Tick Inspector: Controlling The Current Tick
 After loading the file, the data for game ticks recorded by the Bot will be available for playback. 
@@ -62,7 +62,7 @@ For the entity in the tick representing the Bot Instance that the replay data wa
 Shows any command(s) that the Bot sent to the game for the current tick. These could be movements, performed abilities, object interactions, etc
 
 #### Validations
-Shows any validation(s) that the Bot performed on the current tick. These are normally test cases coded into the Bot to validate that the tick data changed as expected based on prior actions or other factors in the game state. See the [validation](../../core-concepts/validation-suites/validation-suites-getting-started) docs for more information.
+Shows any validation(s) that the Bot performed on the current tick. These are normally test cases coded into the Bot to validate that the tick data changed as expected based on prior actions or other factors in the game state. See the [validation](../../core-concepts/validation-suites) docs for more information.
 
 ### Registering Custom Models For Replay Objects
 When viewing a replay, entities that are dynamically spawned into the scene (not defined in the scene itself) need to be told what model to render with. By default they will load as a pink capsule, but they can be configured with a specific model based on their type.
