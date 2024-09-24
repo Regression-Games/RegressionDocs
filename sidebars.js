@@ -39,7 +39,8 @@ const sidebars = {
       label: "Core Concepts",
       items: [
         "core-concepts/authenticating-with-api-keys",
-        "core-concepts/the-in-game-overlay",
+        "core-concepts/recording-gameplay",
+        "core-concepts/gameplay-sessions",
         {
           type: "category",
           label: "Gameplay Sessions",

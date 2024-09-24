@@ -10,54 +10,11 @@ technical overview of the Gameplay Sessions system, as well as more technical de
 
 ## Overview of the Schema
 
-### Folder and File Structure
-
-When a Gameplay Session is recorded, all data is stored on disk within two folders:
-
-* `~/unity_videos/{Application.productName}/recording_{date}_{time}_{sessionId}/screenshots` - A folder with screenshots for each recorded tick of
-  the session. Each screenshot is named with the format `{tick#}.jpg`, where `tick#` is the in-game tick from the start
-  of the session.
-* `~/unity_videos/{Application.productName}/recording_{date}_{time}_{sessionId}/data` - A folder with the state and input data for each recorded
-  tick of the session. Each tick is stored in a JSON file named with the format `{tick#}.json`.
-
-After a recording is finished, you will not see these folders, because they will be compressed into zip files
-(`bot_segments.zip`, `data.zip`, and `screenshots.zip` within the `recording_{date}_{time}_{sessionId}` folder).
-
-Additionally, there is a `thumbnail.jpg` file stored in this `sessionDirectory`, which is the screenshot from the middle of
-your Gameplay Session.
-
-### Structure of {tick#}.json Files
-
-Each `{tick#}.json` file contains the following information:
-
-* Timing information (e.g. tick number, time, time scale)
-* Screen size information
-* Information about the state of the game (i.e. the game objects / entities within the game on that tick)
-* Information about inputs on that tick (i.e. keyboard, mouse)
-* Key frames on this tick (explained below)
-
 #### Game Object State
 
 Within the `state` field, an array of objects represents the state of game objects on this tick. Depending on the
 [options you have configured](./gameplay-sessions-usage#advanced-options) for recording, some objects
 and state in your scene may not be present in this list.
-
-#### Key Frames
-
-Key frames is how the SDK marks important moments in your gameplay session. They are represented as an array of strings
-in the `keyFrame` field of the `{tick#}.json` file. The possible key frames are:
-
-* `FIRST_FRAME` - Indicates that this tick is the first tick of the gameplay session.
-* `SCENE` - Indicates that the scenes visible in this tick are different from the scenes visible in the previous tick.
-* `GAME_ELEMENT` - Indicates that a game element became visible to the camera or went off camera this tick. This could
-                   be from spawning, de-spawning, movement, or camera rotation/movement.
-* `GAME_ELEMENT_RENDERER_COUNT` - Indicates that a visible game element changed its number of renderers this tick.
-* `UI_ELEMENT` - Indicates that a visible UI element became visible to the camera or went off camera this tick. This
-                 could be from spawning, de-spawning, or UI component or canvas group visibility changes.
-* `UI_PIXELHASH` - Indicates that the screen pixels of a UI component changed this tick. This value is only relevant
-                   when using 3rd party UI system like Coherent GameFace.
-
-Any time one of these events occurs on a tick, the corresponding key frame will be added to the `keyFrame` array.
 
 ### Example of a Tick JSON File
 
@@ -216,21 +173,6 @@ Any time one of these events occurs on a tick, the corresponding key frame will 
   }
 }
 ```
-
-## How performance information is scraped
-
-Performance information, such as fps, render time, and object stats are either calculated frame-by-frame, or use
-the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class. Since
-UnityStats is an editor-only feature, some performance information, specifically that of `engineStats`, is only
-available when running in the Unity Editor.
-
-Performance information like `fps` is calculated tick by tick.
-
-Performance information like `cpuTimeSincePreviousTick`, `memory`, and `gcMemory` are captured using Unity ProfilerRecorder.
-
-Performance information like render time object stats are captured using the [UnityStats](https://stephenhodgson.github.io/UnityCsReference/api/UnityEditor.UnityStats.html) class.
-Since UnityStats is an editor-only feature, some performance information, specifically the `engineStats` section of the state, is only available when running in the Unity Editor.
-
 
 ## RGTestUtils class
 

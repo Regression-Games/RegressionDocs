@@ -2,27 +2,8 @@
 sidebar_label: 'Using Gameplay Sessions'
 ---
 
-import OverlayPartial from '../../partials/_add-overlay-partial.mdx';
 
 # Using Gameplay Sessions
-
-## Preparing the Overlay
-
-The Regression Games SDK's `RGOverlayCanvas` prefab is a UI component that will allow you to record and replay Gameplay
-Sessions.
-
-<OverlayPartial />
-
-## Recording Gameplay
-
-Once the overlay has been added to your scene(s), click play.
-The Regression Games toolbar at the bottom of the Scene View will display recording and playback controls.
-
-Recording can be started by clicking the red "record" button on the right side of the toolbar.
-Once clicked, the SDK will begin recording your gameplay. You can tell that recording is active when the red button begins pulsing.
-Clicking the button again will stop the recording and sync the Gameplay Session to your Regression Games account.
-
-![Start a recording](./img/record.png)
 
 ### Loading a Recording
 A recording can be replayed by initiating "play" mode from your Unity editor and selecting the menu button on the Regression Games toolbar.
@@ -216,13 +197,3 @@ Recording state from Behaviours may incur an impact on performance.
 ![Various options for scraping game objects from the scene](./img/base_options_finder.png)
 
 To learn more about the data format and intricacies of this tool, visit the next page for a technical reference.
-
-### Configuring session replay
-
-When replaying a gameplay session recording, the SDK uses key frame information from the original recording.
-
-When processing the replay, there are different modes for how the SDK can enforce keyframe detection.
-- The default mode is `Delta` which is tolerant of non-exact UI element transitions by ensuring that tracked UI elements increase/decrease/etc by at least the recorded amount from one tick to the next.
-- The other mode is `Strict` which requires exact match of the objects in the recorded state to the current state.  This mode works well for some games, but can fail when objects are created/destroyed based on timed events that don't consistently align on the same frame boundaries.
-
-This can be configured using the `UI Replay Enforcement` dropdown of the `Replay Data Playback Controller` Behaviour.  This Behaviour is located on the `RGOverlayCanvas/Recording Toolbar` GameObject.
