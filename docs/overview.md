@@ -43,7 +43,7 @@ clicking **Add package from git URL** in the **Package Manager** window (this wi
 in the **Window > Package Manager** menu) and pasting in the following URL.
 
 ```
-https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.27
+https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.28
 ```
 
 - Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
@@ -51,7 +51,7 @@ https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity
 - If your game utilizes Unity's ECS, we now have an extension package available to support it. Install this package after installing the core RGUnityBots package:
 
 ```
-https://github.com/Regression-Games/RGUnityBots/tree/main/src/gg.regression.unity.bots.ecs#v0.0.27
+https://github.com/Regression-Games/RGUnityBots/tree/main/src/gg.regression.unity.bots.ecs#v0.0.28
 
 ![Screenshot of the package imported into the project](tutorials/img/building-your-first-bot/tutorial-1-package.png)
 

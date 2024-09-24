@@ -4,6 +4,28 @@ sidebar_label: 'Changelog'
 
 # Changelog
 
+## Release 0.0.28
+
+_September 23, 2024_
+
+**New Features**
+
+- Bot Sequences can now be created, edited, and deleted directly from the in-game overlay
+- Bot segments that rely on image sources can now load images from paths vs just raw data
+- Direct login is no longer supported for the SDK; API keys are now required
+- Bot Sequences are now reloaded automatically from disk when played
+- Object detection bot segments can now define a confidence threshold (text queries only)
+
+**Bug Fixes**
+
+- Improved language and explanations within the website
+- Properly handle failing behaviour segments that dont load or timeout
+- Use of computer-vision capabilities now requires authentication
+- Sprite rendering within the SDK has been improved
+- Fixed a bug where the overlay would throw a null exception when opening for the first time
+- Fixed issues where the game would hang when starting
+- Data from the end of a segment is now properly saved
+
 ## Release 0.0.27
 
 _September 9, 2024_
