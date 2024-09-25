@@ -1,8 +1,9 @@
 @import '../../css/custom.css';
 
 .accordion {
-    border: 1px solid var(--ifm-color-primary-lightest);
+    border: 1px solid #757575;
     border-radius: 5px;
+    margin-bottom: 0.5rem;
 }
 
 .title {
@@ -16,7 +17,7 @@
 }
 
 .arrow {
-    color: var(--ifm-color-primary-lightest);
+    color: #757575;
 
     .open {
         transform: rotate(180deg); /* Rotate the arrow when open */

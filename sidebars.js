@@ -45,9 +45,7 @@ const sidebars = {
           type: "category",
           label: "Gameplay Sessions",
           items: [
-            "core-concepts/gameplay-sessions/gameplay-sessions-getting-started",
-            "core-concepts/gameplay-sessions/gameplay-sessions-usage",
-            "core-concepts/gameplay-sessions/gameplay-sessions-reference"
+            "core-concepts/gameplay-sessions/gameplay-sessions-usage"
           ],
         },
         {

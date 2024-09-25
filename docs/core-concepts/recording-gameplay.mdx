@@ -43,8 +43,10 @@ Gameplay Sessions unlock access to more features through the Regression Games we
 
 ## Replaying Recordings
 
-Replaying a recording reproduces its inputs in your game and captures new game state information during the replay.
-The replay data is saved as a new recording and Gameplay Session.
+Replaying a recording reproduces each tick in the original recording in order.
+This involves simulating the inputs from the original recording, and waiting for key values in the game state to match expectations for that tick
+before continuing to the next set of inputs in the recording.
+The SDK records the state of the game while a replay is in progress, and saves the replay data as a new recording and Gameplay Session.
 Replay, and recording the replay, can be useful for identifying areas of your game that behave inconsistently
 given the same inputs, reproducing transient bugs and collecting information for debugging them,
 or ensuring that changes to your game don't affect unintended behaviours.
@@ -58,10 +60,12 @@ create your own customized [Bot Sequences](bot-sequences/getting-started-with-bo
 rather than relying on raw recordings themselves.
 :::
 
+### Starting a Replay
+
 There are two ways to initiate a replay of an existing recording:
 manually select a recording via the overlay, or programmatically start a recording using utilities from our SDK.
 
-### Manual Replay
+#### Manual Replay
 
 import ReplayOptions from "./img/recording-gameplay/replay-options.png"
 import SuccessfulReplay from "./img/recording-gameplay/successful-replay.png"
@@ -78,22 +82,30 @@ Navigate into the folder of the recording you'd like to replay, select its `bot_
     <img src={ReplayOptions} alt="Replay Options"/>
     <figcaption>
         You can <b>Play</b> the recording once or <b>Loop</b> it to play continuously.
-        The <b>Stop</b> button stops and unloads the current recording
+        The <b>Stop</b> button stops and unloads the current recording.
+        Stopping a recording in the middle of playback will save the replay up to that point.
     </figcaption>
 </figure>
 
 <figure className="col">
     <img src={SuccessfulReplay} alt="Successful Replay"/>
-    <figcaption>Successful playback results in a green indicator surrounding the <b>Play</b> button</figcaption>
+    <figcaption>
+        Successful playback results in a green indicator surrounding the <b>Play</b> icon.
+        The recording can be played again or unloaded.
+    </figcaption>
 </figure>
 
 <figure className="col">
     <img src={LoopCounter} alt="Loop Counter"/>
-    <figcaption>Looping the recording displays a counter for the current loop iteration</figcaption>
+    <figcaption>
+        Looping the recording displays a counter for the current loop iteration.
+        Looping works best when the recording returns itself to a known start state
+        to set up the next loop iteration.
+    </figcaption>
 </figure>
 </div>
 
-### Programmatic Replay
+#### Programmatic Replay
 
 The `RGTestUtils` class provides methods for replaying recordings programmatically.
 This is intended for use in
@@ -159,6 +171,19 @@ public class RecordingTest
 }
 ```
 
+### Game State Errors During Replay
+
+The replay tool attempts to reproduce each tick in the original recording in order.
+This involves simulating the original user inputs, and waiting for key values in the game state to match expectations for that tick.
+If the game state does not match a set of key expectations set by the original recording after a certain timeout,
+then the replay will pause itself and display a warning above the RG Toolbar with the list of unmet expectations.
+Replay will continue from where it left off if the warning is resolved.
+
+TODO: get new screenshot of replay error
+
+![Errors During Playback](gameplay-sessions/img/overlay_playback_error.png)
+
+
 ## Recorded Data Formats
 
 By default, the SDK saves recordings to your user's home directory under `unity_videos`.
@@ -176,15 +201,15 @@ C:\Users\{MyUser}\unity_videos\MyGame\recording_08-30-2024_14.34_0b8551
 ```
 
 A recording folder contains multiple files that provide important context about the game's state.
-Expand the sections below to learn more about each file type.
-:::info
-All of this same data is saved to the [Gameplay Session](gameplay-sessions) when data is uploaded
+All of this same data is saved to the [Gameplay Session](gameplay-sessions) that is uploaded
 to your Regression Games account at the end of a recording.
-:::
+Expand the sections below to learn more about our raw data formats.
 
 import BotSegmentsZipPartial from "../partials/recording-gameplay/_bot-segments-zip-partial"
 import DataZipPartial from "../partials/recording-gameplay/_data-zip-partial"
-
+import LogsZipPartial from "../partials/recording-gameplay/_logs-zip-partial"
+import ScreenshotsZipPartial from "../partials/recording-gameplay/_screenshots-zip-partial"
+import ThumbnailJpgPartial from "../partials/recording-gameplay/_thumbnail-jpg-partial"
 
 <Accordion
     title="#### **bot_segments.zip**"
@@ -196,22 +221,21 @@ import DataZipPartial from "../partials/recording-gameplay/_data-zip-partial"
     content={DataZipPartial}
 />
 
+<Accordion
+    title="#### **logs.zip**"
+    content={LogsZipPartial}
+/>
 
-### `logs.zip`
+<Accordion
+    title="#### **screenshots.zip**"
+    content={ScreenshotsZipPartial}
+/>
 
-This .zip contains numbered JSONL files, each containing any runtime logs at a specific tick.
-Logs produced between ticks will be recorded in the next tick's log file.
-The file may be empty if no logs were produced since the previous tick.
+<Accordion
+    title="#### **thumbnail.jpg**"
+    content={ThumbnailJpgPartial}
+/>
 
-### `screenshots.zip`
-
-This .zip contains numbered JPG files, each representing a screenshot taken at a specific tick.
-These are used in the Regression Games web interface to visualize the in-game graphics alongside the game state at a moment in time.
-
-### `thumbnail.jpg`
-
-A single screenshot taken from the middle of the recording.
-This is used to help give Gameplay Sessions that are uploaded to RG a visual representation in the web interface.
 
 ## Advanced Configuration
 
