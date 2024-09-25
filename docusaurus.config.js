@@ -59,6 +59,10 @@ const config = {
     ],
   ],
 
+  plugins: [
+    require.resolve('./plugins/custom-webpack'),
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({

@@ -2,6 +2,8 @@
 sidebar_label: 'Recording Gameplay'
 ---
 
+import Accordion from "../../src/components/Accordion"
+
 # Recording Gameplay
 
 The [RGOverlayCanvas](../getting-started/installing-regression-games#add-the-regression-games-overlay-to-your-scene)
@@ -28,15 +30,134 @@ Recording requires the [RGOverlayCanvas](../getting-started/installing-regressio
 to be present in your scene.
 :::
 
-You can start a recording at any time while playing your game by pressing the **Record** icon in the RG Toolbar.
+Press the **Record** icon in the RG Toolbar while in "Play" mode to start recording gameplay.
 The icon will pulse to signal that a recording is in progress, and our SDK will begin capturing game state and user inputs.
 
 ![Start Recording](img/recording-gameplay/start-recording.png)
+
 
 Click the **Record** icon again to stop the recording and save captured data to your local device.
 If you have provided a valid [API Key in the RG Settings](../getting-started/installing-regression-games#configure-your-api-key),
 then a copy of the captured data will also be uploaded to your Regression Games account as a [Gameplay Session](gameplay-sessions).
 Gameplay Sessions unlock access to more features through the Regression Games web interface such as [Validation Suites](validation-suites).
+
+## Replaying Recordings
+
+Replaying a recording reproduces its inputs in your game and captures new game state information during the replay.
+The replay data is saved as a new recording and Gameplay Session.
+Replay, and recording the replay, can be useful for identifying areas of your game that behave inconsistently
+given the same inputs, reproducing transient bugs and collecting information for debugging them,
+or ensuring that changes to your game don't affect unintended behaviours.
+
+:::tip
+Replaying a recording file works best in deterministic or mostly-deterministic scenarios.
+For example, navigating menus tends to be deterministic, while the locations and movements of NPCs may not be.
+The replay tool attempts to account for some inconsistencies, but it is not perfect.
+For games with a high degree of randomness or non-determinism, we recommend using recordings as a basis to
+create your own customized [Bot Sequences](bot-sequences/getting-started-with-bot-sequences-and-segments)
+rather than relying on raw recordings themselves.
+:::
+
+There are two ways to initiate a replay of an existing recording:
+manually select a recording via the overlay, or programmatically start a recording using utilities from our SDK.
+
+### Manual Replay
+
+import ReplayOptions from "./img/recording-gameplay/replay-options.png"
+import SuccessfulReplay from "./img/recording-gameplay/successful-replay.png"
+import LoopCounter from "./img/recording-gameplay/loop-counter.png"
+
+Press the **Menu** icon in the RG Toolbar while in "Play" mode to select a recording to replay.
+This will launch a file explorer at the location of the [recordings directory](#recording-directory) on your device.
+Navigate into the folder of the recording you'd like to replay, select its `bot_segments.zip` file, and then click **Load Replay**.
+
+![Select a Recording](img/recording-gameplay/select-recording.png)
+
+<div className="container row text--center">
+<figure className="col">
+    <img src={ReplayOptions} alt="Replay Options"/>
+    <figcaption>
+        You can <b>Play</b> the recording once or <b>Loop</b> it to play continuously.
+        The <b>Stop</b> button stops and unloads the current recording
+    </figcaption>
+</figure>
+
+<figure className="col">
+    <img src={SuccessfulReplay} alt="Successful Replay"/>
+    <figcaption>Successful playback results in a green indicator surrounding the <b>Play</b> button</figcaption>
+</figure>
+
+<figure className="col">
+    <img src={LoopCounter} alt="Loop Counter"/>
+    <figcaption>Looping the recording displays a counter for the current loop iteration</figcaption>
+</figure>
+</div>
+
+### Programmatic Replay
+
+The `RGTestUtils` class provides methods for replaying recordings programmatically.
+This is intended for use in
+[Play Mode tests for the Unity Test Runner](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html).
+
+:::info
+The `RegressionGames` and `RegressionGames.TestFramework` assemblies must be listed as
+references in your test assembly to use the `RGTestUtils` class.
+
+![Test assembly references for Regression Games SDK](img/recording-gameplay/test_assembly_refs.png)
+:::
+
+:::tip
+By default, [recordings are saved outside your project](#recorded-data-formats).
+Make sure you copy the recordings you'd like to replay into your project
+to ensure they'll be available on other machines that run these automated tests.
+:::
+
+Create a `UnityTest` that invokes the `RGTestUtils.StartPlaybackFromZipFile` method.
+Pass the path to your recording's `bot_segments.zip` file.
+This will replay the recording, wait until playback is complete, and then save the replay as a new recording.
+You can add additional logic to your test to validate the game state at the end of playback,
+or use a recording to reach a known state in your game for further testing.
+
+```csharp
+using System.Collections;
+using RegressionGames;
+using RegressionGames.Types;
+using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
+
+public class RecordingTest
+{
+
+    [UnityTest]
+    public IEnumerator TestRecording()
+    {
+
+        // Unity has a macOS bug that prints errors when taking screenshots during recording.
+        // This line prevents the test from failing when these errors are logged.
+#if UNITY_EDITOR_OSX || UNITY_RUNTIME_OSX
+        LogAssert.ignoreFailingMessages = true;
+#endif
+
+        // Define which recording to use
+        string recordingPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Assets/Tests/Runtime/Recordings/MainMenuRecording.zip");
+
+        // Wait for the scene to load
+        SceneManager.LoadSceneAsync("Startup", LoadSceneMode.Single);
+        yield return RGTestUtils.WaitForScene("MainMenu");
+
+        // Start playback
+        // This will automatically create a new recording of the replay
+        PlaybackResult playbackResult = null;
+        yield return RGTestUtils.StartPlaybackFromZipFile(recordingPath, result => playbackResult = result);
+
+        // Print out the recording path for viewing later
+        RGDebug.LogInfo("Played back and recorded the test run - saved to " + playbackResult.saveLocation);
+        Assert.IsNotNull(playbackResult.saveLocation);
+
+    }
+}
+```
 
 ## Recorded Data Formats
 
@@ -55,54 +176,26 @@ C:\Users\{MyUser}\unity_videos\MyGame\recording_08-30-2024_14.34_0b8551
 ```
 
 A recording folder contains multiple files that provide important context about the game's state.
+Expand the sections below to learn more about each file type.
+:::info
 All of this same data is saved to the [Gameplay Session](gameplay-sessions) when data is uploaded
 to your Regression Games account at the end of a recording.
-
-
-### `bot_segments.zip`
-
-This .zip contains numbered JSON files, each representing a delta of the game state at a specific tick.
-These files are used to [replay the recording](#replaying-recordings).
-[Bot Segments](bot-sequences/getting-started-with-bot-sequences-and-segments) are explained in more detail in their own section,
-but they essentially represent actions for the replay tool to produce (such as sending mouse and keyboard inputs),
-and outline conditions that should result from those actions.
-Bot Segments and Sequences are powerful tools for automating testing, and
-the contents of the Segments produced during recording can help you form the basis for your own custom Segments later on.
-
-
-### `data.zip`
-
-This .zip contains numbered JSON files, each representing the full, unaltered game state at a specific tick.
-This data is used by the Regression Games web interface and backend to create and run [Validation Suites](validation-suites).
-
-Each file contains the following information:
-
-* Timing information (e.g. tick number, time, timescale)
-* Performance metrics (e.g. frame rate, memory usage)
-* Screen size
-* Object states (i.e. the game objects / entities within the game at that tick)
-* Inputs produced leading up to the tick (e.g. mouse, keyboard)
-* Key Frame flags to identify what changed since the previous tick
-
-Some performance metrics are recorded for each frame leading up to the tick,
-while others, like render time object stats, are calculated at the time the tick is recorded.
-
-:::caution
-Some performance information in the `engineStats` object is collected using UnityStats.
-UnityStats is an editor-only feature, so these stats are unavailable when running outside the Unity Editor.
 :::
 
-Key Frame flags indicate that important changes occurred to the game state between ticks.
-They are represented as an array of strings in the `keyFrame` field of the JSON file.
+import BotSegmentsZipPartial from "../partials/recording-gameplay/_bot-segments-zip-partial"
+import DataZipPartial from "../partials/recording-gameplay/_data-zip-partial"
 
-| Key Frame Type              | Description                                                                                                                                                                   |
-|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| FIRST_FRAME                 | Indicates that this tick is the first tick of the recording                                                                                                                   |
-| SCENE                       | Indicates that the visible scenes are different from those in the previous tick                                                                                               |
-| GAME_ELEMENT                | Indicates that a game element became visible to the camera or moved off-camera. This could be from spawning, de-spawning, character movement, camera rotation, etc.           |
-| GAME_ELEMENT_RENDERER_COUNT | Indicates that the number of renderers changed for a visible game element                                                                                                     |
-| UI_ELEMENT                  | Indicates that a UI element became visible to the camera or moved off-camera. This could be from spawning, de-spawning, UI component or canvas group visibility changes, etc. |
-| UI_PIXELHASH                | Indicates that the screen pixels of a UI component changed. This value is only relevant when using 3rd party UI system like Coherent GameFace.                                |
+
+<Accordion
+    title="#### **bot_segments.zip**"
+    content={BotSegmentsZipPartial}
+/>
+
+<Accordion
+    title="#### **data.zip**"
+    content={DataZipPartial}
+/>
+
 
 ### `logs.zip`
 
@@ -119,64 +212,6 @@ These are used in the Regression Games web interface to visualize the in-game gr
 
 A single screenshot taken from the middle of the recording.
 This is used to help give Gameplay Sessions that are uploaded to RG a visual representation in the web interface.
-
-## Replaying Recordings
-
-Replaying a recording reproduces inputs from the original recording
-and captures new game state information during the replay.
-This is saved as a new recording and Gameplay Session.
-Replay, and recording the replay, can be useful for identifying areas of your game that behave inconsistently
-given the same inputs, reproducing bugs and collecting information for debugging them,
-or ensuring that changes to your game don't affect unintended behaviours.
-
-:::tip
-Replaying a recording file works best in deterministic or mostly-deterministic scenarios.
-For example, navigating menus tends to be deterministic, while the locations and movements of NPCs may not be.
-The replay tool attempts to account for some inconsistencies, but it is not perfect.
-For games with a high degree of randomness or non-determinism, we recommend using recordings as a basis to
-create your own customized [Bot Sequences](bot-sequences/getting-started-with-bot-sequences-and-segments)
-rather than relying on raw recordings.
-:::
-
-There are two ways to initiate a replay: manually selecting a recording via the overlay, or programmatically through our SDK.
-
-### Manual Replay
-
-import ReplayOptions from "./img/recording-gameplay/replay-options.png"
-import SuccessfulReplay from "./img/recording-gameplay/successful-replay.png"
-import LoopCounter from "./img/recording-gameplay/loop-counter.png"
-
-Press the **Menu** icon in the RG Toolbar in "Play" mode to select a recording to replay.
-This will launch a file explorer at the location of your [recordings directory](#recording-directory) on your device.
-Navigate into the folder of the recording you'd like to replay, select its `bot_segments.zip` file, and then click **Load Replay**.
-
-![Select a Recording](img/recording-gameplay/select-recording.png)
-
-<div style={{display: "grid", gridAutoFlow: "column", textAlign: "center"}}>
-
-<figure>
-    <img src={ReplayOptions} alt="Replay Options"/>
-    <figcaption>
-        You can <b>Play</b> the recording once or <b>Loop</b> it to play continuously.
-        The <b>Stop</b> button stops and unloads the current recording
-    </figcaption>
-</figure>
-
-<figure>
-    <img src={SuccessfulReplay} alt="Successful Replay"/>
-    <figcaption>Successful playback results in a green indicator surrounding the <b>Play</b> button</figcaption>
-</figure>
-
-<figure>
-    <img src={LoopCounter} alt="Loop Counter"/>
-    <figcaption>Looping the recording displays a counter for the current loop iteration</figcaption>
-</figure>
-
-</div>
-
-
-
-### Programmatic Replay
 
 ## Advanced Configuration
 
