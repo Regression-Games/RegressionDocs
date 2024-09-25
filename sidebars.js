@@ -43,13 +43,6 @@ const sidebars = {
         "core-concepts/gameplay-sessions",
         {
           type: "category",
-          label: "Gameplay Sessions",
-          items: [
-            "core-concepts/gameplay-sessions/gameplay-sessions-usage"
-          ],
-        },
-        {
-          type: "category",
           label: "Bot Sequences",
           items: [
             "core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments",
