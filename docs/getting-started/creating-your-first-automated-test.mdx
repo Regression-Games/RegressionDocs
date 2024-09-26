@@ -5,10 +5,8 @@ sidebar_label: 'Creating Your First Automated Test'
 # Creating Your First Automated Test
 
 In this tutorial, we will get a simple automated test working in Unity using Regression Games.
-We will show you how to
-record a [Gameplay Session](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
-and create a [Validation Suite](../core-concepts/validation-suites)
-from the session for regression testing.
+We will show you how to record gameplay, upload a [Gameplay Session](../core-concepts/gameplay-sessions),
+and use it to create a [Validation Suite](../core-concepts/validation-suites) for regression testing.
 
 ![Screenshot of results from a run](img/creating-your-first-automated-test/run-details.png)
 
@@ -18,14 +16,6 @@ Feel free to follow this tutorial within your own game,
 but we recommend starting with a sample game if you do not have a game available.
 Our team often uses BossRoom, a simple multiplayer game created by Unity, to develop and test features.
 However, you can start with any game of your choosing!
-
-:::info
-
-Note that there are some limitations of the package that may not work with your game. For instance, our framework
-works best with games that use standard UI canvas elements and game objects. Learn
-more about these limitations in our [Gameplay Session recording docs](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started).
-
-:::
 
 Download the BossRoom sample from the [official GitHub repository.](https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop)
 and open it within Unity version 2022.3 (visit the [Unity archive](https://unity.com/releases/editor/whats-new/2022.3.27) if
@@ -39,9 +29,10 @@ Once the project is loaded, open the `MainMenu` scene in `Assets` > `Scenes`.
 Follow our [installation instructions](installing-regression-games) to add our package to your game.
 If you're using one of our recommended samples, you can ignore sections on extension packages.
 
-## Record a Gameplay Session
+## Record Gameplay
 
-The first step in automating a test is to record a [gameplay session](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started).
+The first step in automating a test is to [record some gameplay](../core-concepts/recording-gameplay)
+and allow the SDK to upload a [Gameplay Session](../core-concepts/gameplay-sessions) to your Regression Games account.
 This feature allows you to record real gameplay and play it back later to run regression tests against. Regression Games does
 offer other utilities for dynamic bots, but to get started with a simple example, we will record a click-through that
 verifies the functionality of the UI in BossRoom.
@@ -63,7 +54,7 @@ As shown in the short video below, follow these steps:
 1. Click the close button on the Volume Settings panel.
 1. Click the rec recording button in the bottom right to stop recording.
 1. When finished recording, click the hamburger menu next to the record button to open up a dialog for loading your
-recording. You can find the recordings within [the session directory](../core-concepts/gameplay-sessions/gameplay-sessions-reference#folder-and-file-structure).
+recording. You can find the recordings within [the recordings directory](../core-concepts/recording-gameplay#overriding-the-recording-directory).
 Select the `bot_segments.zip` file and click **Load Replay**.
 1. Click the play button under the Regression Games logo to see your recording play back!
 

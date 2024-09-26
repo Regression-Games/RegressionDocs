@@ -52,18 +52,63 @@ The icon will pulse to signal that a recording is in progress, and our SDK will 
 
 ![Start Recording](img/recording-gameplay/start-recording.png)
 
-
 Click the **Record** icon again to stop the recording and save captured data to your local device.
 If you have provided a valid [API Key in the RG Settings](../getting-started/installing-regression-games#configure-your-api-key),
 then a copy of the captured data will also be uploaded to your Regression Games account as a [Gameplay Session](gameplay-sessions).
 Gameplay Sessions unlock access to more features through the Regression Games web interface such as [Validation Suites](validation-suites).
 
+### Recorded Data Formats
+
+The SDK saves recordings to your user's home directory under `unity_videos` on your local device.
+Beneath the root directory, the SDK gives each Unity project its own subdirectory matching the project's `Application.productName`.
+Recordings are saved under these project subdirectories as a folders named `recording_{MM-dd-yyyy_HH.mm}_{sessionId}`.
+
+Here is an example of a recording's location for a project named "MyGame":
+```bash
+# macOS & Linux
+~/unity_videos/MyGame/recording_08-30-2024_14.34_0b8551
+
+# Windows
+C:\Users\{MyUser}\unity_videos\MyGame\recording_08-30-2024_14.34_0b8551
+```
+
+A recording folder contains multiple files that provide important context about the game's state.
+This data is also saved to the [Gameplay Session](gameplay-sessions) that is uploaded
+to your Regression Games account at the end of a recording.
+Expand the sections below to learn more about our raw data formats.
+
+<Accordion
+    title="#### **bot_segments.zip**"
+    content={BotSegmentsZipPartial}
+/>
+
+<Accordion
+    title="#### **data.zip**"
+    content={DataZipPartial}
+/>
+
+<Accordion
+    title="#### **logs.zip**"
+    content={LogsZipPartial}
+/>
+
+<Accordion
+    title="#### **screenshots.zip**"
+    content={ScreenshotsZipPartial}
+/>
+
+<Accordion
+    title="#### **thumbnail.jpg**"
+    content={ThumbnailJpgPartial}
+/>
+
 ## Replaying Recordings
 
 Replaying a recording reproduces each tick in the original recording in order.
-This involves simulating the inputs from the original recording, and waiting for key values in the game state to match expectations for that tick
-before continuing to the next set of inputs in the recording.
-The SDK records the state of the game while a replay is in progress, and saves the replay data as a new recording and Gameplay Session.
+This involves simulating inputs from the original recording and waiting for key values in the game state to match
+expectations set by the recorded tick before continuing to the next set of inputs.
+The SDK records the state of the game while a replay is in progress, and saves the replay data as a new recording and
+[Gameplay Session](gameplay-sessions).
 
 Replay, and recording the replay, can be useful for identifying areas of your game that behave inconsistently
 given the same inputs, reproducing transient bugs and collecting debug information for them,
@@ -80,13 +125,13 @@ rather than relying on raw recordings themselves.
 
 ### Starting a Replay
 
-There are two ways to initiate a replay of an existing recording:
+There are two ways to initiate replay of an existing recording:
 manually select a recording via the overlay, or programmatically start a recording using utilities from our SDK.
 
 #### Manual Replay
 
 Press the **Menu** icon in the RG Toolbar while in "Play" mode to select a recording to replay.
-This will launch a file explorer at the location of the [recordings directory](#recording-directory) on your device.
+This will launch a file explorer at the location of the [recordings directory](#recorded-data-formats) on your device.
 Navigate into the folder of the recording you'd like to replay, select its `bot_segments.zip` file, and then click **Load Replay**.
 
 ![Select a Recording](img/recording-gameplay/select-recording.png)
@@ -203,99 +248,31 @@ public class RecordingTest
 
 ### Game State Errors During Replay
 
-The replay tool attempts to reproduce each tick in the original recording in order.
-This involves simulating the original user inputs, and waiting for key values in the game state to match expectations for that tick.
-If the game state does not match a set of key expectations set by the original recording after a certain timeout,
-then the replay will pause itself and display a warning above the RG Toolbar with the list of unmet expectations.
+The replay tool reproduces user inputs from the original recording and waits for key values in the game state to match those in the recording.
+If the game state does not meet expectations set by the original recording after a certain timeout,
+then the SDK will pause replay and display a warning above the RG Toolbar with the list of unmet expectations.
 Replay will continue from where it left off if the warning is resolved.
 
 <img src={ReplayError} alt="Errors During Replay" style={{display: "block", margin: "auto"}}/>
 
-## Recorded Data Formats
-
-Recordings are located in the configured [recording directory](#recording-directory) on your local device.
-
-A recording folder contains multiple files that provide important context about the game's state.
-All of this same data is saved to the [Gameplay Session](gameplay-sessions) that is uploaded
-to your Regression Games account at the end of a recording.
-Expand the sections below to learn more about our raw data formats.
-
-<Accordion
-    title="#### **bot_segments.zip**"
-    content={BotSegmentsZipPartial}
-/>
-
-<Accordion
-    title="#### **data.zip**"
-    content={DataZipPartial}
-/>
-
-<Accordion
-    title="#### **logs.zip**"
-    content={LogsZipPartial}
-/>
-
-<Accordion
-    title="#### **screenshots.zip**"
-    content={ScreenshotsZipPartial}
-/>
-
-<Accordion
-    title="#### **thumbnail.jpg**"
-    content={ThumbnailJpgPartial}
-/>
-
-
 ## Advanced Configuration
-
-The SDK provides a number of options to configure how game state and user inputs are recorded.
-These options can be found under components attached to the `RGOverlayCanvas` GameObject in your scene.
-
-<img src={AdvancedConfiguration} alt="Advanced Configuration Options" style={{display: "block", margin: "auto"}}/>
 
 ### Adjusting the Recording Interval
 
-The **Recording Min FPS** value in the `ScreenRecorder` component controls how often the SDK
-scrapes the game state and captures that data as a tick.
+The **Recording Min FPS** value controls how often the SDK scrapes the game state and captures that data as a tick.
+This option can be found under the `ScreenRecorder` component attached to the `RGOverlayCanvas` GameObject in your scene.
+
+<img src={AdvancedConfiguration} alt="Advanced Configuration Options" style={{display: "block", margin: "auto"}}/>
+&nbsp;
 
 The default value for this setting is `0`, which means the SDK will capture a tick whenever it detects an important change in the game state.
 Allowing the SDK to determine key state changes is sufficient for most games,
 but you can set a regular interval for capturing ticks instead by adjusting the `Recording Min FPS` value on the `ScreenRecorder` component.
 Setting the value above `0` will cause the SDK to record that many ticks each second.
 
-### Overriding the Recording Directory
-
-The **State Recordings Directory** path in the `ScreenRecorder` component controls which directory on your local
-device recordings will be saved to.
-
-By default, the SDK saves recordings to your user's home directory under `unity_videos`.
-Whatever path you provide will be used as the root directory instead.
-
-Beneath the root directory, the SDK gives each Unity project its own subdirectory matching the project's `Application.productName`.
-Recordings are saved under these project subdirectories as a folders named `recording_{MM-dd-yyyy_HH.mm}_{sessionId}`.
-For example, the default location for a recording from a project named "MyGame" will be located at:
-
-```bash
-# macOS & Linux
-~/unity_videos/MyGame/recording_08-30-2024_14.34_0b8551
-
-# Windows
-C:\Users\{MyUser}\unity_videos\MyGame\recording_08-30-2024_14.34_0b8551
-```
-
-### Adjusting Input Thresholds
-
-The **Key Held Threshold Seconds** value in the `Keyboard Input Action Observer` component controls how long a key must be released
-between presses before each press is considered a distinct key-down event.
-
-Some devices might erroneously recognize a held key as spamming key-down events for that key.
-This setting defaults to `0.1` seconds, and on Windows should not have to be changed.
-If you experience spammy key clicks on macOS or other platforms that handle key events in a non-standard way,
-then you may need to increase this value.
-
 ### Including and Excluding GameObjects from Data Capture
 
-The SDK captures data for all GameObjects in the scene hierarchy that are visible to the camera and have a renderer.
+The SDK captures data for all GameObjects in the scene hierarchy that are visible to the camera.
 This can result in a lot of data being captured every tick, depending on the complexity of your scene.
 
 You can **exclude** a GameObject from being captured by attaching the `RGExcludeFromState` component to it.
