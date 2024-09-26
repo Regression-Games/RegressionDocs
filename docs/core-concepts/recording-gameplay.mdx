@@ -4,6 +4,23 @@ sidebar_label: 'Recording Gameplay'
 
 import Accordion from "../../src/components/Accordion"
 
+import ReplayOptions from "./img/recording-gameplay/replay-options.png"
+import PauseOrStop from "./img/recording-gameplay/pause-or-stop.png"
+import SuccessfulReplay from "./img/recording-gameplay/successful-replay.png"
+import LoopCounter from "./img/recording-gameplay/loop-counter.png"
+
+import TestAssemblyRefs from "./img/recording-gameplay/test_assembly_refs.png"
+
+import ReplayError from "./img/recording-gameplay/replay-error.png"
+
+import BotSegmentsZipPartial from "../partials/recording-gameplay/_bot-segments-zip-partial"
+import DataZipPartial from "../partials/recording-gameplay/_data-zip-partial"
+import LogsZipPartial from "../partials/recording-gameplay/_logs-zip-partial"
+import ScreenshotsZipPartial from "../partials/recording-gameplay/_screenshots-zip-partial"
+import ThumbnailJpgPartial from "../partials/recording-gameplay/_thumbnail-jpg-partial"
+
+import AdvancedConfiguration from "./img/recording-gameplay/advanced-configuration.png"
+
 # Recording Gameplay
 
 The [RGOverlayCanvas](../getting-started/installing-regression-games#add-the-regression-games-overlay-to-your-scene)
@@ -47,9 +64,10 @@ Replaying a recording reproduces each tick in the original recording in order.
 This involves simulating the inputs from the original recording, and waiting for key values in the game state to match expectations for that tick
 before continuing to the next set of inputs in the recording.
 The SDK records the state of the game while a replay is in progress, and saves the replay data as a new recording and Gameplay Session.
+
 Replay, and recording the replay, can be useful for identifying areas of your game that behave inconsistently
-given the same inputs, reproducing transient bugs and collecting information for debugging them,
-or ensuring that changes to your game don't affect unintended behaviours.
+given the same inputs, reproducing transient bugs and collecting debug information for them,
+or ensuring that changes to your game don't break gameplay.
 
 :::tip
 Replaying a recording file works best in deterministic or mostly-deterministic scenarios.
@@ -65,11 +83,7 @@ rather than relying on raw recordings themselves.
 There are two ways to initiate a replay of an existing recording:
 manually select a recording via the overlay, or programmatically start a recording using utilities from our SDK.
 
-### Manual Replay
-
-import ReplayOptions from "./img/recording-gameplay/replay-options.png"
-import SuccessfulReplay from "./img/recording-gameplay/successful-replay.png"
-import LoopCounter from "./img/recording-gameplay/loop-counter.png"
+#### Manual Replay
 
 Press the **Menu** icon in the RG Toolbar while in "Play" mode to select a recording to replay.
 This will launch a file explorer at the location of the [recordings directory](#recording-directory) on your device.
@@ -78,15 +92,29 @@ Navigate into the folder of the recording you'd like to replay, select its `bot_
 ![Select a Recording](img/recording-gameplay/select-recording.png)
 
 <div className="container row text--center">
+<div className="row">
 <figure className="col">
     <img src={ReplayOptions} alt="Replay Options"/>
     <figcaption>
-        You can <b>Play</b> the recording once or <b>Loop</b> it to play continuously.
-        The <b>Stop</b> button stops and unloads the current recording.
-        Stopping a recording in the middle of playback will save the replay up to that point.
+        <b>Play</b> a loaded recording once or <b>Loop</b> it to play continuously.
+        The SDK will automatically save the replay as a new recording.
+        Loop iterations are saved together in the same recording.
     </figcaption>
 </figure>
 
+<figure className="col">
+    <img src={PauseOrStop} alt="{Pause or Stop Replay}"/>
+    <figcaption>
+        <b>Pause</b> by pressing the Pause icon or hitting <code>Ctrl+Shift+F9</code>.
+        Use the same shortcut to resume.
+        <br/>
+        <b>Stop</b> by pressing the Stop icon or using the shortcut <code>Ctrl+Shift+F10</code>.
+        Stopping a recording will save the replay up to that point.
+    </figcaption>
+</figure>
+</div>
+
+<div className="row">
 <figure className="col">
     <img src={SuccessfulReplay} alt="Successful Replay"/>
     <figcaption>
@@ -105,6 +133,8 @@ Navigate into the folder of the recording you'd like to replay, select its `bot_
 </figure>
 </div>
 
+</div>
+
 #### Programmatic Replay
 
 The `RGTestUtils` class provides methods for replaying recordings programmatically.
@@ -115,7 +145,7 @@ This is intended for use in
 The `RegressionGames` and `RegressionGames.TestFramework` assemblies must be listed as
 references in your test assembly to use the `RGTestUtils` class.
 
-![Test assembly references for Regression Games SDK](img/recording-gameplay/test_assembly_refs.png)
+<img src={TestAssemblyRefs} alt="Test assembly references for Regression Games SDK" style={{display: "block", margin: "auto"}}/>
 :::
 
 :::tip
@@ -179,37 +209,16 @@ If the game state does not match a set of key expectations set by the original r
 then the replay will pause itself and display a warning above the RG Toolbar with the list of unmet expectations.
 Replay will continue from where it left off if the warning is resolved.
 
-TODO: get new screenshot of replay error
-
-![Errors During Playback](gameplay-sessions/img/overlay_playback_error.png)
-
+<img src={ReplayError} alt="Errors During Replay" style={{display: "block", margin: "auto"}}/>
 
 ## Recorded Data Formats
 
-By default, the SDK saves recordings to your user's home directory under `unity_videos`.
-[This directory is configurable](#recording-directory).
-The SDK gives each Unity project its own directory matching the project's `Application.productName`.
-A recording is saved under its project directory as a folder named `recording_{MM-dd-yyyy_HH.mm}_{sessionId}`.
-
-For example, a recording for a project named "MyGame" may be located at:
-```bash
-# macOS & Linux
-~/unity_videos/MyGame/recording_08-30-2024_14.34_0b8551
-
-# Windows
-C:\Users\{MyUser}\unity_videos\MyGame\recording_08-30-2024_14.34_0b8551
-```
+Recordings are located in the configured [recording directory](#recording-directory) on your local device.
 
 A recording folder contains multiple files that provide important context about the game's state.
 All of this same data is saved to the [Gameplay Session](gameplay-sessions) that is uploaded
 to your Regression Games account at the end of a recording.
 Expand the sections below to learn more about our raw data formats.
-
-import BotSegmentsZipPartial from "../partials/recording-gameplay/_bot-segments-zip-partial"
-import DataZipPartial from "../partials/recording-gameplay/_data-zip-partial"
-import LogsZipPartial from "../partials/recording-gameplay/_logs-zip-partial"
-import ScreenshotsZipPartial from "../partials/recording-gameplay/_screenshots-zip-partial"
-import ThumbnailJpgPartial from "../partials/recording-gameplay/_thumbnail-jpg-partial"
 
 <Accordion
     title="#### **bot_segments.zip**"
@@ -239,99 +248,59 @@ import ThumbnailJpgPartial from "../partials/recording-gameplay/_thumbnail-jpg-p
 
 ## Advanced Configuration
 
-### Tick Interval
+The SDK provides a number of options to configure how game state and user inputs are recorded.
+These options can be found under components attached to the `RGOverlayCanvas` GameObject in your scene.
 
-The `Recording Min FPS` field under `RGOverlayCanvas` > `ScreenRecorder` allows you to configure
-how often the SDK scrapes the game for state data.
-Its default value is 0, which instructs the SDK to only record state data when it detects a
-[**key frame**](./gameplay-sessions-reference#key-frames). In most cases, this should be set to 0, as most games will only require state collection on key frames.
-Setting `Recording Min FPS` to a value greater than 0 will cause the SDK to record data at that frequency,
-in addition to recording any key frame that was detected.
-For instance, a setting of `5` will result in the SDK scraping the game for state data 5 times per second.
+<img src={AdvancedConfiguration} alt="Advanced Configuration Options" style={{display: "block", margin: "auto"}}/>
 
-![Change the FPS at which data is collected from the game](gameplay-sessions/img/base_options_fps.png)
+### Adjusting the Recording Interval
 
-### Recording Directory
+The **Recording Min FPS** value in the `ScreenRecorder` component controls how often the SDK
+scrapes the game state and captures that data as a tick.
 
-By default, recorded data is stored in your home directory under `/unity_videos`.
-This directory can be overridden by changing the `State Recordings Directory` field under `RGOverlayCanvas` > `ScreenRecorder`.
+The default value for this setting is `0`, which means the SDK will capture a tick whenever it detects an important change in the game state.
+Allowing the SDK to determine key state changes is sufficient for most games,
+but you can set a regular interval for capturing ticks instead by adjusting the `Recording Min FPS` value on the `ScreenRecorder` component.
+Setting the value above `0` will cause the SDK to record that many ticks each second.
 
-![Change the location where data is saved](gameplay-sessions/img/base_options_location.png)
+### Overriding the Recording Directory
 
-### Input threshold options
+The **State Recordings Directory** path in the `ScreenRecorder` component controls which directory on your local
+device recordings will be saved to.
 
-Some devices might recognize holding down a key as spamming key presses for that key instead.
-The `Key Held Threshold Seconds` field under `RGOverlayCanvas` > `Keyboard Input Action Observer`
-allows you to configure the threshold for how long a key must be released
-between presses before each press is considered a distinct event.
-This setting defaults to 0.1 seconds, and on Windows should not have to be changed. This setting is primarily used on
-Mac and other platforms that handle key repeats in a non-standard way.  If you do experience key click spamming,
-increase the value.
+By default, the SDK saves recordings to your user's home directory under `unity_videos`.
+Whatever path you provide will be used as the root directory instead.
 
-![Change the threshold for held key inputs](gameplay-sessions/img/base_options_threshold.png)
+Beneath the root directory, the SDK gives each Unity project its own subdirectory matching the project's `Application.productName`.
+Recordings are saved under these project subdirectories as a folders named `recording_{MM-dd-yyyy_HH.mm}_{sessionId}`.
+For example, the default location for a recording from a project named "MyGame" will be located at:
 
-### Configuring game-state collection
+```bash
+# macOS & Linux
+~/unity_videos/MyGame/recording_08-30-2024_14.34_0b8551
 
-The Regression Games SDK scrapes the game for state data by traversing the game's GameObject hierarchy
-and recording any data it considers relevant to playing back recordings or running tests.
+# Windows
+C:\Users\{MyUser}\unity_videos\MyGame\recording_08-30-2024_14.34_0b8551
+```
 
-#### Excluding GameObjects from Data Capture
+### Adjusting Input Thresholds
 
-Adding the `RGExcludeFromState` component to a GameObject will prevent its state data from being recorded.
-This can be useful for ignoring irrelevant regions of a level
-or other objects that are not relevant to your playback or testing.
-Children of an excluded GameObject are also excluded from the recording, effectively ignoring the entire hierarchy.
+The **Key Held Threshold Seconds** value in the `Keyboard Input Action Observer` component controls how long a key must be released
+between presses before each press is considered a distinct key-down event.
 
-#### Including objects from your scene in the state
+Some devices might erroneously recognize a held key as spamming key-down events for that key.
+This setting defaults to `0.1` seconds, and on Windows should not have to be changed.
+If you experience spammy key clicks on macOS or other platforms that handle key events in a non-standard way,
+then you may need to increase this value.
 
-By default, the system records game objects visible in the scene with a renderer. Other game objects can be included in
-the state by attaching the `RGIncludeInState` MonoBehaviour to them.
+### Including and Excluding GameObjects from Data Capture
 
-#### Collapsing renderers
+The SDK captures data for all GameObjects in the scene hierarchy that are visible to the camera and have a renderer.
+This can result in a lot of data being captured every tick, depending on the complexity of your scene.
 
-By default, the SDK collapses a child GameObject's data into its respective top-level GameObject.
-If a GameObject hierarchy has colliders/renderers/animators/etc. at multiple levels,
-they will be represented together as a single "entity" in the recorded state.
-This is generally desirable, as it allows you to treat each player (for example) as a complete entity in the state
-rather than visualizing individual child components as their own entities.
+You can **exclude** a GameObject from being captured by attaching the `RGExcludeFromState` component to it.
+Excluding a GameObject will also exclude its children from data capture.
+This can be useful for ignoring entire regions of a level or individual objects that are not relevant to your testing scenarios.
 
-However, it can also be useful to disable this behaviour in cases where you'd like to validate
-render bounds on individual armatures, weapons, or other components that are children in the hierarchy.
-
-The `Collapse Renderers into Top Level Game Object` checkbox under `RGOverlayCanvas` > `In Game Object Finder`
-controls this behaviour, where checking the box forces collapsing and unchecking the box disables collapsing.
-
-#### Include off-camera objects
-
-By default, the SDK only records state data for GameObjects that are within the main camera's viewport.
-In many cases, this is desirable because off-camera GameObjects are not relevant to playback or applicable test scenarios.
-Off-camera objects can be included in recordings by toggling the
-`Include Only On Camera Objects` checkbox under `RGOverlayCanvas` > `In Game Object Finder`.
-Checking this box limits state collection to on-camera objects and unchecking the box enables state collection for
-off-camera objects.
-
-:::info Note
-
-Recording objects outside the camera viewport may increase the size of recordings and impact performance.
-
-:::
-
-#### Collect state from behaviours
-
-By default, the SDK only records state data from GameObjects themselves, and does not record
-fields or property values from attached Behaviours.
-These are generally not needed for playing back recordings, but can be extremely useful for test scenarios.
-
-The `Collect State from Behaviours` checkbox under `RGOverlayCanvas` > `In Game Object Finder`
-dictates whether recordings include data from Behaviours attached to a GameObject.
-Checking this box will include all fields and properties from all Behaviours attached to a GameObject in the recorded state,
-and unchecking the box will exclude them.
-
-:::info Note
-
-Recording state from Behaviours may incur an impact on performance.
-
-:::
-
-![Various options for scraping game objects from the scene](gameplay-sessions/img/base_options_finder.png)
-
+You can **include** GameObjects that are not visible to the camera or otherwise not rendered by adding the `RGIncludeInState` component to them.
+This can be useful for always capturing data for important objects, regardless of whether they appear on-screen.
