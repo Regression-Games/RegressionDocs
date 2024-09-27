@@ -204,6 +204,7 @@ Pass the path to your recording's `bot_segments.zip` file.
 This will replay the recording, wait until playback is complete, and then save the replay as a new recording.
 You can add additional logic to your test to validate the game state at the end of playback,
 or use a recording to reach a known state in your game for further testing.
+The `PlaybackResult` object contains the path to the new recording, but may be null if playback fails.
 
 ```csharp
 using System.Collections;
@@ -241,9 +242,7 @@ public class RecordingTest
         // Print out the recording path for viewing later
         Assert.IsNotNull(playbackResult);
         Assert.IsNotNull(playbackResult.saveLocation);
-        RGDebug.LogInfo("Played back and recorded the test run - saved to " + playbackResult.saveLocation);
-
-
+        RGDebug.LogInfo("Successfully replayed the recording and saved new recording to " + playbackResult.saveLocation);
     }
 }
 ```
