@@ -39,16 +39,8 @@ const sidebars = {
       label: "Core Concepts",
       items: [
         "core-concepts/authenticating-with-api-keys",
-        "core-concepts/the-in-game-overlay",
-        {
-          type: "category",
-          label: "Gameplay Sessions",
-          items: [
-            "core-concepts/gameplay-sessions/gameplay-sessions-getting-started",
-            "core-concepts/gameplay-sessions/gameplay-sessions-usage",
-            "core-concepts/gameplay-sessions/gameplay-sessions-reference"
-          ],
-        },
+        "core-concepts/recording-gameplay",
+        "core-concepts/gameplay-sessions",
         {
           type: "category",
           label: "Bot Sequences",

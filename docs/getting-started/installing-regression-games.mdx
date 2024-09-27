@@ -66,7 +66,7 @@ To learn more about our API keys, see the [Authenticating with API Keys](../core
 
 Create a personal account through [the Regression Games website](https://play.regression.gg/signup).
 This step is simple, and will give you access to many
-features such as saving [Gameplay Sessions](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
+features such as saving [Gameplay Sessions](../core-concepts/gameplay-sessions)
 and creating powerful [Validation Suites](../core-concepts/validation-suites).
 Once you are logged in, you can find the **API Keys** section near the bottom of your [account settings](https://play.regression.gg/account).
 
@@ -82,10 +82,10 @@ Without this step, Unity and your code editor may not properly resolve your new 
 ## Add the Regression Games Overlay to Your Scene
 
 Our core package provides an in-game overlay that acts as a UI for features such as performing
-[input recording and playback](../core-concepts/gameplay-sessions/gameplay-sessions-getting-started)
-and constructing and running [Bot Sequences](../core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments),
-but it also drives our data collection behind-the-scenes.
-This means the overlay prefab **must** be present in each scene where you want to use any Regression Games features.
+[input recording and playback](../core-concepts/recording-gameplay)
+and constructing and running [Bot Sequences](../core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments).
+It also drives our data collection behind-the-scenes.
+The overlay prefab **must** be present in each scene where you want to use any Regression Games features.
 However, you can hide the visibility of the overlay through the project settings under
 `Edit` > `Project Settings` > `Regression Games` if needed.
 
