@@ -4,56 +4,51 @@ sidebar_label: 'What is Regression Games?'
 
 # Regression Games for Unity
 
-Regression Games is developing a platform where studios can **build and deploy bots for a variety of use cases in minutes.** We are designing for scale (deploy thousands of bots), ease of use (e.g. generative AI to build bots), ease of integration (minimal impact on game development time), and feature richness (e.g. A/B bot test for engagement).
+**Regression Games is developing the tools and standards that will make effective and easy end-to-end automated testing of games a reality.**
 
-![vision](img/vision.png)
+Most games suffer from a lack of automated testing, and the complex nature of games often constrains the testing that is done to small and simple scenarios.
 
-## Current Stage of the Product
+We are imagining a future where automated tests can handle the most complex and repetitive scenarios, freeing up valuable time for developers to focus on
+the most challenging and creative aspects of game development. By combining old school algorithms, cutting-edge machine learning techniques, and a focus
+on the developer experience, Regression Games is building tools that make this end-to-end testing possible.
 
-This product is currently a **release preview**. We are actively talking with studios and game developers to discover the best features and use cases to tackle, and we're making changes frequently.
+## What is our vision?
 
-The team has focused on the foundation of supporting use cases and initial infrastructure to get bots to connect to Unity. The bulk
-of our value will come from the interfaces to build bots, the scale of our infrastructure, the speed of integration, and the products
-built around these bots.
+Our vision for this framework is that a members of development and QA teams in game studios can collaborate to create tests for their games that are both highly reliable and easy to maintain. 
 
-![timeline feature](unused-content/session-insights/img/replay/timeline.png)
+Automated testing of games is challenging due to the complexity and dynamic behavior of games. This is why we
+provide a variety of approaches to create **bots** that can handle the unique constraints of your game. We aren't locked into either old school
+AI approaches or LLMs, but rather utilize any technique when it will actually result in a bot that can test your game reliably.
 
-## Availability Assurances
+There are three core principles driving the development of this framework:
+* Ease of use - developers should be able to integrate and create new tests with minimal effort.
+* Reliability - the framework should be designed to be reliable, whether that means providing approaches that are robust to dynamic scenarios, or giving developers the ability to identify and fix flaky tests.
+* Data driven - the framework collects a wide variety of data, used in both testing and bot building.
 
-The Regression Games team offers the following assurances for our initial testing with developers. Additionally, we have a dedicated Discord server for support, and can also create a Slack Connect channel, giving you direct access to our entire team. For access to
-these channels, send an e-mail to [aaron@regression.gg](mailto:aaron@regression.gg).
+## Highlighted Features
 
-* A single account can run at least 10 bots concurrently
-* The time from requesting a bot to be started to the time it connects to Unity will take less than 10 seconds if the bot is relying on dependencies that are common to most bots. This does not cover bots that may have lots of library dependencies, which may take longer.
+The table below highlights some of the main features of the framework.
 
-## Implemented Features
+| Feature | Description |
+| --- | --- |
+| Plug-and-Play Setup | Simply add our SDK and add one GameObject to your scene to begin instantly collecting detailed information for tests and bots. Custom integration code is rarely needed. |
+| Get Started Quickly with Session Recording | Developers can create a new test simply by recording a play through of their scenario. |
+| Computer Vision Capabilities | In some cases, a bot needs to see the game to understand it. Our CV capabilities can extract information from game screenshots to help drive bot behavior and validate game state using approaches like OCR and object detection. |
+| Exploratory Testing | The framework collects a wide variety of data, used in both testing and bot building. |
+| Composability | One approach is not always adequate for automating a certain test scenario. Our drag and drop tool allows you to stitch together and re-use bot logic across tests. |
+| Runtime, CI/CD, and Editor Compatibility | Our tools work in the Editor, in builds, and within CI/CD. Because of our integration approach, in most cases you will **not need to restart your game** to iterate on a test scenario. |
+| Data Exploration and Validation | Our dashboard allows developers to inspect and test the state of their game in a no-code fashion. |
 
-The table below details and links to documentation for the features implemented on our platform.
+## Where do I started?
 
-| **Feature**                    | **Description**                                                                                                   | **Documentation**                                         |
-|--------------------------------|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
-| Unity C# SDK                   | A C# SDK for implementing bots locally in Unity.                                                                  | [Link](unused-content/creating-bots/csharp/adaptive-bots) |
-| Bot Code Generation            | Create bots with low-code tools such as behavior trees powered by GPT.                                            | [Link](unused-content/creating-bots/csharp/agent-builder) |
-| Platform and Language Agnostic | Our protocol permits bots to eventually be written in multiple engines and languages.                             | _Docs coming soon_                                        |  
+The best place to start is with our [installation guide](getting-started/installing-regression-games). Once the package is added, you can [create your first
+test automation](getting-started/creating-your-first-automated-test).
 
-## Importing the Regression Games Unity Bots package
+If you are already familiar with the framework, check out these more advanced guides for test inspiration:
 
-Our package is available via GitHub [here](https://github.com/Regression-Games/RGUnityBots). Import the repository by 
-clicking **Add package from git URL** in the **Package Manager** window (this window can be opened
-in the **Window > Package Manager** menu) and pasting in the following URL.
+* [Interacting with User Interfaces using Computer Vision](guides/interacting-with-ui-using-computer-vision.mdx)
+* [Finding Game-Breaking Bugs with Stability Testing](guides/finding-game-breaking-bugs-with-stability-testing.mdx)
+* [Writing Advanced Validations](guides/writing-advanced-validations.mdx)
+* [Running Tests in Editor and in Builds](guides/running-tests-in-editor-and-in-builds.mdx)
 
-```
-https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.27
-```
-
-- Note that this package utilizes TextMeshPro.  If you are prompted by Unity to add TextMeshPro assets to your project, please add them.
-- Note that this package installs a dependency of Newtonsoft Json (https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.1/manual/index.html) for serializing/deserializing Json message payloads.
-- If your game utilizes Unity's ECS, we now have an extension package available to support it. Install this package after installing the core RGUnityBots package:
-
-```
-https://github.com/Regression-Games/RGUnityBots/tree/main/src/gg.regression.unity.bots.ecs#v0.0.27
-```
-
-![Screenshot of the package imported into the project](getting-started/img/creating-your-first-automated-test/tutorial-1-package.png)
-
-For a full walkthrough on getting started, see the [Building Your First Bot](getting-started/creating-your-first-automated-test) tutorial.
+You can also check out our [existing game samples](https://github.com/Regression-Games) or the [live demo of our validation tool](https://play.regression.gg/validations-demo).
