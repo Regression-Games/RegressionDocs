@@ -239,8 +239,10 @@ public class RecordingTest
         yield return RGTestUtils.StartPlaybackFromZipFile(recordingPath, result => playbackResult = result);
 
         // Print out the recording path for viewing later
-        RGDebug.LogInfo("Played back and recorded the test run - saved to " + playbackResult.saveLocation);
+        Assert.IsNotNull(playbackResult);
         Assert.IsNotNull(playbackResult.saveLocation);
+        RGDebug.LogInfo("Played back and recorded the test run - saved to " + playbackResult.saveLocation);
+
 
     }
 }
