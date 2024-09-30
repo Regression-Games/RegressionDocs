@@ -15,6 +15,7 @@ import ReplayError from "./img/recording-gameplay/replay-error.png"
 
 import BotSegmentsZipPartial from "../partials/recording-gameplay/_bot-segments-zip-partial"
 import DataZipPartial from "../partials/recording-gameplay/_data-zip-partial"
+import GameMetadataPartial from "../partials/recording-gameplay/_game-metadata-json-partial"
 import LogsZipPartial from "../partials/recording-gameplay/_logs-zip-partial"
 import ScreenshotsZipPartial from "../partials/recording-gameplay/_screenshots-zip-partial"
 import ThumbnailJpgPartial from "../partials/recording-gameplay/_thumbnail-jpg-partial"
@@ -85,6 +86,11 @@ Expand the sections below to learn more about our raw data formats.
 <Accordion
     title="#### **data.zip**"
     content={DataZipPartial}
+/>
+
+<Accordion
+    title="#### **game_metadata.json**"
+    content={GameMetadataPartial}
 />
 
 <Accordion
