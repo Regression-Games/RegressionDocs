@@ -11,6 +11,31 @@ Basic information about when this tick was captured within the context of the ov
 This includes the sequential tick number (which matches the name of the file), 
 the time in seconds since the start of the game, and the in-game timescale.
 
+### Key Frame Flags
+
+Key Frame flags indicate that important changes occurred to the game state since the previous tick was captured.
+Flags are represented as an array of strings in the \`keyFrame\` field.
+
+| Key Frame Flag              | Description                                                                                                                                                                   |
+|:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| FIRST_FRAME                 | Indicates that this tick is the first tick of the recording.                                                                                                                  |
+| GAME_ELEMENT                | Indicates that a game element became visible to the camera or moved off-camera. This could be from spawning and de-spawning objects, character movement, camera rotation, changes to the visibility of UI components, etc.  |
+| UI_PIXELHASH                | Indicates that the screen pixels of a UI component changed. This value is only relevant when using 3rd party UI systems like Coherent GameFace.                               |
+| TIMER                       | This indicates that ticks are [configured to be collected at a specific interval](#adjusting-the-recording-interval) rather than allowing the SDK to determine when important changes to the game state have occurred. This flag may be accompanied by other flags, or it may be presented alone which indicates no important changes to the state since the previous tick.  |
+| END_RECORDING               | Indicates that this tick is the last tick of the recording. This captures any buffered inputs up to the moment the recording is stopped.                                      |
+
+
+### Screen Size
+
+The size of the game's viewport at the time of recording the tick.
+This is used to scale inputs like mouse movements and clicks to the correct position on the screen during replay,
+and to display bounding boxes around game elements in the web interface.
+
+### Camera Data
+
+Information about the main camera's position, orientation, field of view, etc.
+This is used to help determine which objects are visible to the player.
+
 ### Performance Metrics
 
 A host of performance metrics are captured for each tick under the \`performance\` object.
@@ -49,27 +74,6 @@ Mouse and keyboard events that were sent to the game since the previous tick.
 These events are reproduces during replay to simulate real user input.
 Each event includes the time it was sent, and which button or key was pressed. 
 Mouse events also include the position of the mouse at the time the event was sent.
-
-### Screen Size
-
-The size of the game's viewport at the time of recording the tick.
-This is used to scale inputs like mouse movements and clicks to the correct position on the screen during replay,
-and to display bounding boxes around game elements in the web interface.
-
-### Key Frame Flags
-
-Key Frame flags indicate that important changes occurred to the game state since the previous tick was captured.
-Flags are represented as an array of strings in the \`keyFrame\` field.
-
-| Key Frame Flag              | Description                                                                                                                                                                   |
-|:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| FIRST_FRAME                 | Indicates that this tick is the first tick of the recording                                                                                                                   |
-| SCENE                       | Indicates that the visible scenes are different from those in the previous tick                                                                                               |
-| GAME_ELEMENT                | Indicates that a game element became visible to the camera or moved off-camera. This could be from spawning, de-spawning, character movement, camera rotation, etc.           |
-| GAME_ELEMENT_RENDERER_COUNT | Indicates that the number of renderers changed for a visible game element                                                                                                     |
-| UI_ELEMENT                  | Indicates that a UI element became visible to the camera or moved off-camera. This could be from spawning, de-spawning, UI component or canvas group visibility changes, etc. |
-| UI_PIXELHASH                | Indicates that the screen pixels of a UI component changed. This value is only relevant when using 3rd party UI systems like Coherent GameFace.                                |
-
 
 `;
 
