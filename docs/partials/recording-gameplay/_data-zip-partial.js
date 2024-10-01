@@ -18,12 +18,11 @@ Flags are represented as an array of strings in the \`keyFrame\` field.
 
 | Key Frame Flag              | Description                                                                                                                                                                   |
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| FIRST_FRAME                 | Indicates that this tick is the first tick of the recording                                                                                                                   |
-| SCENE                       | Indicates that the visible scenes are different from those in the previous tick                                                                                               |
-| GAME_ELEMENT                | Indicates that a game element became visible to the camera or moved off-camera. This could be from spawning, de-spawning, character movement, camera rotation, etc.           |
-| GAME_ELEMENT_RENDERER_COUNT | Indicates that the number of renderers changed for a visible game element                                                                                                     |
-| UI_ELEMENT                  | Indicates that a UI element became visible to the camera or moved off-camera. This could be from spawning, de-spawning, UI component or canvas group visibility changes, etc. |
+| FIRST_FRAME                 | Indicates that this tick is the first tick of the recording.                                                                                                                  |
+| GAME_ELEMENT                | Indicates that a game element became visible to the camera or moved off-camera. This could be from spawning and de-spawning objects, character movement, camera rotation, changes to the visibility of UI components, etc.  |
 | UI_PIXELHASH                | Indicates that the screen pixels of a UI component changed. This value is only relevant when using 3rd party UI systems like Coherent GameFace.                               |
+| TIMER                       | This indicates that ticks are [configured to be collected at a specific interval](#adjusting-the-recording-interval) rather than allowing the SDK to determine when important changes to the game state have occurred. This flag may be accompanied by other flags, or it may be presented alone which indicates no important changes to the state since the previous tick.  |
+| END_RECORDING               | Indicates that this tick is the last tick of the recording. This captures any buffered inputs up to the moment the recording is stopped.                                      |
 
 
 ### Screen Size
