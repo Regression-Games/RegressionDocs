@@ -246,23 +246,28 @@ import FinalScenario1 from "./img/writing-advanced-validations/starting-a-match/
 import FinalScenario2 from "./img/writing-advanced-validations/starting-a-match/final-scenario-2.png"
 import FinalScenario3 from "./img/writing-advanced-validations/starting-a-match/final-scenario-3.png"
 
-
 <div className="container row column--no-gutters margin--none">
     <img src={FinalScenario1} alt="Select the Male Tank class" className="margin--none"/>
     <img src={FinalScenario2} alt="Select the Male Tank class" className="margin--none"/>
     <img src={FinalScenario3} alt="Select the Male Tank class" className="margin--none"/>
 </div>
 
-
-
 ## Using Character Skills
 
-Breaking Items
-Defeating Enemies
+Now that we've seen some examples of UI validation, let's address gameplay mechanics.
 
-## Interacting with the Environment
+**For this Gameplay Session**: We start in the dungeon as a Female Archer character.
+First, we press the `1` key to use her basic ability on a small pot to smash it.
+Then, we make lift a heavy pot above her head and walk it to the opposite end of the corridor before setting it down.
+Once the character's hands are free, we'll make her walk towards the nearest group of Imp enemies
+and attack all of them at once using her AOE.
+Pressing the `3` key will allow her to target the ground; click the right mouse button to confirm the target and unleash
+a rain of arrows.
+Once the enemies die in a puff of smoke, we end the recording.
 
-Floor Switches + doors
+**In the Scenario Builder**: we'll validate that destroying pots causes them to break into fragments,
+that contextual abilities change depending on whether the target is environmental or an NPC, and that
+enemies in an area can be damaged with AOE effects and die as a result of combat.
 
 ## Validating Player Death
 
