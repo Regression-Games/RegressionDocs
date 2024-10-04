@@ -4,6 +4,211 @@ sidebar_label: 'Writing Advanced Validations'
 
 # Writing Advanced Validations
 
-import Placeholder from '../partials/_placeholder.mdx';
+This guide provides in-depth examples for validating gameplay using [Validation Suites](../core-concepts/validation-suites).
 
-<Placeholder />
+:::note You will learn:
+✓ how to build validations for common scenarios such as navigating menus and exercising core gameplay mechanics<br/>
+✓ how to establish potential cause-and-effect relationships between actions and their effects on the game state<br/>
+✓ how to build validations around non-deterministic behaviours
+:::
+
+This guide uses gameplay from [Unity's Boss Room sample project](https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop).
+You can follow along by downloading Boss Room and [installing our core SDK](../getting-started/installing-regression-games),
+or you can apply the concepts covered throughout this guide to your own project.
+You can also try out our validations tools from our [Website Demo](https://play.regression.gg/validations-demo),
+although the demo lacks some gameplay from this guide.
+
+Each example describes how to recreate the gameplay it validates.
+If you're following along, see our **Core Concepts** section for instructions on
+capturing a [Gameplay Session](../core-concepts/gameplay-sessions)
+and creating a [Validation Suite](../core-concepts/validation-suites) from that Session
+to start building [Validation Scenarios](../core-concepts/validation-suites#validation-scenarios).
+
+## Changing In-Game Settings
+
+Let's start with a simple Validation Scenario.
+
+**For this Gameplay Session**: we open the settings menu then increase the music volume and toggle graphics quality from "Medium" to "High".
+
+**In the Scenario Builder**: we'll validate that the settings were changed successfully.
+
+:::info Before Recording
+Set the [recording interval](../core-concepts/recording-gameplay#adjusting-the-recording-interval) to `1`. This is necessary for capturing changes in some of the menus.
+:::
+
+![Sample Gameplay Session](img/writing-advanced-validations/changing-in-game-settings/sample-gameplay-session.gif)
+
+We'll start building the Scenario by waiting until the `MainMenu` scene is loaded.
+Many games use startup scenes to initialize data, so it's good practice to make sure the Scenario is at the correct scene
+before running other steps.
+Then, we'll wait for the settings menu to be open.
+We can do this by adding a "Wait for Existence" step and selecting `SettingsPanel` from the dropdown.
+
+import SettingsMenuExistsStep from "./img/writing-advanced-validations/changing-in-game-settings/settings-menu-exists-step.png"
+import SettingsMenuExistsSupplement from "./img/writing-advanced-validations/changing-in-game-settings/settings-menu-exists-supplement.gif"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--7">
+        <img src={SettingsMenuExistsStep} alt="Wait for settings menu to exist"/>
+    </div>
+    <div className="col col--5">
+        <img src={SettingsMenuExistsSupplement} alt="Settings Menu State" />
+    </div>
+</div>
+
+Waiting for the settings menu to exist in the game state is very important for the next step: capturing the initial music volume.
+We can use the "Store Value" step to save a value and reference it later in the same Scenario.
+"Store Value" always runs on the tick that the previous step left off - this means that
+if we attempt to capture the initial volume before the settings menu exists,
+then the step won't be able to find the slider and will fail.
+
+The actual volume value that the slider's position should translate to isn't present in our collected game state data,
+but we can check that the UI handle's position changes over time to validate that the user adjusted the slider.
+Store the `Handle`'s `position.x` value as "Volume Value".
+
+import StoreInitialVolumeStep from "./img/writing-advanced-validations/changing-in-game-settings/store-initial-volume-step.png"
+import StoreInitialVolumeSupplement from "./img/writing-advanced-validations/changing-in-game-settings/store-initial-volume-supplement.gif"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--7">
+        <figure className="margin--none text--center">
+            <img src={StoreInitialVolumeStep} alt="Store initial volume"/>
+            <figcaption><i>Make sure you select the <code>Handle</code> entity for the correct volume slider</i></figcaption>
+        </figure>
+    </div>
+    <div className="col col--5">
+        <img src={StoreInitialVolumeSupplement} alt="Volume slider state"/>
+    </div>
+</div>
+
+Now, we need to validate that the volume increases.
+Add a "Wait for State" step and select the same `Handle` entity and its `position.x` field from the first two dropdowns.
+Select "greater than" (`>`) as your comparator.
+Clicking on the last field will reveal a dropdown with your available stored values.
+Select "Volume Value".
+
+import VolumeChangeStep from "./img/writing-advanced-validations/changing-in-game-settings/volume-change-step.png"
+
+<img src={VolumeChangeStep} alt="Wait for volume to increase" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+The last task in building our Scenario is validating that the user changed the graphics quality from "Medium" to "High".
+Start by validating that the initial state is "Medium".
+Add a "Wait for State" step and find the `Text` component that belongs to the `Settings Button` entity,
+then select its `text` field. Type "Medium" into the comparison field.
+
+import GraphicsMediumStep from "./img/writing-advanced-validations/changing-in-game-settings/graphics-medium-step.png"
+import GraphicsSupplement from "./img/writing-advanced-validations/changing-in-game-settings/graphics-supplement.png"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--7">
+        <figure className="margin--none text--center">
+            <img src={GraphicsMediumStep} alt="Assert graphics quality is 'Medium'"/>
+            <figcaption>
+                <i>
+                    Commonly-used components such as Text may appear frequently in the list.
+                    Type "Settings Button" into the dropdown to search for the one we want.
+                </i>
+            </figcaption>
+        </figure>
+    </div>
+    <div className="col col--5">
+        <img src={GraphicsSupplement} alt="Graphics button state"/>
+    </div>
+</div>
+
+Finish the Scenario by repeating this process for the text "High" instead of "Medium".
+
+### Final Scenario
+
+![Final Scenario](img/writing-advanced-validations/changing-in-game-settings/final-scenario.png)
+
+
+## Selecting a Character and Starting a Match
+
+This next example will validate user inputs in addition to interactions with UI components.
+
+**For this Gameplay Session**: we create a profile by clicking the "Change Profile" button and submitting the name "RG".
+This will enable the "Start with Direct IP" menu option which we can use to create a lobby and select a character class.
+We preview several character classes before locking in the Female Archer so that this Scenario can show examples of
+UI components changing over time to reflect the highlighted class.
+We end the recording once we successfully load into the dungeon map.
+
+**In the Scenario Builder**: we'll validate that the profile name is entered correctly, that UI components behave as expected as we
+click through each menu, that class-specific elements are represented correctly in the state, and finally that locking in a
+character class gets us to the core gameplay.
+
+![Sample Gameplay Session](img/writing-advanced-validations/starting-a-match/sample-gameplay-session.gif)
+
+Like in the previous Scenario, we'll start by making sure we're at the Main Menu.
+Wait for the left mouse button to be pressed to indicate that we've clicked the "Change Profile" button.
+Then, confirm that the `ProfilePopup` entity is visible.
+You'll see that we insert a step to make sure the "Change Profile" button is interactable before waiting for the mouse click.
+This isn't required for the Scenario to work, but sanity checks like this will help you diagnose
+the root cause of failed Scenarios.
+
+import OpenProfileSelector from "./img/writing-advanced-validations/starting-a-match/open-profile-selector.png"
+
+<img src={OpenProfileSelector} alt="Open profile selector" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+With the `ProfilePopup` open, we'll validate that the text field reflects the profile name we want to type into it.
+We'll need two steps to validate the keyboard input that produces the text "RG".
+The first step waits for the `shift` key and the `r` key to be pressed together to produce a capitalized "R",
+and the second step waits for `shift` + `g` for "G".
+Then, we can validate that the `ProfilePopup`'s `InputText` component contains the text "RG".
+
+:::info Key Combinations
+Why can't we wait for `shift` + `r` + `g` in one "Wait for Key" step?
+
+This type of step validates that every key in the list is simultaneously held or not held.
+When users type, they tap keys such that they release one key before tapping the next -
+this is different from using key combinations during actively gameplay
+(for example, `ctrl` + `shift` + `1` to cast a spell from your 20th hot-bar in your favorite MMO).
+When you use the "Wait for Key" step, consider what the player's intentions are for producing
+those keyboard inputs.
+:::
+
+import TypeProfileNameStep from "./img/writing-advanced-validations/starting-a-match/type-profile-name-step.png"
+import TypeProfileNameSupplement from "./img/writing-advanced-validations/starting-a-match/type-profile-name-supplement.png"
+
+<div className="text--center margin-bottom--md">
+    <img src={TypeProfileNameStep} alt="Assert the user typed 'RG'" style={{width: "45rem"}}/>
+    <img src={TypeProfileNameSupplement} alt="'RG' is entered into text input" style={{width: "45rem"}}/>
+</div>
+
+Confirming your profile name in Boss Room will automatically close the `ProfilePopup` dialog
+and activate the new profile.
+Validate that the popup is dismissed, and then wait for another mouse click which indicates
+we've clicked the "Host with Direct IP" button in the main menu.
+This will launch a new dialog, `IPPopup`.
+The next left mouse click we wait for indicates we've clicked the "Host" button in this dialog,
+which brings us to character selection, where we can inspect the available character classes and select one to play as.
+
+import OpenHostingDialogStep from "./img/writing-advanced-validations/starting-a-match/create-lobby-step.png"
+import OpenHostingDialogSupplement from "./img/writing-advanced-validations/starting-a-match/create-lobby-supplement.png"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--6">
+        <img src={OpenHostingDialogStep} alt="Host a match from the IP Hosting Dialog"/>
+    </div>
+    <div className="col col--6">
+        <img src={OpenHostingDialogSupplement} alt="The IP Hosting dialog"/>
+    </div>
+</div>
+
+
+
+
+## Using Character Skills
+
+Breaking Items
+Defeating Enemies
+
+## Interacting with the Environment
+
+Floor Switches + doors
+
+## Validating Player Death
+
+Letting enemies kill the player
+Multiple ways to validate
+
