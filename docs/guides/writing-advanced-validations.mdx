@@ -8,7 +8,7 @@ This guide provides in-depth examples for validating gameplay using [Validation 
 
 :::note You will learn:
 ✓ how to build validations for common scenarios such as navigating menus and exercising core gameplay mechanics<br/>
-✓ how to establish potential cause-and-effect relationships between actions and their effects on the game state<br/>
+✓ how to establish potential cause-and-effect relationships between actions and changes in the game state<br/>
 ✓ how to build validations around non-deterministic behaviours
 :::
 
@@ -33,7 +33,7 @@ Let's start with a simple Validation Scenario.
 **In the Scenario Builder**: we'll validate that the settings were changed successfully.
 
 :::note Before Recording
-Set the [recording interval](../core-concepts/recording-gameplay#adjusting-the-recording-interval) to `1`. This is necessary for capturing changes in some of the menus.
+Set the [recording interval](../core-concepts/recording-gameplay#adjusting-the-recording-interval) to `1`. This is necessary for capturing changes to the settings menu.
 :::
 
 ![Sample Gameplay Session](img/writing-advanced-validations/changing-in-game-settings/sample-gameplay-session.gif)
@@ -159,8 +159,8 @@ Then, we can validate that the `ProfilePopup`'s `InputText` component contains t
 Why can't we wait for `shift` + `r` + `g` in one "Wait for Key" step?
 
 This type of step validates that every key in the list is simultaneously held or not held.
-When users type, they tap keys such that they release one key before tapping the next -
-this is different from using key combinations during actively gameplay
+When users type, they tap keys, releasing one key before tapping the next -
+this is different from using key combinations during active gameplay
 (for example, `ctrl` + `shift` + `1` to cast a spell from your 20th hot-bar in your favorite MMO).
 When you use the "Wait for Key" step, consider what the player's intentions are for producing
 those keyboard inputs.
@@ -175,10 +175,10 @@ import TypeProfileNameSupplement from "./img/writing-advanced-validations/starti
 </div>
 
 Creating a new profile in Boss Room will automatically close the `ProfilePopup` dialog and activate that profile.
-Validate that the popup is dismissed, and then wait for another mouse click which indicates
-we've clicked the "Host with Direct IP" button in the main menu.
+Validate that the popup is dismissed, and then wait for another mouse event which indicates
+we've selected the "Host with Direct IP" option from the main menu.
 This will launch a new dialog, `IPPopup`.
-The next left mouse click we wait for indicates we've clicked the "Host" button in this dialog,
+The next left-mouse event we wait for indicates we've clicked the "Host" button in this dialog,
 which brings us to character selection, where we can inspect the available character classes and select one to play as.
 
 import OpenHostingDialogStep from "./img/writing-advanced-validations/starting-a-match/create-lobby-step.png"
@@ -206,13 +206,13 @@ import SelectCharactersSupplement from "./img/writing-advanced-validations/start
             <figure className="margin--none margin-bottom--md">
                 <img src={SelectMaleTankClass} alt="Select the Male Tank class"/>
                 <figcaption>
-                    The Tank class has two abilities: a basic attack and a defensive shield.
+                    <i>The Tank class has two abilities: a basic attack and a defensive shield.</i>
                 </figcaption>
             </figure>
             <figure className="margin--none">
                 <img src={SelectFemaleArcherClass} alt="Select the Female Archer class"/>
                 <figcaption>
-                    The Archer class has three abilities: a basic attack, a charge arrow, and an AOE.
+                    <i>The Archer class has three abilities: a basic attack, a charge arrow, and an AOE.</i>
                 </figcaption>
             </figure>
         </div>
@@ -222,7 +222,7 @@ import SelectCharactersSupplement from "./img/writing-advanced-validations/start
 </div>
 
 The last piece left in our Scenario is locking in the Archer class and entering the dungeon.
-Wait for one last mouse click to indicate we've pressed the "Ready" button.
+Wait for one last mouse event to indicate we've pressed the "Ready" button.
 We can validate that the game registers our selection by asserting the `LobbyEndingSplash` entity appears in the scene.
 Finally, we wait for the `BossRoom` (main dungeon) scene to load, and validate that our character object is instantiated.
 In this case, we check for the `PlayerGraphics_Archer_Girl` entity to explicitly validate that the correct class is loaded
@@ -256,13 +256,13 @@ import StartMatch_FinalScenario3 from "./img/writing-advanced-validations/starti
 
 Now that we've seen some examples of UI validation, let's address gameplay mechanics.
 
-**For this Gameplay Session**: We start in the dungeon as a Female Archer character.
+**For this Gameplay Session**: we start in the dungeon as a Female Archer character.
 First, we target a small pot and press the `1` key to smash it using her basic attack.
 Then, we target a heavy pot.
 This should replace her first skill with "Pick Up".
 We press `1` again to hold the pot in her hands, then make her walk to the opposite end of the corridor before setting the pot down again.
 Once the character's hands are free, we make her walk into a group of three Imp enemies and attack all of them at once using her AOE skill.
-Pressing the `3` key allows her to target a position on the ground; clicking the right mouse button unleashes a rain of arrows.
+Pressing the `3` key allows her to target a position on the ground; clicking the right mouse button locks in that position and unleashes a rain of arrows.
 These Imps should require three volleys to make them disappear in a puff of smoke.
 We end the recording once they've been defeated.
 
@@ -280,9 +280,10 @@ import SceneLoaded from "./img/writing-advanced-validations/using-character-abil
 
 <img src={SceneLoaded} alt="Scene loaded" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
 
-Validate that we've targeted a breakable pot by waiting for a left-mouse event and validating that a red target circle
-appears around one of the breakable pots in the scene.
-Then, wait for the `1` key to be pressed and validate that it launches a basic arrow attack.
+Whenever we target a valid object by clicking on it with the mouse, a red circle appears around it.
+Validate that we've targeted a breakable pot by waiting for a left-mouse event and then validating that the circle
+shows around one of the breakable pots in the scene.
+Then, validate that a basic arrow attack is launched when the `1` key is pressed.
 
 import TargetBreakablePotStep from "./img/writing-advanced-validations/using-character-abilities/target-breakable-pot-step.png"
 import TargetBreakablePotSupplement from "./img/writing-advanced-validations/using-character-abilities/target-breakable-pot-supplement.png"
@@ -337,7 +338,7 @@ Clicking on the pot to target it won't cause our character to approach it yet.
 This means that now is a good time to store two values which can help us validate that the character
 will walk towards the pot, and that the pot will be picked up once we activate the "Pick Up" skill.
 
-Store the `PlayerAvatar0`'s `position.x` as "Last Player Position" and the `PickUpPot`'s `position.y` as "Initial Pot Position".
+Store the value of `PlayerAvatar0`'s `position.x` as "Last Player Position" and the value of `PickUpPot`'s `position.y` as "Initial Pot Position".
 Then, wait for the "Pick Up" action to be activated with the `1` key.
 Validate that the character walks to the pot by waiting for her `position.x` to be greater than the value we just stored.
 Validate that the character lifts the heavy pot by waiting for the pot's `position.y` to be greater than its
@@ -352,8 +353,10 @@ import PickUpPotSupplement from "./img/writing-advanced-validations/using-charac
 
 Before we put the pot down, store the character's new position in the "Last Player Position" variable.
 This will override the old "Last Player Position" value.
-Wait for a left-mouse event to produce a `Click_Feedback` circle on the ground.
-Validate that the character moves towards this circle by waiting for her `position.x` to be less than the value we just stored.
+Then, wait for a left-mouse event to move the character.
+Clicking on the dungeon floor causes a bullseye to ripple out from the click position, and the character will walk to its center.
+Wait for the `Click_Feedback` bullseye to appear on the ground.
+Finally, validate that the character has moved towards this position by waiting for her `position.x` to be less than the value we just stored.
 
 import WalkWithPotStep from "./img/writing-advanced-validations/using-character-abilities/walk-with-pot-step.png"
 import WalkWithPotSupplement from "./img/writing-advanced-validations/using-character-abilities/walk-with-pot-supplement.png"
@@ -363,7 +366,7 @@ import WalkWithPotSupplement from "./img/writing-advanced-validations/using-char
 
 Wait for the "Put Down" action to be activated with the `1` key, and validate that the heavy pot returns
 to its initial `position.y` value to rest on the floor.
-As soon as the character puts the pot down, her first ability should revert to her basic attack.
+As soon as the character puts the pot down, her first ability should revert back to her basic attack.
 
 import PutDownPotStep from "./img/writing-advanced-validations/using-character-abilities/put-down-pot-step.png"
 
@@ -371,6 +374,10 @@ import PutDownPotStep from "./img/writing-advanced-validations/using-character-a
 
 Let's wrap up this Scenario by validating combat skills.
 It would be hard to fight Imps if there were no Imps in the scene, so validate that at least one is present.
+
+import ImpsExistStep from "./img/writing-advanced-validations/using-character-abilities/imps-exist-step.png"
+
+<img src={ImpsExistStep} alt="At least one Imp exists" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
 
 :::info Step Counts and Non-Determinism
 
@@ -386,13 +393,10 @@ However, Boss Room's enemies are much more dynamic.
 The game loads portions of the dungeon as the player gets within a certain distance of unloaded areas,
 and spawners throughout the dungeon spawn new Imps over time.
 This means that the `count` for steps that evaluate `Imp` entities won't be predictable from play-through to play-through.
-In these cases, it's best to use the default "any" behaviour than supply a specific count.
+In these cases, it's best to use the default "any" behaviour rather than supply a specific count.
 
 :::
 
-import ImpsExistStep from "./img/writing-advanced-validations/using-character-abilities/imps-exist-step.png"
-
-<img src={ImpsExistStep} alt="At least one Imp exists" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
 
 In a real Scenario, we might validate movement for this portion of the Session, but we'll skip it here since we've already gone over
 a few movement examples. Assume the character has walked further into the dungeon, and is now ready to attack the group of Imps.
@@ -400,7 +404,7 @@ a few movement examples. Assume the character has walked further into the dungeo
 The Archer's AOE skill has multiple behaviours to validate.
 First, wait for the `3` key to be pressed and validate that a `ClientAoeInput` targeting circle appears.
 This will follow the player's mouse until they click their right-mouse button to activate the skill at the targeted position.
-Wait for a right-mouse event and validate that the `ClientAoeInput` disappears, and that appropriate skill animation plays.
+Wait for a right-mouse event and validate that the `ClientAoeInput` disappears, and that the appropriate skill animation plays.
 
 import UseAOESkillStep from "./img/writing-advanced-validations/using-character-abilities/use-aoe-skill-step.png"
 import UseAOESkillSupplement1 from "./img/writing-advanced-validations/using-character-abilities/use-aoe-skill-supplement-1.png"
@@ -418,20 +422,22 @@ import UseAOESkillSupplement2 from "./img/writing-advanced-validations/using-cha
 <img src={UseAOESkillStep} alt="At least one Imp exists" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
 
 Enemies play stagger animations when they're hit in Boss Room.
-We can validate that all three Imps were hit by the AOE skill by asserting three `Hitreact Minor` objects appear in the scene.
+We can validate that all three Imps were hit by the AOE skill by asserting that three `Hitreact Minor` objects appear in the scene.
 
 import AOEImpStaggerStep from "./img/writing-advanced-validations/using-character-abilities/aoe-imp-stagger-step.png"
 
 <figure  className="margin--none margin-bottom--md text--center">
     <img src={AOEImpStaggerStep} alt="Three Imps were hit and staggered" style={{width: "30rem"}}/>
-    <figcaption>Select the Imp <code>Hitreact</code> animation specifically! The player has one too.</figcaption>
+    <figcaption>
+        <i>Select the Imp <code>Hitreact</code> animation specifically! The player has one too.</i>
+    </figcaption>
 </figure>
 
 :::info Building Appropriate Validations
 
-Why are we using stagger effects to indirectly validate successful hits on Imps rather than directly validating that their health values drop?
+Why are we indirectly validating that Imps were hit using stagger effects rather than raw health values?
 
-In this Scenario, we cast the AOE skill three times.
+In this Gameplay Session, we cast the AOE skill three times.
 This means we probably want to validate that _every_ skill cast causes some amount of damage to each Imp.
 We could try to capture the initial health value of an Imp using the "Store" step,
 but this will only work before any Imps have taken damage.
@@ -455,8 +461,9 @@ The "best" configuration of steps will depend heavily on your game state.
 :::
 
 Depending on the goals of your Scenario, you may want to repeat these steps for each cast of the AOE skill.
+You can repeat the last sequence of steps two more times to achieve this effect.
 Or, you may simply want to validate that the skill is mechanically sound and eventually results in the decimation of your enemies.
-Wrap up the Scenario by validating that all three Imps die at the same time.
+Wrap up the Scenario by validating that all three Imps die at the same time and produce an `FX_ImpDefeat` animation.
 
 import ImpsDefeatedStep from "./img/writing-advanced-validations/using-character-abilities/imps-defeated-step.png"
 import ImpsDefeatedSupplement from "./img/writing-advanced-validations/using-character-abilities/imps-defeated-supplement.png"
