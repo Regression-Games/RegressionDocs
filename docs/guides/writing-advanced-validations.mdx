@@ -257,20 +257,111 @@ import FinalScenario3 from "./img/writing-advanced-validations/starting-a-match/
 Now that we've seen some examples of UI validation, let's address gameplay mechanics.
 
 **For this Gameplay Session**: We start in the dungeon as a Female Archer character.
-First, we press the `1` key to use her basic ability on a small pot to smash it.
-Then, we make lift a heavy pot above her head and walk it to the opposite end of the corridor before setting it down.
-Once the character's hands are free, we'll make her walk towards the nearest group of Imp enemies
-and attack all of them at once using her AOE.
-Pressing the `3` key will allow her to target the ground; click the right mouse button to confirm the target and unleash
-a rain of arrows.
-Once the enemies die in a puff of smoke, we end the recording.
+First, we target a small pot and press the `1` key to smash it using her basic attack.
+Then, we target a heavy pot.
+This should replace her first skill with "Pick Up".
+We press `1` again to hold the pot in her hands, then make her walk to the opposite end of the corridor before setting the pot down again.
+Once the character's hands are free, we make her walk into a group of three Imp enemies and attack all of them at once using her AOE skill.
+Pressing the `3` key allows her to target a position on the ground; clicking the right mouse button unleashes a rain of arrows.
+These Imps should require three volleys to make them disappear in a puff of smoke.
+We end the recording once they've been defeated.
 
 **In the Scenario Builder**: we'll validate that destroying pots causes them to break into fragments,
 that contextual abilities change depending on whether the target is environmental or an NPC, and that
 enemies in an area can be damaged with AOE effects and die as a result of combat.
 
-## Validating Player Death
+![Sample Gameplay Session](./img/writing-advanced-validations/using-character-abilities/sample-gameplay-session.gif)
 
-Letting enemies kill the player
-Multiple ways to validate
+The Scenario starts simply enough.
+Validate that the "BossRoom" dungeon scene is loaded and that our Archer character exists.
+Also assert that there are exactly five breakable pots in the game state (some of these are off-camera).
+
+import SceneLoaded from "./img/writing-advanced-validations/using-character-abilities/scene-loaded-step.png"
+
+<img src={SceneLoaded} alt="Scene loaded" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
+
+Validate that we've targeted a breakable pot by waiting for a left-mouse event and validating that a red target circle
+appears around one of the breakable pots in the scene.
+Then, wait for the `1` key to be pressed and validate that it launches a basic arrow attack.
+
+import TargetBreakablePotStep from "./img/writing-advanced-validations/using-character-abilities/target-breakable-pot-step.png"
+import TargetBreakablePotSupplement from "./img/writing-advanced-validations/using-character-abilities/target-breakable-pot-supplement.png"
+import AttackBreakablePotStep from "./img/writing-advanced-validations/using-character-abilities/attack-breakable-pot-step.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--6">
+        <div className="row">
+            <img src={TargetBreakablePotStep} alt="Target a breakable pot" className="margin-bottom--md"/>
+            <img src={AttackBreakablePotStep} alt="Attack the targeted pot"/>
+        </div>
+    </div>
+    <div className="col col--6">
+        <img src={TargetBreakablePotSupplement} alt="Targeted pot has a red circle around it"/>
+    </div>
+</div>
+
+Detecting damaged objects will vary based on your game's implementation.
+In Boss Room, the parent `BreakablePot` object remains in the scene, but its default `pot` child is replaced with an
+`env_pot_break_parent` which contains a series of broken pieces that fall to the floor in a random arrangement.
+We can validate that the pot shattered by asserting this new child object exists, and that it contains some broken pieces.
+
+import AssertPotBrokenStep from "./img/writing-advanced-validations/using-character-abilities/assert-pot-broken-step.png"
+import AssertPotBrokenSupplement from "./img/writing-advanced-validations/using-character-abilities/assert-pot-broken-supplement.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--6">
+        <img src={AssertPotBrokenStep} alt="Assert the pot has broken"/>
+    </div>
+    <div className="col col--6">
+        <img src={AssertPotBrokenSupplement} alt="Pot explodes into pieces"/>
+    </div>
+</div>
+
+Now let's validate that heavy pots can be picked up and carried by the player character.
+The next left-mouse event should select the heavy pot.
+Assert that the character's first skill is replaced with a contextual "Pick Up" action.
+
+import TargetHeavyPotStep from "./img/writing-advanced-validations/using-character-abilities/target-heavy-pot-step.png"
+import TargetHeavyPotSupplement from "./img/writing-advanced-validations/using-character-abilities/target-heavy-pot-supplement.png"
+
+<img src={TargetHeavyPotStep} alt="Target heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+<img src={TargetHeavyPotSupplement} alt="Target heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+Clicking on the pot to target it won't cause our character to approach it.
+This means that now is a good time to store some values that we can use to validate that both the character and pot will move
+in the next steps we build.
+Store the `PlayerAvatar0`'s `position.x` as "Last Player Position" and the `PickUpPot`'s `position.y` as "Initial Pot Position".
+Then, wait for the "Pick Up" action to be activated with the `1` key.
+Validate that the character starts walks to the pot by waiting for her `position.x` to be greater than the value we just stored.
+Validate that the character lifts the heavy pot by waiting for the pot's `position.y` to be greater than its
+initial resting position on the floor.
+As soon as our character picks up the pot, her first ability should be replaced with a contextual "Put Down" action.
+
+import PickUpPotStep from "./img/writing-advanced-validations/using-character-abilities/pick-up-pot-step.png"
+import PickUpPotSupplement from "./img/writing-advanced-validations/using-character-abilities/pick-up-pot-supplement.png"
+
+<img src={PickUpPotStep} alt="Pick up the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+<img src={PickUpPotSupplement} alt="Pick up the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+Before we put the pot down, store the character's new position in the "Last Player Position" variable.
+This will override the old "Last Player Position" value.
+Wait for a left-mouse event to produce a `Click_Feedback` circle on the ground.
+Validate that the character moves towards this circle by waiting for her `position.x` to be less than the value we just stored.
+
+import WalkWithPotStep from "./img/writing-advanced-validations/using-character-abilities/walk-with-pot-step.png"
+import WalkWithPotSupplement from "./img/writing-advanced-validations/using-character-abilities/walk-with-pot-supplement.png"
+
+<img src={WalkWithPotStep} alt="Walk while holding the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+<img src={WalkWithPotSupplement} alt="Walk while holding the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+Wait for the "Put Down" action to be activated with the `1` key, and validate that the heavy pot returns
+to its initial `position.y` value to rest on the floor.
+As soon as the character puts the pot down, her first ability should revert to her basic attack.
+
+import PutDownPotStep from "./img/writing-advanced-validations/using-character-abilities/put-down-pot-step.png"
+import PutDownPotSupplement from "./img/writing-advanced-validations/using-character-abilities/put-down-pot-supplement.png"
+
+<img src={PutDownPotStep} alt="Put down the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+<img src={PutDownPotSupplement} alt="Put down the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
 
