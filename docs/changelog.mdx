@@ -10,7 +10,7 @@ _October 9th, 2024_
 
 **New Features**
 - Additional game and environment metadata is now captured during gameplay recording (e.g. Unity version, active input devices, etc.)
-- Bot Sequences can now be paused
+- Bot Sequences and Bot Segments can now be paused
 - Recordings are now saved directly within projects as a "Latest Recording" that can be copied and edited
 - Segments can now be seen and played directly from the in-game overlay
 - An `-rgsequencepath` argument can be used to start Unity and run a desired Bot Sequence
@@ -24,6 +24,8 @@ _October 9th, 2024_
 - The font used in the SDK no longer conflicts with project fonts
 - Scrollbars on the web client have an improved design
 - Scenario runs are now scrollable when many scenario steps are present
+- "Wait for Key" step properly detects key-held events from previous steps as long as we're inside the start and end window
+- "Wait for State" step can compare against non-string values
 
 ## Release 0.0.28
 
