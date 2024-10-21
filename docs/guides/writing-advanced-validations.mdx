@@ -123,7 +123,6 @@ Finish the Scenario by repeating this process for the text "High" instead of "Me
 ![Final Scenario](img/writing-advanced-validations/changing-in-game-settings/final-scenario.png)
 
 ## Selecting a Character and Starting a Match
-
 This next example will validate user inputs in addition to interactions with UI components.
 
 **For this Gameplay Session**: we create a profile by clicking the "Change Profile" button and submitting the name "RG".
@@ -135,6 +134,11 @@ We end the recording once the dungeon map loads with our character.
 **In the Scenario Builder**: we'll validate that the profile name is entered correctly, that UI components behave as expected as we
 click through each menu, that class-specific elements are represented correctly in the state, and finally that locking in a
 character class gets us to the core gameplay.
+
+:::note Before Recording
+If you adjusted the [recording interval](../core-concepts/recording-gameplay#adjusting-the-recording-interval) for the previous Scenario,
+then set the interval back to 0 now.
+:::
 
 ![Sample Gameplay Session](img/writing-advanced-validations/starting-a-match/sample-gameplay-session.gif)
 
@@ -159,11 +163,13 @@ Then, we can validate that the `ProfilePopup`'s `InputText` component contains t
 Why can't we wait for `shift` + `r` + `g` in one "Wait for Key" step?
 
 This type of step validates that every key in the list is simultaneously held or not held.
-When users type, they tap keys, releasing one key before tapping the next -
-this is different from using key combinations during active gameplay
-(for example, `ctrl` + `shift` + `1` to cast a spell from your 20th hot-bar in your favorite MMO).
-When you use the "Wait for Key" step, consider what the player's intentions are for producing
-those keyboard inputs.
+When users type, they tap keys, releasing one key before tapping the next.
+This input pattern differs from triggering gameplay mechanics like spells and abilities using key combinations.
+For example, if you type "hello" into a chat-box then you'd expect to release "h" before pressing "e", and so on.
+But you may need to hold an obscure combination of keys like `ctrl` + `shift` + `1` at the same time
+to cast a spell from the 20th hot-bar in your favorite MMO.
+
+When you use the "Wait for Key" step, consider what the player's intentions are when they produce those keyboard inputs.
 :::
 
 import TypeProfileNameStep from "./img/writing-advanced-validations/starting-a-match/type-profile-name-step.png"
@@ -435,7 +441,7 @@ import AOEImpStaggerStep from "./img/writing-advanced-validations/using-characte
 
 :::info Building Appropriate Validations
 
-Why are we indirectly validating that Imps were hit using stagger effects rather than raw health values?
+Why are we indirectly validating that Imps were hit by looking for stagger effects rather than watching raw health values?
 
 In this Gameplay Session, we cast the AOE skill three times.
 This means we probably want to validate that _every_ skill cast causes some amount of damage to each Imp.
@@ -460,10 +466,12 @@ The "best" configuration of steps will depend heavily on your game state.
 
 :::
 
-Depending on the goals of your Scenario, you may want to repeat these steps for each cast of the AOE skill.
-You can repeat the last sequence of steps two more times to achieve this effect.
-Or, you may simply want to validate that the skill is mechanically sound and eventually results in the decimation of your enemies.
-Wrap up the Scenario by validating that all three Imps die at the same time and produce an `FX_ImpDefeat` animation.
+For the sake of this example, we'll only write steps for the first AOE effect.
+However, it would be good practice for this Scenario to repeat the same steps for each instance of the skill
+to validate that it produces consistent results.
+You can achieve this by repeating the previous sequence of steps two more times.
+
+Finally, wrap up the Scenario by validating that all three Imps die at the same time and produce an `FX_ImpDefeat` animation.
 
 import ImpsDefeatedStep from "./img/writing-advanced-validations/using-character-abilities/imps-defeated-step.png"
 import ImpsDefeatedSupplement from "./img/writing-advanced-validations/using-character-abilities/imps-defeated-supplement.png"

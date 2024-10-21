@@ -4,11 +4,11 @@ sidebar_label: 'Validation Suites'
 
 # Validation Suites
 
-**Validation Suites** help ensure your game is functioning as intended by verifying that specific criteria are met
-over the course of a [Gameplay Session](gameplay-sessions).
+**Validation Suites** verify that specific criteria are met over the course of a [Gameplay Session](gameplay-sessions)
+to ensure your game is functioning as intended.
 A Validation Suite is composed of a collection of [Scenarios](#validation-scenarios)
-and [Rules](#validation-rules). Validation Suites are managed through a dashboard in the
-[Regression Games web interface](https://play.regression.gg/validations).
+and [Rules](#validation-rules) and can be managed through a dashboard in the [Regression Games web interface](https://play.regression.gg/validations)
+
 
 ## Creating a Validation Suite
 
@@ -22,17 +22,24 @@ which can then be run against other Gameplay Sessions in the future for regressi
 
 ## Validation Scenarios
 
-A **Validation Scenario** defines a functional test case by asserting that specific actions are taken during
-a Gameplay Session and that they produce expected changes in the game state.
-Steps can assert that a game scene is loaded, wait for mouse and keyboard inputs, check for the existence
+A **Validation Scenario** is a functional test case which asserts that specific actions were taken during
+a Gameplay Session and that they produced expected changes in the game state.
+A Scenario can assert that a game scene is loaded, wait for mouse and keyboard inputs, check for the existence
 of specific game objects, and much more.
 
-Multiple Validation Scenarios can belong to a single Validation Suite.
-Validation Scenarios in a Suite execute in the same order as they appear in the Validation Suite dashboard.
-They run independently of each other, meaning the contents of one Scenario do not affect others at runtime.
-Each Scenario starts at the first tick of the Gameplay Session, and the Suite continues to run remaining Scenarios when one fails.
+A Validation Suite may contain multiple Validation Scenarios.
+When a [Suite is executed](#running-a-validation-suite), its Scenarios are run in the order they were created through the dashboard.
+Scenarios run independently of each other, meaning the contents of one Scenario do not affect others.
+For example, each Scenario starts at the first tick of a Gameplay Session, so you don't need to worry about
+whether a Scenario succeeds by a specific tick in order to set up for the next Scenario in the list.
+Even if one Scenario fails, remaining Scenarios in the Suite will continue to run.
 
 ### Creating a Validation Scenario
+
+:::info Ready for more?
+See our [Writing Advanced Validations](../guides/writing-advanced-validations) guide
+for in-depth examples on building effective Validation Scenarios.
+:::
 
 Open your Suite in the [Validation Suites dashboard](https://play.regression.gg/validations) and click the **Create Scenario** button.
 This opens the **Scenario Builder**, where you can view game state data and a screenshot for each tick in the Gameplay Session,
@@ -43,12 +50,14 @@ import ScenarioExample from "./img/validation-suites/scenario-example.png"
 <figure>
     <img src={ScenarioExample} alt="Example Scenario"/>
     <figcaption>
-        This example Scenario waits for the player to be in the Main Menu and have a match hosting dialog open.
-        Waiting for a left mouse-click event signifies that the player has clicked the "Host Match" button
-        to create a lobby and that the character selection screen should load.
-        The Scenario then waits for the Rogue character class to be selected and for a splash screen representing
-        the end of character selection to be present.
-        Finally, the Scenario asserts that the player is in the game scene with 3 Imp enemies spawned.
+        <i>
+            In this example, we wait for the player to be at the Main Menu and for a match hosting dialog to be open.
+            A left mouse-click event signifies that the player has created a lobby by clicking the <b>Host Match</b> button,
+            which should load the character selection screen.
+            We then wait for the Rogue character class to be selected and for a splash screen representing
+            the end of character selection to be present.
+            Finally, we assert that the player loads into the dungeon and can see 3 Imp enemies.
+        </i>
     </figcaption>
 </figure>
 
