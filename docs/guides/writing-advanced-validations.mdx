@@ -4,6 +4,497 @@ sidebar_label: 'Writing Advanced Validations'
 
 # Writing Advanced Validations
 
-import Placeholder from '../partials/_placeholder.mdx';
+This guide provides in-depth examples for validating gameplay using [Validation Suites](../core-concepts/validation-suites).
 
-<Placeholder />
+:::note You will learn:
+✓ how to build validations for common scenarios such as navigating menus and exercising core gameplay mechanics<br/>
+✓ how to establish potential cause-and-effect relationships between actions and changes in the game state<br/>
+✓ how to build validations around non-deterministic behaviours
+:::
+
+This guide uses gameplay from [Unity's Boss Room sample project](https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop).
+You can follow along by downloading Boss Room and [installing our core SDK](../getting-started/installing-regression-games),
+or you can apply the concepts covered throughout this guide to your own project.
+You can also try out our validations tools from our [Website Demo](https://play.regression.gg/validations-demo),
+although the demo lacks some gameplay from this guide.
+
+Each example describes how to recreate the gameplay it validates.
+If you're following along, see our **Core Concepts** section for instructions on
+capturing a [Gameplay Session](../core-concepts/gameplay-sessions)
+and creating a [Validation Suite](../core-concepts/validation-suites) from that Session
+to start building [Validation Scenarios](../core-concepts/validation-suites#validation-scenarios).
+
+## Changing In-Game Settings
+
+Let's start with a simple Validation Scenario.
+
+**For this Gameplay Session**: we open the settings menu then increase the music volume and toggle graphics quality from "Medium" to "High".
+
+**In the Scenario Builder**: we'll validate that the settings were changed successfully.
+
+:::note Before Recording
+Set the [recording interval](../core-concepts/recording-gameplay#adjusting-the-recording-interval) to `1`. This is necessary for capturing changes to the settings menu.
+:::
+
+![Sample Gameplay Session](img/writing-advanced-validations/changing-in-game-settings/sample-gameplay-session.gif)
+
+We'll start building the Scenario by waiting until the `MainMenu` scene is loaded.
+Many games use startup scenes to initialize data, so it's good practice to make sure the Scenario is at the correct scene
+before running other steps.
+Then, we'll wait for the settings menu to be open.
+We can do this by adding a "Wait for Existence" step and selecting `SettingsPanel` from the dropdown.
+
+import SettingsMenuExistsStep from "./img/writing-advanced-validations/changing-in-game-settings/settings-menu-exists-step.png"
+import SettingsMenuExistsSupplement from "./img/writing-advanced-validations/changing-in-game-settings/settings-menu-exists-supplement.gif"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--7">
+        <img src={SettingsMenuExistsStep} alt="Wait for settings menu to exist"/>
+    </div>
+    <div className="col col--5">
+        <img src={SettingsMenuExistsSupplement} alt="Settings Menu State" />
+    </div>
+</div>
+
+Waiting for the settings menu to exist in the game state is very important for the next step: capturing the initial music volume.
+We can use the "Store Value" step to save a value and reference it later in the same Scenario.
+"Store Value" always runs on the tick that the previous step left off - this means that
+if we attempt to capture the initial volume before the settings menu exists,
+then the step won't be able to find the slider and will fail.
+
+The actual volume value that the slider's position should translate to isn't present in our collected game state data,
+but we can check that the UI handle's position changes over time to validate that the user adjusted the slider.
+Store the `Handle`'s `position.x` value as "Volume Value".
+
+import StoreInitialVolumeStep from "./img/writing-advanced-validations/changing-in-game-settings/store-initial-volume-step.png"
+import StoreInitialVolumeSupplement from "./img/writing-advanced-validations/changing-in-game-settings/store-initial-volume-supplement.gif"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--7">
+        <figure className="margin--none text--center">
+            <img src={StoreInitialVolumeStep} alt="Store initial volume"/>
+            <figcaption><i>Make sure you select the <code>Handle</code> entity for the correct volume slider</i></figcaption>
+        </figure>
+    </div>
+    <div className="col col--5">
+        <img src={StoreInitialVolumeSupplement} alt="Volume slider state"/>
+    </div>
+</div>
+
+Now, we need to validate that the volume increases.
+Add a "Wait for State" step and select the same `Handle` entity and its `position.x` field from the first two dropdowns.
+Select "greater than" (`>`) as your comparator.
+Clicking on the last field will reveal a dropdown with your available stored values.
+Select "Volume Value".
+
+import VolumeChangeStep from "./img/writing-advanced-validations/changing-in-game-settings/volume-change-step.png"
+
+<img src={VolumeChangeStep} alt="Wait for volume to increase" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+The last task in building our Scenario is validating that the user changed the graphics quality from "Medium" to "High".
+Start by validating that the initial state is "Medium".
+Add a "Wait for State" step and find the `Text` component that belongs to the `Settings Button` entity,
+then select its `text` field. Type "Medium" into the comparison field.
+
+import GraphicsMediumStep from "./img/writing-advanced-validations/changing-in-game-settings/graphics-medium-step.png"
+import GraphicsSupplement from "./img/writing-advanced-validations/changing-in-game-settings/graphics-supplement.png"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--7">
+        <figure className="margin--none text--center">
+            <img src={GraphicsMediumStep} alt="Assert graphics quality is 'Medium'"/>
+            <figcaption>
+                <i>
+                    Commonly-used components such as Text may appear frequently in the list.
+                    Type "Settings Button" into the dropdown to search for the one we want.
+                </i>
+            </figcaption>
+        </figure>
+    </div>
+    <div className="col col--5">
+        <img src={GraphicsSupplement} alt="Graphics button state"/>
+    </div>
+</div>
+
+Finish the Scenario by repeating this process for the text "High" instead of "Medium".
+
+### Final Scenario
+
+![Final Scenario](img/writing-advanced-validations/changing-in-game-settings/final-scenario.png)
+
+## Selecting a Character and Starting a Match
+This next example will validate user inputs in addition to interactions with UI components.
+
+**For this Gameplay Session**: we create a profile by clicking the "Change Profile" button and submitting the name "RG".
+This will allow us to create a lobby and select a character class through the "Start with Direct IP" menu option.
+We preview the Male Tank character class before locking in the Female Archer -
+this allows our Scenario to show examples of UI components changing over time to reflect the highlighted class.
+We end the recording once the dungeon map loads with our character.
+
+**In the Scenario Builder**: we'll validate that the profile name is entered correctly, that UI components behave as expected as we
+click through each menu, that class-specific elements are represented correctly in the state, and finally that locking in a
+character class gets us to the core gameplay.
+
+:::note Before Recording
+If you adjusted the [recording interval](../core-concepts/recording-gameplay#adjusting-the-recording-interval) for the previous Scenario,
+then set the interval back to 0 now.
+:::
+
+![Sample Gameplay Session](img/writing-advanced-validations/starting-a-match/sample-gameplay-session.gif)
+
+Like in the previous Scenario, we'll start by making sure we're at the Main Menu.
+Wait for the left mouse button to be pressed to indicate that we've clicked the "Change Profile" button.
+Then, confirm that the `ProfilePopup` entity is visible.
+You'll see that we insert a step to make sure the "Change Profile" button is interactable before waiting for the mouse click.
+This isn't required for the Scenario to work, but sanity checks like this will help you diagnose
+the root cause of failed Scenarios.
+
+import OpenProfileSelector from "./img/writing-advanced-validations/starting-a-match/open-profile-selector.png"
+
+<img src={OpenProfileSelector} alt="Open profile selector" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+With the `ProfilePopup` open, we'll validate that the text field reflects the profile name we want to type into it.
+We'll need two steps to validate the keyboard input that produces the text "RG".
+The first step waits for the `shift` key and the `r` key to be pressed together to produce a capitalized "R",
+and the second step waits for `shift` + `g` for "G".
+Then, we can validate that the `ProfilePopup`'s `InputText` component contains the text "RG".
+
+:::info Key Combinations
+Why can't we wait for `shift` + `r` + `g` in one "Wait for Key" step?
+
+This type of step validates that every key in the list is simultaneously held or not held.
+When users type, they tap keys, releasing one key before tapping the next.
+This input pattern differs from triggering gameplay mechanics like spells and abilities using key combinations.
+For example, if you type "hello" into a chat-box then you'd expect to release "h" before pressing "e", and so on.
+But you may need to hold an obscure combination of keys like `ctrl` + `shift` + `1` at the same time
+to cast a spell from the 20th hot-bar in your favorite MMO.
+
+When you use the "Wait for Key" step, consider what the player's intentions are when they produce those keyboard inputs.
+:::
+
+import TypeProfileNameStep from "./img/writing-advanced-validations/starting-a-match/type-profile-name-step.png"
+import TypeProfileNameSupplement from "./img/writing-advanced-validations/starting-a-match/type-profile-name-supplement.png"
+
+<div className="text--center margin-bottom--md">
+    <img src={TypeProfileNameStep} alt="Assert the user typed 'RG'" style={{width: "45rem"}}/>
+    <img src={TypeProfileNameSupplement} alt="'RG' is entered into text input" style={{width: "45rem"}}/>
+</div>
+
+Creating a new profile in Boss Room will automatically close the `ProfilePopup` dialog and activate that profile.
+Validate that the popup is dismissed, and then wait for another mouse event which indicates
+we've selected the "Host with Direct IP" option from the main menu.
+This will launch a new dialog, `IPPopup`.
+The next left-mouse event we wait for indicates we've clicked the "Host" button in this dialog,
+which brings us to character selection, where we can inspect the available character classes and select one to play as.
+
+import OpenHostingDialogStep from "./img/writing-advanced-validations/starting-a-match/create-lobby-step.png"
+import OpenHostingDialogSupplement from "./img/writing-advanced-validations/starting-a-match/create-lobby-supplement.png"
+
+<div className="container row margin-bottom--md">
+    <div className="col col--6">
+        <img src={OpenHostingDialogStep} alt="Host a match from the IP Hosting Dialog"/>
+    </div>
+    <div className="col col--6">
+        <img src={OpenHostingDialogSupplement} alt="The IP Hosting dialog"/>
+    </div>
+</div>
+
+Wait for the Session to click the Male Tank character, then validate that the UI updates accordingly.
+Boss Room displays a panel in the top-right corner of this scene with information about
+the selected class, including its name and a preview of its available abilities.
+
+import SelectMaleTankClass from "./img/writing-advanced-validations/starting-a-match/select-male-tank-class.png"
+import SelectFemaleArcherClass from "./img/writing-advanced-validations/starting-a-match/select-female-archer-class.png"
+import SelectCharactersSupplement from "./img/writing-advanced-validations/starting-a-match/select-characters-supplement.gif"
+
+<div className="container row margin-bottom--md text--center">
+        <div className="col col--7">
+            <figure className="margin--none margin-bottom--md">
+                <img src={SelectMaleTankClass} alt="Select the Male Tank class"/>
+                <figcaption>
+                    <i>The Tank class has two abilities: a basic attack and a defensive shield.</i>
+                </figcaption>
+            </figure>
+            <figure className="margin--none">
+                <img src={SelectFemaleArcherClass} alt="Select the Female Archer class"/>
+                <figcaption>
+                    <i>The Archer class has three abilities: a basic attack, a charge arrow, and an AOE.</i>
+                </figcaption>
+            </figure>
+        </div>
+        <div className="col col--5 margin-top--lg">
+            <img src={SelectCharactersSupplement} alt="UI changes when character selection is changed"/>
+        </div>
+</div>
+
+The last piece left in our Scenario is locking in the Archer class and entering the dungeon.
+Wait for one last mouse event to indicate we've pressed the "Ready" button.
+We can validate that the game registers our selection by asserting the `LobbyEndingSplash` entity appears in the scene.
+Finally, we wait for the `BossRoom` (main dungeon) scene to load, and validate that our character object is instantiated.
+In this case, we check for the `PlayerGraphics_Archer_Girl` entity to explicitly validate that the correct class is loaded
+based on our character selection from the previous steps.
+
+import MatchStartingStep from "./img/writing-advanced-validations/starting-a-match/match-starting-step.png"
+import MatchStartingSupplement from "./img/writing-advanced-validations/starting-a-match/match-starting-supplement.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--6">
+        <img src={MatchStartingStep} alt="Select the Male Tank class"/>
+    </div>
+    <div className="col col--6">
+        <img src={MatchStartingSupplement} alt="Select the Male Tank class"/>
+    </div>
+</div>
+
+### Final Scenario
+
+import StartMatch_FinalScenario1 from "./img/writing-advanced-validations/starting-a-match/final-scenario-1.png"
+import StartMatch_FinalScenario2 from "./img/writing-advanced-validations/starting-a-match/final-scenario-2.png"
+import StartMatch_FinalScenario3 from "./img/writing-advanced-validations/starting-a-match/final-scenario-3.png"
+
+<div className="container row column--no-gutters margin--none">
+    <img src={StartMatch_FinalScenario1} alt="Starting a Match - final scenario part 1" className="margin--none"/>
+    <img src={StartMatch_FinalScenario2} alt="Starting a Match - final scenario part 2" className="margin--none"/>
+    <img src={StartMatch_FinalScenario3} alt="Starting a Match - final scenario part 3" className="margin--none"/>
+</div>
+
+## Using Character Skills
+
+Now that we've seen some examples of UI validation, let's address gameplay mechanics.
+
+**For this Gameplay Session**: we start in the dungeon as a Female Archer character.
+First, we target a small pot and press the `1` key to smash it using her basic attack.
+Then, we target a heavy pot.
+This should replace her first skill with "Pick Up".
+We press `1` again to hold the pot in her hands, then make her walk to the opposite end of the corridor before setting the pot down again.
+Once the character's hands are free, we make her walk into a group of three Imp enemies and attack all of them at once using her AOE skill.
+Pressing the `3` key allows her to target a position on the ground; clicking the right mouse button locks in that position and unleashes a rain of arrows.
+These Imps should require three volleys to make them disappear in a puff of smoke.
+We end the recording once they've been defeated.
+
+**In the Scenario Builder**: we'll validate that destroying pots causes them to break into fragments,
+that contextual abilities change depending on whether the target is environmental or an NPC, and that
+enemies in an area can be damaged with AOE effects and die as a result of combat.
+
+![Sample Gameplay Session](./img/writing-advanced-validations/using-character-abilities/sample-gameplay-session.gif)
+
+The Scenario starts simply enough.
+Validate that the "BossRoom" dungeon scene is loaded and that our Archer character exists.
+Also assert that there are exactly five breakable pots in the game state (some of these are off-camera).
+
+import SceneLoaded from "./img/writing-advanced-validations/using-character-abilities/scene-loaded-step.png"
+
+<img src={SceneLoaded} alt="Scene loaded" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
+
+Whenever we target a valid object by clicking on it with the mouse, a red circle appears around it.
+Validate that we've targeted a breakable pot by waiting for a left-mouse event and then validating that the circle
+shows around one of the breakable pots in the scene.
+Then, validate that a basic arrow attack is launched when the `1` key is pressed.
+
+import TargetBreakablePotStep from "./img/writing-advanced-validations/using-character-abilities/target-breakable-pot-step.png"
+import TargetBreakablePotSupplement from "./img/writing-advanced-validations/using-character-abilities/target-breakable-pot-supplement.png"
+import AttackBreakablePotStep from "./img/writing-advanced-validations/using-character-abilities/attack-breakable-pot-step.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--6">
+        <div className="row">
+            <img src={TargetBreakablePotStep} alt="Target a breakable pot" className="margin-bottom--md"/>
+            <img src={AttackBreakablePotStep} alt="Attack the targeted pot"/>
+        </div>
+    </div>
+    <div className="col col--6">
+        <img src={TargetBreakablePotSupplement} alt="Targeted pot has a red circle around it"/>
+    </div>
+</div>
+
+Detecting damaged objects will vary based on your game's implementation.
+In Boss Room, the parent `BreakablePot` object remains in the scene, but its default `pot` child is replaced with an
+`env_pot_break_parent` which contains a series of broken pieces that fall to the floor in a random arrangement.
+We can validate that the pot shattered by asserting this new child object exists, and that it contains some broken pieces.
+
+import AssertPotBrokenStep from "./img/writing-advanced-validations/using-character-abilities/assert-pot-broken-step.png"
+import AssertPotBrokenSupplement from "./img/writing-advanced-validations/using-character-abilities/assert-pot-broken-supplement.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--6">
+        <img src={AssertPotBrokenStep} alt="Assert the pot has broken"/>
+    </div>
+    <div className="col col--6">
+        <img src={AssertPotBrokenSupplement} alt="Pot explodes into pieces"/>
+    </div>
+</div>
+
+Now let's validate that heavy pots can be picked up and carried by the player character.
+The next left-mouse event should select the heavy pot.
+Assert that the character's first skill is replaced with a contextual "Pick Up" action.
+
+import TargetHeavyPotStep from "./img/writing-advanced-validations/using-character-abilities/target-heavy-pot-step.png"
+import TargetHeavyPotSupplement from "./img/writing-advanced-validations/using-character-abilities/target-heavy-pot-supplement.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--9">
+        <img src={TargetHeavyPotStep} alt="Target heavy pot"/>
+    </div>
+    <div className="col col--3">
+        <img src={TargetHeavyPotSupplement} alt="First skill changes to 'Pick Up'"/>
+    </div>
+</div>
+
+Clicking on the pot to target it won't cause our character to approach it yet.
+This means that now is a good time to store two values which can help us validate that the character
+will walk towards the pot, and that the pot will be picked up once we activate the "Pick Up" skill.
+
+Store the value of `PlayerAvatar0`'s `position.x` as "Last Player Position" and the value of `PickUpPot`'s `position.y` as "Initial Pot Position".
+Then, wait for the "Pick Up" action to be activated with the `1` key.
+Validate that the character walks to the pot by waiting for her `position.x` to be greater than the value we just stored.
+Validate that the character lifts the heavy pot by waiting for the pot's `position.y` to be greater than its
+initial resting position on the floor.
+As soon as our character picks up the pot, her first ability should be replaced with a contextual "Put Down" action.
+
+import PickUpPotStep from "./img/writing-advanced-validations/using-character-abilities/pick-up-pot-step.png"
+import PickUpPotSupplement from "./img/writing-advanced-validations/using-character-abilities/pick-up-pot-supplement.png"
+
+<img src={PickUpPotStep} alt="Pick up the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+<img src={PickUpPotSupplement} alt="Pick up the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+Before we put the pot down, store the character's new position in the "Last Player Position" variable.
+This will override the old "Last Player Position" value.
+Then, wait for a left-mouse event to move the character.
+Clicking on the dungeon floor causes a bullseye to ripple out from the click position, and the character will walk to its center.
+Wait for the `Click_Feedback` bullseye to appear on the ground.
+Finally, validate that the character has moved towards this position by waiting for her `position.x` to be less than the value we just stored.
+
+import WalkWithPotStep from "./img/writing-advanced-validations/using-character-abilities/walk-with-pot-step.png"
+import WalkWithPotSupplement from "./img/writing-advanced-validations/using-character-abilities/walk-with-pot-supplement.png"
+
+<img src={WalkWithPotStep} alt="Walk while holding the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+<img src={WalkWithPotSupplement} alt="Walk while holding the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+Wait for the "Put Down" action to be activated with the `1` key, and validate that the heavy pot returns
+to its initial `position.y` value to rest on the floor.
+As soon as the character puts the pot down, her first ability should revert back to her basic attack.
+
+import PutDownPotStep from "./img/writing-advanced-validations/using-character-abilities/put-down-pot-step.png"
+
+<img src={PutDownPotStep} alt="Put down the heavy pot" className="margin-bottom--md" style={{width: "45rem", display: "block", margin: "auto"}}/>
+
+Let's wrap up this Scenario by validating combat skills.
+It would be hard to fight Imps if there were no Imps in the scene, so validate that at least one is present.
+
+import ImpsExistStep from "./img/writing-advanced-validations/using-character-abilities/imps-exist-step.png"
+
+<img src={ImpsExistStep} alt="At least one Imp exists" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
+
+:::info Step Counts and Non-Determinism
+
+Why can't I validate that at least three Imps exist in the scene, since this is the number we attacked in the Gameplay Session?
+
+The `count` option for steps such as "Wait for Existence" and "Wait for State" must be an exact match.
+If there are more or fewer entities that satisfy the step than what your count dictates, then the step will fail.
+This can be useful for behaviours with some level of determinism.
+For example, we know there will always be five pots at the entrance of the dungeon,
+so the beginning of this Scenario is able to assert that exactly five exist.
+
+However, Boss Room's enemies are much more dynamic.
+The game loads portions of the dungeon as the player gets within a certain distance of unloaded areas,
+and spawners throughout the dungeon spawn new Imps over time.
+This means that the `count` for steps that evaluate `Imp` entities won't be predictable from play-through to play-through.
+In these cases, it's best to use the default "any" behaviour rather than supply a specific count.
+
+:::
+
+
+In a real Scenario, we might validate movement for this portion of the Session, but we'll skip it here since we've already gone over
+a few movement examples. Assume the character has walked further into the dungeon, and is now ready to attack the group of Imps.
+
+The Archer's AOE skill has multiple behaviours to validate.
+First, wait for the `3` key to be pressed and validate that a `ClientAoeInput` targeting circle appears.
+This will follow the player's mouse until they click their right-mouse button to activate the skill at the targeted position.
+Wait for a right-mouse event and validate that the `ClientAoeInput` disappears, and that the appropriate skill animation plays.
+
+import UseAOESkillStep from "./img/writing-advanced-validations/using-character-abilities/use-aoe-skill-step.png"
+import UseAOESkillSupplement1 from "./img/writing-advanced-validations/using-character-abilities/use-aoe-skill-supplement-1.png"
+import UseAOESkillSupplement2 from "./img/writing-advanced-validations/using-character-abilities/use-aoe-skill-supplement-2.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--6">
+        <img src={UseAOESkillSupplement1} alt="Target heavy pot"/>
+    </div>
+    <div className="col col--6">
+        <img src={UseAOESkillSupplement2} alt="First skill changes to 'Pick Up'"/>
+    </div>
+</div>
+
+<img src={UseAOESkillStep} alt="At least one Imp exists" className="margin-bottom--md" style={{width: "30rem", display: "block", margin: "auto"}}/>
+
+Enemies play stagger animations when they're hit in Boss Room.
+We can validate that all three Imps were hit by the AOE skill by asserting that three `Hitreact Minor` objects appear in the scene.
+
+import AOEImpStaggerStep from "./img/writing-advanced-validations/using-character-abilities/aoe-imp-stagger-step.png"
+
+<figure  className="margin--none margin-bottom--md text--center">
+    <img src={AOEImpStaggerStep} alt="Three Imps were hit and staggered" style={{width: "30rem"}}/>
+    <figcaption>
+        <i>Select the Imp <code>Hitreact</code> animation specifically! The player has one too.</i>
+    </figcaption>
+</figure>
+
+:::info Building Appropriate Validations
+
+Why are we indirectly validating that Imps were hit by looking for stagger effects rather than watching raw health values?
+
+In this Gameplay Session, we cast the AOE skill three times.
+This means we probably want to validate that _every_ skill cast causes some amount of damage to each Imp.
+We could try to capture the initial health value of an Imp using the "Store" step,
+but this will only work before any Imps have taken damage.
+The "Store" step only succeeds when it can definitively determine what value to capture from a field.
+If there is only one Imp in the scene, or if every Imp has the same amount of health, then the
+"Store" step knows what value it should store.
+However, if we have multiple Imps with various amounts of health remaining, then the "Store" step
+won't be able to determine which of those values should be stored.
+This will cause the step to fail.
+
+Alternatively, we could use the "Wait for State" step to assert that three Imps drop below a specific health value
+(100, 75, 25, etc.).
+This may work for your game if you know the max health value for an enemy and the minimum amount of damage a skill should deal to that enemy.
+However, Boss Room doesn't expose this data directly to our SDK.
+Health bars are rectangles whose fill levels are determined by remaining percentage of health,
+but the fill level doesn't translate well to a meaningful health value.
+
+There may be many different ways to achieve a Scenario for your game.
+The "best" configuration of steps will depend heavily on your game state.
+
+:::
+
+For the sake of this example, we'll only write steps for the first AOE effect.
+However, it would be good practice for this Scenario to repeat the same steps for each instance of the skill
+to validate that it produces consistent results.
+You can achieve this by repeating the previous sequence of steps two more times.
+
+Finally, wrap up the Scenario by validating that all three Imps die at the same time and produce an `FX_ImpDefeat` animation.
+
+import ImpsDefeatedStep from "./img/writing-advanced-validations/using-character-abilities/imps-defeated-step.png"
+import ImpsDefeatedSupplement from "./img/writing-advanced-validations/using-character-abilities/imps-defeated-supplement.png"
+
+<div className="container row margin-bottom--md text--center">
+    <div className="col col--6">
+        <img src={ImpsDefeatedStep} alt="Target heavy pot"/>
+    </div>
+    <div className="col col--6">
+        <img src={ImpsDefeatedSupplement} alt="First skill changes to 'Pick Up'"/>
+    </div>
+</div>
+
+### Final Scenario
+
+import CharAbilities_FinalScenario1 from "./img/writing-advanced-validations/using-character-abilities/final-scenario-1.png"
+import CharAbilities_FinalScenario2 from "./img/writing-advanced-validations/using-character-abilities/final-scenario-2.png"
+import CharAbilities_FinalScenario3 from "./img/writing-advanced-validations/using-character-abilities/final-scenario-3.png"
+import CharAbilities_FinalScenario4 from "./img/writing-advanced-validations/using-character-abilities/final-scenario-4.png"
+
+<div className="container row column--no-gutters margin--none">
+    <img src={CharAbilities_FinalScenario1} alt="Using character abilities - final scenario part 1" className="margin--none"/>
+    <img src={CharAbilities_FinalScenario2} alt="Using character abilities - final scenario part 2" className="margin--none"/>
+    <img src={CharAbilities_FinalScenario3} alt="Using character abilities - final scenario part 3" className="margin--none"/>
+    <img src={CharAbilities_FinalScenario4} alt="Using character abilities - final scenario part 4" className="margin--none"/>
+</div>
