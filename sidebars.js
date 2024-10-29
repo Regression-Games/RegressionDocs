@@ -46,13 +46,14 @@ const sidebars = {
           label: "Bot Sequences",
           items: [
             "core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments",
-            "core-concepts/bot-sequences/actions",
-            "core-concepts/bot-sequences/end-criteria"
+            // "core-concepts/bot-sequences/actions",
+            // "core-concepts/bot-sequences/end-criteria"
           ]
         },
         "core-concepts/validation-suites",
-        "core-concepts/stability-and-exploratory-testing",
-        "core-concepts/running-tests-in-the-unity-test-runner"
+        // "computer-vision/computer-vision",
+        // "core-concepts/stability-and-exploratory-testing",
+        // "core-concepts/running-tests-in-the-unity-test-runner"
       ],
     },
 
@@ -62,14 +63,14 @@ const sidebars = {
       label: "Guides",
       items: [
         "guides/writing-advanced-validations",
-        "guides/running-tests-in-editor-and-in-builds",
-        "guides/interacting-with-ui-using-computer-vision",
-        "guides/finding-game-breaking-bugs-with-stability-testing",
-        "guides/visual-regression-testing-using-screenshot-comparison",
-        "guides/writing-tests-that-rely-on-a-mixture-of-approaches"
+        // "guides/running-tests-in-editor-and-in-builds",
+        // "guides/interacting-with-ui-using-computer-vision",
+        // "guides/finding-game-breaking-bugs-with-stability-testing",
+        // "guides/visual-regression-testing-using-screenshot-comparison",
+        // "guides/writing-tests-that-rely-on-a-mixture-of-approaches"
       ],
     },
-    "additional-game-samples"
+    // "additional-game-samples"
   ]
 };
 
