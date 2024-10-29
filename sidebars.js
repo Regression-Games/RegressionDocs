@@ -51,7 +51,7 @@ const sidebars = {
           ]
         },
         "core-concepts/validation-suites",
-        "computer-vision/computer-vision",
+        // "computer-vision/computer-vision",
         // "core-concepts/stability-and-exploratory-testing",
         // "core-concepts/running-tests-in-the-unity-test-runner"
       ],
