@@ -1,0 +1,34 @@
+@import '../../css/custom.css';
+
+.accordion {
+    border: 1px solid #757575;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+
+.title {
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    padding: 1rem 1rem 0 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.arrow {
+    color: #757575;
+
+    .open {
+        transform: rotate(180deg); /* Rotate the arrow when open */
+        transition: transform 200ms ease-in-out !important;
+    }
+
+    .closed {
+        transition: transform 200ms ease-in-out !important;
+    }
+}
+
+.content {
+    padding: 1rem;
+}

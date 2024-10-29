@@ -59,6 +59,10 @@ const config = {
     ],
   ],
 
+  plugins: [
+    require.resolve('./plugins/custom-webpack'),
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -76,12 +80,6 @@ const config = {
             sidebarId: 'unitySidebar',
             position: 'left',
             label: 'Developer Reference',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'automatedTesting',
-            position: 'left',
-            label: 'Experimental Packages',
           },
           {
             type: 'doc',
@@ -104,11 +102,11 @@ const config = {
             items: [
               {
                 label: 'Overview',
-                to: 'overview',
+                to: 'what-is-regression-games',
               },
               {
                 label: 'Quickstart',
-                to: 'quickstart',
+                to: 'getting-started/creating-your-first-automated-test',
               },
             ],
           },

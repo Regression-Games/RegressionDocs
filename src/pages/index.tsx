@@ -16,14 +16,14 @@ const HomepageHeader = () => (
             <div className={styles.buttons} style={{justifyContent: "left"}}>
               <Link
                 className="button button--primary button--outline button--lg"
-                to="tutorials/building-your-first-bot">
+                to="./getting-started/creating-your-first-automated-test">
                 Get Started
               </Link>
             </div>
             <div style={{marginTop: "16px"}}>
               Get started immediately by adding the package to Unity:
               <div style={{marginTop: "16px", fontSize: 12}}>
-                <pre style={{display: "inline"}}>https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.28</pre>
+                <pre style={{display: "inline"}}>https://github.com/Regression-Games/RGUnityBots.git?path=src/gg.regression.unity.bots#v0.0.29</pre>
               </div>
             </div>
           </div>

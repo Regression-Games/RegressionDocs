@@ -1,0 +1,73 @@
+---
+sidebar_label: 'Adaptive Bots'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Defining Bots that Adapt to the Game State
+
+Defining a Unity Bot in C# is as simple as creating a MonoBehaviour that implements the IRGBot interface.
+The IRGBot interface has no methods, but is used by the Regression Games SDK to identify bots that can be started from the in game overlay.
+
+<Tabs>
+<TabItem value="sample_Bot" label="Perform actions on players and NPCs" default>
+
+```csharp
+/**
+ * Outline of this Bot algorithm. For every update:
+ *  - If enough time has passed for the bot to process a new update, handle the update.
+ *  - Select a random nearby player or enemy if one exists
+ *    - Follow that entity at distance 2f
+ *    - Perform a skill targeting that entity and position
+ * Note: This bot code works with the Unity multiplayer sample project fork @ https://github.com/Regression-Games/RGBossRoom
+ */
+public class SampleBot: MonoBehaviour, IRGBot
+{
+    private float _lastUpdate = -1f;
+    private static readonly float _updateEveryXSeconds = 2.0f;
+
+    public void Update()
+    {
+        var time = Time.time;
+        if (time - _lastUpdate > _updateEveryXSeconds)
+        {
+            HandleUpdate(this.gameObject);
+            _lastUpdate = time;
+        }
+    }
+
+    public void HandleUpdate(GameObject spawnedGameObject)
+    {
+        var entities = FindObjectsByType<ServerCharacter>(FindObjectsSortMode.None);
+
+        if (entities.Length > 0)
+        {
+            // default to friendly ability
+            var skillId = 0;
+
+            GameObject target = entities[new Random().Next(entities.Length)].gameObject;
+            spawnedGameObject.GetComponent<RGFollowObjectAction>().FollowObject(target.transform, 2f);
+
+
+            if (target.GetComponent<RGEnemyState>() != null)
+            {
+                // if enemy.. set ability to 1
+                skillId = 1;
+            }
+
+            var targetPosition = target.transform.position;
+
+            spawnedGameObject.GetComponent<RGPerformSkillAction>().PerformSkill(skillId, target.GetInstanceID(), targetPosition);
+        }
+        else
+        {
+            RGDebug.LogWarning("No entities found...");
+        }
+    }
+}
+```
+</TabItem>
+</Tabs>
+
+

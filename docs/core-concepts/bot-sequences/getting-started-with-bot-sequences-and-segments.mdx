@@ -1,0 +1,60 @@
+---
+sidebar_label: 'Getting Started With Bot Sequences and Segments'
+---
+
+import SequenceCard from './img/sequence_card.png';
+import SequenceList from './img/sequences_list.png';
+import SequenceEditing from './img/sequence_editing.gif';
+import SequenceDeleteDialog from './img/sequence_delete.png';
+import CreateSequenceButton from './img/create_sequence_button.png';
+import ReloadIcon from './img/reload.png';
+
+# Getting Started With Bot Sequences and Segments
+
+A **Bot Sequence** is a series of automated actions that can be used to both drive and assert certain behaviours or outcomes within your game. These actions are referred to as **Segments**. 
+
+<img src={SequenceList} alt="A list of Bot Sequences" style={{display: 'block',width: '100%', borderRadius: '8px'}} />
+
+## Starting A Bot Sequence
+
+After [adding the RGOverlayCanvas prefab to your scene](../../getting-started/installing-regression-games.mdx), click on the Williward icon in the RG Toolbar to open the overlay. With the overlay opened, you can see the list of Bot Sequences that are available to you. Each Sequence is represented by a card, with three possible actions:
+- **Play**: Start the Bot Sequence, beginning with its first Segment
+- **Edit**: Open the Bot Sequence in the Sequence Editor [(see the next section)](./actions.mdx)
+- **Delete**: Delete the Bot Sequence file from your project [(see the next section)](./actions.mdx)
+
+<div style={{width: '100%'}}>
+<img src={SequenceCard} alt="Sequence Card" style={{display: 'block', width: '300px', margin: '0 auto', borderRadius: '8px'}} />
+</div>
+
+## Creating and Modifying Bot Sequences
+
+### Within Unity
+
+With the overlay open, click the "Create a new Sequence" button to create a new Bot Sequence in our Sequence Editor.
+
+<div style={{width: '100%'}}>
+<img src={CreateSequenceButton} alt="Create Sequence Card" style={{display: 'block', width: '300px', margin: '0 auto', borderRadius: '8px'}} />
+</div>
+
+<br />
+
+Within the Sequence Editor, you can add, remove, and reorder Segments. The available Segments can be searched for by **name**, and are added to the Sequence by dragging them from the list on the right to the Sequence in the middle of the editor. When a Sequence is played, it will execute its Segments from top to bottom.
+
+<img src={SequenceEditing} style={{borderRadius: '8px'}}/>
+
+You can also delete a Sequence by clicking the trash icon on the Sequence card in the overlay. A confirmation dialog will appear to ensure you don't delete a Sequence by accident.
+
+<div style={{width: '100%'}}>
+<img src={SequenceDeleteDialog} alt="Delete Sequence dialog" style={{display: 'block', height: '200px', margin: '0 auto', borderRadius: '8px'}} />
+</div>
+
+### Outside of Unity
+
+Bot Sequences and Segments are saved as **json** files in your Unity project. You can edit these files directly in a text editor. [In the next sections](./actions.mdx) you can find more information on the structure of these files.
+
+If you have created or modified any Sequences or Segments outside of Unity, you can click the refresh button in the overlay to reload them from disk. Bot Sequences can be reloaded from the Sequence list, and Segments can be reloaded from within the Sequence Editor.
+
+<div style={{width: '100%', display: 'flex'}}>
+<p style={{paddingTop: '10px', paddingRight: '8px'}}>Keep your eye out for this icon to reload!</p>
+<img src={ReloadIcon} alt="Reload Sequences or Segments icon" style={{display: 'block', width: '55px', height: '50px', borderRadius: '8px'}} />
+</div>
