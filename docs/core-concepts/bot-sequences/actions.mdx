@@ -17,7 +17,7 @@ Bot Actions are defined in Bot Segments within the `botAction` field. A segment 
 {
     "name": "Click the play button",
     "description": "Clicks the play button in the main menu",
-    "keyFrameCriteria": [...],
+    "endCriteria": [...],
     "botAction": {
         "type": ..., // The type of action to be taken, as a string
         "data": {
@@ -33,7 +33,7 @@ the parameters for that action. For example, a bot action to click on a coordina
 {
     "name": "Click the play button",
     "description": "Clicks the play button in the main menu",
-    "keyFrameCriteria": [...],
+    "endCriteria": [...],
     "botAction": {
         "type": "InputPlayback",
         "data": {
@@ -98,7 +98,7 @@ replaying a sequence of static actions that were previously recorded as part of 
         "mouse": [ // Any number of mouse inputs can be provided
             {
                 "startTime": ..., // A number indicating the time offset at which the action should be performed from the start of the segment (in seconds)
-                "screenSize": {"x": ..., "y": ...}, // A width and height indicating the size of the screen, which is used to scale the position of the mouse when the screen size is different from the screen size at the time the inputs were recorded
+                "screenSize": {"x": ..., "y": ...}, // A width and height indicating the size of the screen, which is used to linearly scale the position of the mouse when the screen size is different from the screen size at the time the inputs were recorded
                 "position": {"x": ..., "y": ...}, // A coordinate indicating the position to click, where X and Y are integers
                 "worldPosition": null, // An optional coordinate indicating the position to click in world space, which is often null.
                 "leftButton": ..., // A boolean indicating whether the left mouse button should be pressed
@@ -107,7 +107,7 @@ replaying a sequence of static actions that were previously recorded as part of 
                 "forwardButton": ..., // A boolean indicating whether the forward mouse button should be pressed
                 "backButton": ..., // A boolean indicating whether the back mouse button should be pressed
                 "scroll": {"x": ..., "y": ...}, // An optional scroll amount, where X and Y are integers
-                "clickedObjectNormalizedPaths": [...], // An optional list of normalized paths to the objects that were clicked
+                "clickedObjectNormalizedPaths": [...], // An optional list of normalized paths to the objects that were clicked. This is used to adjust the click coordinates when there are variances in resolution scaling or object position between runs.
             }
         ],
         "keyboard": [ // Any number of keyboard inputs can be provided
@@ -127,6 +127,7 @@ replaying a sequence of static actions that were previously recorded as part of 
 - If two actions have the same `startTime`, the action that appears earlier in the list will be performed first.
 - You can omit an `endTime` of a keyboard action to have the action continue until it is disabled using using an action that only sets the `endTime`.
 - The available keys to press in keyboard actions can be found [here](https://github.com/Regression-Games/RGUnityBots/blob/cd68ed0f4b10567eb652477717338d92b4f4571e/src/gg.regression.unity.bots/Runtime/Scripts/StateRecorder/KeyboardInputActionObserver.cs#L25-L151). The bindings should take the format of `<Keyboard>/keyname`.
+- It is best practice to move the mouse to the desired position before clicking. Without this, Unity's input handling can cause unexpected behaviour with the click, especially when the prior mouse position was over a different input component in the UI.
 
 **Example: Typing "Hello"**
 
@@ -173,8 +174,11 @@ replaying a sequence of static actions that were previously recorded as part of 
             "inputData": {
                 "keyboard": [],
                 "mouse": [
+                    // Note that the mouse is moved to the desired position before the click. This is best practice to avoid unexpected behaviour with the click, especially when the prior mouse position was over a different input component in the UI.
                     {"startTime":0.0,"screenSize":{"x":1920,"y":1080},"position":{"x":942,"y":500},"worldPosition":null,"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0,"y":0},"clickedObjectNormalizedPaths":["UI Canvas/Start Button"]},
-                    {"startTime":0.1,"screenSize":{"x":1920,"y":1080},"position":{"x":942,"y":500},"worldPosition":null,"leftButton":true,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0,"y":0},"clickedObjectNormalizedPaths":["UI Canvas/Start Button"]}
+                    {"startTime":0.1,"screenSize":{"x":1920,"y":1080},"position":{"x":942,"y":500},"worldPosition":null,"leftButton":true,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0,"y":0},"clickedObjectNormalizedPaths":["UI Canvas/Start Button"]},
+                    // Release the left mouse button
+                    {"startTime":0.2,"screenSize":{"x":1920,"y":1080},"position":{"x":942,"y":500},"worldPosition":null,"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0,"y":0},"clickedObjectNormalizedPaths":["UI Canvas/Start Button"]}
                 ]
             }
         }
@@ -194,27 +198,56 @@ particular data and information from the code of your game, such as tapping into
 ```json
 // The `botAction.data` format
 {
-    "behaviourFullName": "...", // The full class path of the MonoBehaviour to run
+    "behaviourFullName": "...", // The full qualified class path of the MonoBehaviour to run
     "maxRuntimeSeconds": ... // The maximum amount of time to run the behaviour for in seconds before it is stopped
 }
 ```
 
 The Behaviour itself needs to be defined in the codebase of your game where it can be found during runtime. It should be
 a class that inherits from `MonoBehaviour`. In order to terminate the behaviour, you can use `Destroy(this)` to destroy the
-behaviour instance.
+behaviour instance. The `Update` loop of your behaviour will run as normal until either it is destroyed by your implementation or
+the time limit is reached (`maxRuntimeSeconds`), at which point the SDK will destroy it automatically.
+
+To take full advantage of our toolset, the behaviour can optionally implement `IRGBotSegmentActionBehaviour`, which permits a pausing strategy to be used when a developer
+pauses the segment in the middle of a run.
+
+```csharp
+namespace RegressionGames.StateRecorder.Types
+{
+    /**
+     * <summary>An interface that MonoBehaviours used as actions in RG BotSegments MAY implement to provide pause / un-pause functionality during Bot Segment evaluation.
+     * Implementing this interface is not required for the behaviour action to run, only for it to support pause / un-pause.</summary>
+     */
+    public interface IRGBotSegmentActionBehaviour
+    {
+        /**
+         * <summary>Called by Regression Games Bot Segment processing to indicate that the user has paused the playback of the bot segments.
+         * This should normally be implemented by setting a boolean to true and checking that boolean at the start of your Update loop to block execution when paused.</summary>
+         */
+        public void PauseAction();
+
+        /**
+         * <summary>Called by Regression Games Bot Segment processing to indicate that the user has un-paused the playback of the bot segments.
+         * This should normally be implemented by setting a boolean to false and checking that boolean at the start of your Update loop to allow execution when un-paused.</summary>
+         */
+        public void UnPauseAction();
+    }
+}
+```
 
 **Example: Running a pathfinding behaviour for at max 30 seconds**
 
 ```csharp
-// The monobehaviour code contained somewhere in your game ruintime code
+// The monobehaviour code contained somewhere in your game runtime code
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RG.Example {
 
-    public class NavigateToPosition : MonoBehaviour
+    public class NavigateToPosition : MonoBehaviour, IRGBotSegmentActionBehaviour
     {
         private NavMeshAgent agent;
+        private bool isPaused = false;
         public Vector3 targetPosition;
 
         private void Start()
@@ -226,9 +259,17 @@ namespace RG.Example {
             }
         }
 
+        public void PauseAction() {
+            isPaused = true;
+        }
+
+        public void UnPauseAction() {
+            isPaused = false;
+        }
+
         private void Update()
         {
-            if (agent != null && !agent.pathPending)
+            if (agent != null && !agent.pathPending && !isPaused)
             {
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -271,6 +312,12 @@ In order to setup the monkey bot, you need to run a code analysis of the game. T
 Once you click that menu option, a panel will appear. Click the "Analyze Actions" button, which will perform an analysis of your game and
 find all the possible actions that can be taken. Once this is done, you can use the monkey bot in your bot segments.
 
+:::info
+The actions found in the panel can be checked and unchecked by clicking on them. However, the SDK will **not use these settings automatically in Monkey bots
+run in a bot segment**. You can use the panel to configure which actions to run, but you then should open the `Assets/Resources/RGActionManagerSettings.txt`
+file, copy the settings from there, and paste them into your botAction's `actionSettings` field. This manual process will be addressed in a future release!
+:::
+
 **Data Format**
 
 `type` is set to `MonkeyBot`.
@@ -300,6 +347,7 @@ find all the possible actions that can be taken. Once this is done, you can use 
             "actionInterval": 0.5,
             "actionSettings": {
                 "DisabledActionPaths": [
+                    // These paths can be seen after deselecting options in the Action Analysis panel and then opening the `Assets/Resources/RGActionManagerSettings.txt` file
                     "Unity UI/Button/Unity.Multiplayer.Samples.BossRoom.Visual.UISettingsCanvas.OnClickQuitButton",
                     "Unity UI/Button/Unity.Multiplayer.Samples.BossRoom.Debug.DebugCheatsManager.GoToPostGame"
                 ]
@@ -331,6 +379,7 @@ clicking on certain icons or objects that may have dynamic positions or are chan
 **Notes**
 
 The `CVImage` type is still in an experimental phase and may provide inconsistent or unexpected results in many situations.
+- The template image and screenshot to search within are **converted to grayscale**. If the object to search for exists in different colors, the algorithm cannot distinguish between them.
 - Multiple matches of the specified image within a frame may provide incorrect or inconsistent result bounds.
 - False positives or incorrect result bounds may occur if pixel regions similar to the specified image exist within a frame.
 
@@ -354,9 +403,7 @@ CURRENT_PATH> ./encode_jpg_base64.sh sample_images/tree.jpg
 {
     "name": "CV Image Action: Click Menu Change Profile Button",
     "description": "Moves the mouse over the change profile button, then clicks and releases on the button. Criteria waits for the action to complete.",
-    "endCriteria": [
-        {"type":"ActionComplete", "transient":false, "data":{}}
-    ],
+    "endCriteria": [...],
     "botAction":{    
         "type":"Mouse_CVImage",
         "data": {
@@ -377,9 +424,7 @@ CURRENT_PATH> ./encode_jpg_base64.sh sample_images/tree.jpg
 {
     "name": "CV Image Action: Click Menu Change Profile Button",
     "description":"Moves the mouse over the change profile button, then clicks and releases on the button. Criteria waits for the action to complete.",
-    "endCriteria": [
-        {"type":"ActionComplete" }
-    ],
+    "endCriteria": [...],
     "botAction":{    
         "type":"Mouse_CVImage",
         "data": {
@@ -407,7 +452,7 @@ clicking on certain buttons or fields that may have dynamic positions or are cha
 - `text` - The text to find.  Note that this algorithm will treat this as a set of words to find, NOT a sentence.  Thus if you have 'Create New Profile' on a single line on one button, but have 'Create' 'New' 'Profile' each on a separate line in different screen area, the algorithm has to choose which one to select.  The current method is to select the smallest bounding area containing all required words that is also `withinRect` (if specified).
 - `textMatchingRule` - One of `Matches` or `Contains`
     - `Matches` - Each word in the provided `text` must be found as a whole word in the results.  This is a very exact matching rule and can sometimes lead to inconsistent results in frames with poor in game lighting on the text or low text contrast.
-    - `Contains` - Each word in the provided `text` must be found as a part of a word in the results.  This is a looser matching rule and if often used instead of `Matches` for more stable results.  For example "Time" would match to "Timer", "Time", "Times", "Timed", "Time", etc in the frame.  This may not seem ideal, but in most game situations, the contrast or text layout isn't always clearly identifiable and extra or incorrect letters may consistently be found for the text you are looking for in a specific frame of the game.  When you encounter those situations, you can adjust your game to give better text clarity/contrast to your users and/or you can utilize `Contains` instead of `Matches`.
+    - `Contains` - Each word in the provided `text` must be found as a part of a word in the results.  This is a looser matching rule and if often used instead of `Matches` for more stable results.  For example "Time" would match to "Timer", "Time", "Times", "Timed", etc in the frame.  This may not seem ideal, but in most game situations, the contrast or text layout isn't always clearly identifiable and extra or incorrect letters may consistently be found for the text you are looking for in a specific frame of the game.  When you encounter those situations, you can adjust your game to give better text clarity/contrast to your users and/or you can utilize `Contains` instead of `Matches`.
 - `textCaseRule` - One of `Matches` or `Ignore`
     - `Matches` - (NOT CURRENTLY SUPPORTED - See the Notes section below for details.) The result must match the case of the specified text exactly.
     - `Ignore` - The specified text is matched without considering capitalization.  This option should be used always.
@@ -430,9 +475,7 @@ The `CVText` type is still in an experimental phase and may provide inconsistent
 {
     "name": "CV Text Action: Click Create New Profile Button",
     "description":"Moves the mouse over the Create New Profile button text, then clicks and releases on the button. Criteria waits for the action to complete.",
-    "endCriteria": [
-        {"type":"ActionComplete", "transient":false, "data":{}}
-    ],
+    "endCriteria": [...],
     "botAction":{    
         "type":"Mouse_CVText",
         "data": {
@@ -509,9 +552,7 @@ The `CVObjectDetection` type is still in an experimental phase and may provide i
 {
     "name": "CV Object Detection Action: Click on a tree using an image query",
     "description":"Moves the mouse over the tree, then clicks and releases on the tree. Criteria waits for the action to complete.",
-    "endCriteria": [
-         {"type":"ActionComplete", "transient":false, "data":{}}
-    ],
+    "endCriteria": [...],
     "botAction":{    
         "type":"Mouse_ObjectDetection",
         "data": {
@@ -538,9 +579,7 @@ The `CVObjectDetection` type is still in an experimental phase and may provide i
 {
     "name": "CV Object Detection Action: Click on a tree using a text query",
     "description":"Moves the mouse over the tree, then clicks and releases on the tree. Criteria waits for the action to complete.",
-    "endCriteria": [
-         {"type":"ActionComplete", "transient":false, "data":{}}
-    ],
+    "endCriteria": [...],
     "botAction":{    
         "type":"Mouse_ObjectDetection",
         "data": {
@@ -562,7 +601,7 @@ This action type restarts the game. This should only be used as the 'last' segme
 ready for another test.
 
 There is an interface you can implement to override the default behaviour of restarting the game. If this interface is not implemented when 
-the `RestartGame` Bot Action is used in a build of your game **outside the UnityEditor**, then the default action will be to call 
+the `RestartGame` Bot Action is used in a build of your game **outside the UnityEditor**, then the default action will be to destroy all `DontDestroyOnLoad` objects and call 
 `SceneManager.LoadScene(sceneBuildIndex: 0, mode: LoadSceneMode.Single)`.  **In the UnityEditor**, the action will **always** be to stop and re-enter play mode;
 any override will not be used.
 
@@ -591,9 +630,7 @@ There is no additional format for this action type.
 {
     "name": "Restart the game",
     "description": "Restarts the game.",
-    "endCriteria": [
-        {"type":"ActionComplete", "transient":false, "data":{}}
-    ],
+    "endCriteria": [...],
     "botAction": {
         "type":"RestartGame"
     }
@@ -614,9 +651,7 @@ There is no additional format for this action type.
 {
     "name": "Quit the game",
     "description": "Quits the game.",
-    "endCriteria": [
-        {"type":"ActionComplete", "transient":false, "data":{}}
-    ],
+    "endCriteria": [...],
     "botAction": {
         "type":"QuitGame"
     }

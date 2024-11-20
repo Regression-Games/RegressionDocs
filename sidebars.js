@@ -46,8 +46,8 @@ const sidebars = {
           label: "Bot Sequences",
           items: [
             "core-concepts/bot-sequences/getting-started-with-bot-sequences-and-segments",
+            "core-concepts/bot-sequences/end-criteria",
             "core-concepts/bot-sequences/actions",
-            "core-concepts/bot-sequences/end-criteria"
           ]
         },
         "core-concepts/validation-suites",

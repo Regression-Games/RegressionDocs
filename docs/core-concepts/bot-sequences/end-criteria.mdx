@@ -9,14 +9,14 @@ can be as simple as waiting for an entity to appear, or as complex as waiting fo
 
 ## Structure of End Criteria
 
-End Criteria are defined in Bot Segments within the `endCriteria` field. A segment may contain multiple end criteria.
+End Criteria are defined in Bot Segments within the `endCriteria` field. A segment may contain multiple end criteria, which by default are AND'd together, and therefore must all be true for the segment to pass.
 
 ```json
 // Segment structure
 {
     "name": "Wait for the player to appear",
     "description": "Waits for the player to appear on the screen",
-    "keyFrameCriteria": [
+    "endCriteria": [
         {
             "type": ..., // The type of end criteria, as a string
             "transient": ..., // If true, allows future criteria to be evaluated at the same time
@@ -63,13 +63,18 @@ specification in the [source code](https://github.com/Regression-Games/RGUnityBo
 There are many different types of end criteria that can be used in a bot segment, each useful in their own way.
 The list of supported types are as follows:
 
-* `NormalizedPath`: This end criteria waits for a specific game object to exist or not exist in the scene.
-* `PartialNormalizedPath`: Similar to `NormalizedPath`, but supports partial matches of the path string.
-* `UIPixelHash`: This end criteria waits and passes if the pixels on the screen change.
+* `NormalizedPath`: This end criteria waits for a specific game object to exist or not exist in the scene (note: prefer this over `PartialNormalizedPath` for performance reasons).
+* `PartialNormalizedPath`: Similar to `NormalizedPath`, but supports partial matches of the path string (note: this is far less performant than `NormalizedPath`).
+* `UIPixelHash`: This end criteria waits and passes if the pixels on the screen change. Currently only supported in games using Coherent GameFace UI.
 * `CVText`: This end criteria waits for a specific text to appear on the screen using computer vision.
 * `CVImage`: This end criteria waits for a specific image to appear on the screen using computer vision.
 * `CVObjectDetection`: This end criteria waits for a specific object to appear on the screen using computer vision.
-* `ActionComplete`: This end criteria waits for the provided bot actions to complete.
+* `ActionComplete`: This end criteria waits for the provided bot action to complete.
+
+There are also two end criteria that allow you to explicitly set `And` and `Or` logic between multiple end criteria.
+
+* `And`: This end criteria waits for all of the provided end criteria to be true.
+* `Or`: This end criteria waits for at least one of the provided end criteria to be true.
 
 ### NormalizedPath
 
@@ -167,6 +172,10 @@ The `countRule` can be one of the following:
 ### UIPixelHash
 
 The `UIPixelHash` end criteria waits and passes if the pixels on the screen change. This automatically passes if this is the first frame of the test.
+
+:::info
+This is only supported in games using Coherent GameFace UI.
+:::
 
 **Data Format**
 
@@ -419,7 +428,7 @@ The `CVObjectDetection` type is still in an experimental phase and may provide i
 
 ### ActionComplete
 
-The `ActionComplete` end criteria is used to indicate that the segment is completed once all actions of this segment have been completed.
+The `ActionComplete` end criteria is used to indicate that the segment is completed once the action of this segment has been completed.
 
 **Data Format**
 
@@ -441,3 +450,49 @@ There is no data field for this end criteria.
     "botAction":{}
 }
 ```
+
+### And / Or
+
+The `And` end criteria waits for all of the provided end criteria to be true. The `Or` end criteria waits for at least one of the provided end criteria to be true. These
+can be combined in a nested fashion to create more complex conditions.
+
+**Data Format**
+
+`type` is set to `And` or `Or`.
+
+```json
+// The `endCriteria[].data` format
+{
+    "criteriaList": [...], // An array of end criteria to AND/OR together
+}
+```
+
+**Example: Verify that the player is present and that either an enemy or an ally is present**
+
+```json
+{
+    "name": "Verify that the player is present and that either an enemy or an ally is present",
+    "endCriteria": [
+        { 
+            "type": "And", 
+            "transient": false,
+            "data": { 
+                "criteriaList": [
+                    { "type": "NormalizedPath", "transient": false, "data": { "path": "Player", "count": 1, "countRule": "GreaterThanEqual" } },
+                    { 
+                        "type": "Or", 
+                        "transient": false,
+                        "data": { 
+                            "criteriaList": [
+                                { "type": "NormalizedPath", "transient": false, "data": { "path": "Enemy", "count": 1, "countRule": "GreaterThanEqual" } },
+                                { "type": "NormalizedPath", "transient": false, "data": { "path": "Ally", "count": 1, "countRule": "GreaterThanEqual" } }
+                            ] 
+                        } 
+                    }
+                ] 
+            } 
+        }
+    ],
+    "botAction":{}
+}
+``` 
