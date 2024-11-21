@@ -60,17 +60,16 @@ Gameplay Sessions unlock access to more features through the Regression Games we
 
 ### Recorded Data Formats
 
-The SDK saves recordings to your user's home directory under `unity_videos` on your local device.
-Beneath the root directory, the SDK gives each Unity project its own subdirectory matching the project's `Application.productName`.
-Recordings are saved under these project subdirectories as a folders named `recording_{MM-dd-yyyy_HH.mm}_{sessionId}`.
+The SDK saves recordings to the temporary path on your local device specified by `Application.persistentDataPath`/RegressionGames/recordings.
+Recordings are saved in these project specific directories as a folders named `recording_{MM-dd-yyyy_HH.mm.ss}_{sessionId}`.
 
 Here is an example of a recording's location for a project named "MyGame":
 ```bash
 # macOS & Linux
-~/unity_videos/MyGame/recording_08-30-2024_14.34_0b8551
+~/Library/Application Support/Unity/MyGame/RegressionGames/recordings/recording_08-30-2024_14.34.13_0b8551
 
 # Windows
-C:\Users\{MyUser}\unity_videos\MyGame\recording_08-30-2024_14.34_0b8551
+C:\Users\{MyUser}\AppData\LocalNow\Unity\MyGame\RegressionGames\recordings\recording_08-30-2024_14.34.13_0b8551
 ```
 
 A recording folder contains multiple files that provide important context about the game's state.
