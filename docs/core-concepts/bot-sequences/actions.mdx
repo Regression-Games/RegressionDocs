@@ -1,9 +1,659 @@
 ---
-sidebar_label: 'Actions'
+sidebar_label: 'Bot Actions'
 ---
 
-# Actions
+# Bot Actions
 
-import Placeholder from '../../partials/_placeholder.mdx';
+Bot Actions are the core pieces of logic that drive behavior within a segment of your test sequence. Actions
+can range from simple operations like clicking or keypresses, to more complex operations like clicking on
+an object in the scene using computer vision.
 
-<Placeholder />
+## Structure of a Bot Action
+
+Bot Actions are defined in Bot Segments within the `botAction` field. A segment may only contain one bot action.
+
+```json
+// Segment structure
+{
+    "name": "Click the play button",
+    "description": "Clicks the play button in the main menu",
+    "endCriteria": [...],
+    "botAction": {
+        "type": ..., // The type of action to be taken, as a string
+        "data": {
+            ... // The data for the action, as a JSON object
+        }
+    }
+}
+```
+A bot action has a `type` and a `data` field. The `type` indicates the type of action to be taken, and the `data` field contains
+the parameters for that action. For example, a bot action to click on a coordinate may look like this:
+
+```json
+{
+    "name": "Click the play button",
+    "description": "Clicks the play button in the main menu",
+    "endCriteria": [...],
+    "botAction": {
+        "type": "InputPlayback",
+        "data": {
+            "startTime": 0.0,
+            "inputData": {
+                "keyboard": [],
+                "mouse": [
+                    {
+                        "apiVersion": 1,
+                        "startTime": 0.0, // This is the time offset at which the action should be performed
+                        "screenSize": {"x": 1920, "y": 1080},
+                        "position": {"x": 907, "y": 796}, // This is the location to click
+                        "worldPosition": null,
+                        "leftButton": true, // This indicates that the left mouse button should be pressed
+                        "middleButton": false,
+                        "rightButton": false,
+                        "forwardButton": false,
+                        "backButton": false,
+                        "scroll": {"x": 0, "y": 0},
+                        "clickedObjectNormalizedPaths": []
+                    }
+                ]
+            }
+        }
+    }
+}
+```
+
+:::info
+There are additional fields that can be set on a bot action and many of these `inputData` fields, such as an apiVersion. You can see the full
+specification in the [source code](https://github.com/Regression-Games/RGUnityBots/blob/cd68ed0f4b10567eb652477717338d92b4f4571e/src/gg.regression.unity.bots/Runtime/Scripts/StateRecorder/BotSegments/Models/BotAction.cs).
+:::
+
+## Action Types
+
+There are many different types of actions that can be used in a bot segment, each useful in their own way.
+The list of supported types are as follows:
+
+* `InputPlayback`: This action plays back a series of mouse and keyboard inputs.
+* `Behaviour`: This action runs a MonoBehaviour for a given amount of time.
+* `MonkeyBot`: This action runs a chaos monkey bot for a given amount of time.
+* `Mouse_CVImage`: This action clicks on a region of the screen based on a template image found using computer vision.
+* `Mouse_CVText`: This action clicks on a region of the screen based on text found using computer vision.
+* `Mouse_ObjectDetection`: This action clicks on a region of the screen based on an object found using computer vision.
+* `RestartGame`: This action restarts the game.
+* `QuitGame`: This action quits the game.
+
+### InputPlayback
+
+The `InputPlayback` action type plays back a sequence of mouse and keyboard inputs. This can be useful for
+replaying a sequence of static actions that were previously recorded as part of a play through.
+
+**Data Format**
+
+`type` is set to `InputPlayback`.
+
+```json
+// The `botAction.data` format
+{
+    "startTime": 0.0, // The time offset at which the action should be performed from the start of the segment
+    "inputData": {
+        "mouse": [ // Any number of mouse inputs can be provided
+            {
+                "startTime": ..., // A number indicating the time offset at which the action should be performed from the start of the segment (in seconds)
+                "screenSize": {"x": ..., "y": ...}, // A width and height indicating the size of the screen, which is used to linearly scale the position of the mouse when the screen size is different from the screen size at the time the inputs were recorded
+                "position": {"x": ..., "y": ...}, // A coordinate indicating the position to click, where X and Y are integers
+                "worldPosition": null, // An optional coordinate indicating the position to click in world space, which is often null.
+                "leftButton": ..., // A boolean indicating whether the left mouse button should be pressed
+                "middleButton": ..., // A boolean indicating whether the middle mouse button should be pressed
+                "rightButton": ..., // A boolean indicating whether the right mouse button should be pressed
+                "forwardButton": ..., // A boolean indicating whether the forward mouse button should be pressed
+                "backButton": ..., // A boolean indicating whether the back mouse button should be pressed
+                "scroll": {"x": ..., "y": ...}, // An optional scroll amount, where X and Y are integers
+                "clickedObjectNormalizedPaths": [...], // An optional list of normalized paths to the objects that were clicked. This is used to adjust the click coordinates when there are variances in resolution scaling or object position between runs.
+            }
+        ],
+        "keyboard": [ // Any number of keyboard inputs can be provided
+            {
+                "startTime": ..., // A number indicating the time offset at which the action should be performed from the start of the segment (in seconds)
+                "endTime": ..., // A number indicating the time offset at which the action should be stopped from the start of the segment (in seconds)
+                "binding": ..., // A sting representing the binding to be pressed
+            }
+        ]
+    }
+}
+```
+
+**Notes**
+
+- You can use the `startTime` and `endTime` fields to control the timing of actions. For instance, you can hold shift and press a key to result in a capital letter.
+- If two actions have the same `startTime`, the action that appears earlier in the list will be performed first.
+- You can omit an `endTime` of a keyboard action to have that action continue until it is disabled by a future action which only sets the `endTime`.
+- The available keys to press in keyboard actions can be found [here](https://github.com/Regression-Games/RGUnityBots/blob/cd68ed0f4b10567eb652477717338d92b4f4571e/src/gg.regression.unity.bots/Runtime/Scripts/StateRecorder/KeyboardInputActionObserver.cs#L25-L151). The bindings should take the format of `<Keyboard>/keyname`.
+- It is best practice to move the mouse to the desired position before clicking. Without this, Unity's input handling can cause unexpected behaviour with the click, especially when the prior mouse position was over a different input component in the UI.
+
+**Example: Typing "Hello"**
+
+```json
+{
+    "name": "Type 'Hello'",
+    "description": "Types 'Hello' using the keyboard",
+    "endCriteria": [...],
+    "botAction": {
+        "type": "InputPlayback",
+        "data": {
+            "startTime":0.0,
+            "inputData": {
+                "keyboard": [
+
+                    {"startTime":0.0,"binding":"<Keyboard>/leftShift"},
+                    {"startTime":0.0,"endTime":0.0,"binding":"<Keyboard>/h"},
+                    {"endTime":0.0,"binding":"<Keyboard>/leftShift"},
+
+                    {"startTime":0.0,"endTime":0.0,"binding":"<Keyboard>/e"},
+                    {"startTime":0.0,"endTime":0.0,"binding":"<Keyboard>/l"},
+                    {"startTime":0.0,"endTime":0.0,"binding":"<Keyboard>/l"},
+                    {"startTime":0.0,"endTime":0.0,"binding":"<Keyboard>/o"}
+
+                ],
+                "mouse":[]
+            }
+        }
+    }
+}
+```
+
+**Example: Moving and clicking the mouse**
+
+```json
+{
+    "name": "Move and click the mouse",
+    "description": "Moves the mouse to a position and clicks it",
+    "endCriteria": [...],
+    "botAction": {
+        "type": "InputPlayback",
+        "data": {
+            "startTime": 0.0,
+            "inputData": {
+                "keyboard": [],
+                "mouse": [
+                    // Note that the mouse is moved to the desired position before the click. This is best practice to avoid unexpected behaviour with the click, especially when the prior mouse position was over a different input component in the UI.
+                    {"startTime":0.0,"screenSize":{"x":1920,"y":1080},"position":{"x":942,"y":500},"worldPosition":null,"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0,"y":0},"clickedObjectNormalizedPaths":["UI Canvas/Start Button"]},
+                    {"startTime":0.1,"screenSize":{"x":1920,"y":1080},"position":{"x":942,"y":500},"worldPosition":null,"leftButton":true,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0,"y":0},"clickedObjectNormalizedPaths":["UI Canvas/Start Button"]},
+                    // Release the left mouse button
+                    {"startTime":0.2,"screenSize":{"x":1920,"y":1080},"position":{"x":942,"y":500},"worldPosition":null,"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0,"y":0},"clickedObjectNormalizedPaths":["UI Canvas/Start Button"]}
+                ]
+            }
+        }
+    }
+}
+```
+
+### Behaviour
+
+The `Behaviour` action type runs a MonoBehaviour. This can be useful for running agent code that relies on
+particular data and information from the code of your game, such as tapping into an existing navigation system.
+
+**Data Format**
+
+`type` is set to `Behaviour`.
+
+```json
+// The `botAction.data` format
+{
+    "behaviourFullName": "...", // The full qualified class path of the MonoBehaviour to run
+    "maxRuntimeSeconds": ... // The maximum amount of time to run the behaviour for in seconds before it is stopped
+}
+```
+
+The Behaviour itself needs to be defined in the codebase of your game where it can be found during runtime. It should be
+a class that inherits from `MonoBehaviour`. In order to terminate the behaviour, you can use `Destroy(this)` to destroy the
+behaviour instance. The `Update` loop of your behaviour will run as normal until either it is destroyed by your implementation or
+the time limit is reached (`maxRuntimeSeconds`), at which point the SDK will destroy it automatically.
+
+To take full advantage of our toolset, the behaviour can optionally implement `IRGBotSegmentActionBehaviour`, which permits a pausing strategy to be used when a developer
+pauses the segment in the middle of a run.
+
+```csharp
+namespace RegressionGames.StateRecorder.Types
+{
+    /**
+     * <summary>An interface that MonoBehaviours used as actions in RG BotSegments MAY implement to provide pause / un-pause functionality during Bot Segment evaluation.
+     * Implementing this interface is not required for the behaviour action to run, only for it to support pause / un-pause.</summary>
+     */
+    public interface IRGBotSegmentActionBehaviour
+    {
+        /**
+         * <summary>Called by Regression Games Bot Segment processing to indicate that the user has paused the playback of the bot segments.
+         * This should normally be implemented by setting a boolean to true and checking that boolean at the start of your Update loop to block execution when paused.</summary>
+         */
+        public void PauseAction();
+
+        /**
+         * <summary>Called by Regression Games Bot Segment processing to indicate that the user has un-paused the playback of the bot segments.
+         * This should normally be implemented by setting a boolean to false and checking that boolean at the start of your Update loop to allow execution when un-paused.</summary>
+         */
+        public void UnPauseAction();
+    }
+}
+```
+
+**Example: Running a pathfinding behaviour for at max 30 seconds**
+
+```csharp
+// The monobehaviour code contained somewhere in your game runtime code
+using UnityEngine;
+using UnityEngine.AI;
+
+namespace RG.Example {
+
+    public class NavigateToPosition : MonoBehaviour, IRGBotSegmentActionBehaviour
+    {
+        private NavMeshAgent agent;
+        private bool isPaused = false;
+        public Vector3 targetPosition;
+
+        private void Start()
+        {
+            agent = GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.SetDestination(targetPosition);
+            }
+        }
+
+        public void PauseAction() {
+            isPaused = true;
+        }
+
+        public void UnPauseAction() {
+            isPaused = false;
+        }
+
+        private void Update()
+        {
+            if (agent != null && !agent.pathPending && !isPaused)
+            {
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                    {
+                        Destroy(this);
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+```json
+{
+    "name": "Run pathfinding behaviour",
+    "description": "Runs a pathfinding behaviour to navigate to a position",
+    "endCriteria": [...],
+    "botAction": {
+        "type": "Behaviour",
+        "data": {
+            "behaviourFullName": "RG.Example.NavigateToPosition",
+            "maxRuntimeSeconds": 30.0
+        }
+    }
+}
+```
+
+### MonkeyBot
+
+The `MonkeyBot` action type runs a chaos monkey bot for a given amount of time. This can be useful for testing the robustness of your game.
+This Monkey Bot will randomly select actions to perform from a list of possible actions, and will perform them at a given interval. These
+actions are found via a code analysis of the game, which must be run before you use this segment type.
+
+**Setup**
+
+In order to setup the monkey bot, you need to run a code analysis of the game. This can be done from the **Regression Games > Configure Bot Actions** menu.
+
+Once you click that menu option, a panel will appear. Click the "Analyze Actions" button, which will perform an analysis of your game and
+find all the possible actions that can be taken. Once this is done, you can use the monkey bot in your bot segments.
+
+:::info
+The actions found in the panel can be checked and unchecked by clicking on them. However, the SDK will **not use these settings automatically in Monkey bots
+run in a bot segment**. You can use the panel to configure which actions to run, but you then should open the `Assets/Resources/RGActionManagerSettings.txt`
+file, copy the settings from there, and paste them into your botAction's `actionSettings` field. This manual process will be addressed in a future release!
+:::
+
+**Data Format**
+
+`type` is set to `MonkeyBot`.
+
+```json
+// The `botAction.data` format
+{
+    "actionInterval": ... // The interval between actions in seconds,
+    "actionSettings": {
+        "DisabledActionPaths": [
+            ... // An optional list of strings of the format "Game Object Path/Method Path" to disable from the monkey bot
+        ]
+    }
+}
+```
+
+**Example: Running a monkey bot to click on random objects while ignoring the quit actions**
+
+```json
+{
+    "name": "Run monkey bot",
+    "description": "Runs a monkey bot to click on random objects while ignoring the quit actions",
+    "endCriteria": [...],
+    "botAction": {
+        "type": "MonkeyBot",
+        "data": {
+            "actionInterval": 0.5,
+            "actionSettings": {
+                "DisabledActionPaths": [
+                    // These paths can be seen after deselecting options in the Action Analysis panel and then opening the `Assets/Resources/RGActionManagerSettings.txt` file
+                    "Unity UI/Button/Unity.Multiplayer.Samples.BossRoom.Visual.UISettingsCanvas.OnClickQuitButton",
+                    "Unity UI/Button/Unity.Multiplayer.Samples.BossRoom.Debug.DebugCheatsManager.GoToPostGame"
+                ]
+            }
+        }
+    }
+}
+```
+
+### Mouse_CVImage
+
+This action type clicks on a region of the screen based on a template image found using computer vision. This is useful for
+clicking on certain icons or objects that may have dynamic positions or are changing often during development.
+
+**Data Format**
+
+`type` is set to `Mouse_CVImage`.
+
+- `imageData` - The image data in one of the following formats...
+    - The base64 encoded string of the JPG image data - This must be the entire JPG image file, not just the visible bytes.
+    - A file:// path to a JPG or PNG image - Be careful when using relative paths as these will be interpreted differently in the Editor vs Runtime builds.
+    - A resource:// path to a READABLE Texture2D in one of your project's Resources folders.
+    - A resource:// path to a .bytes TextAsset in one of your project's Resources folders that is a JPG or PNG file saved with a .bytes file extension.  This can be used if you do not want Unity to import your image as a Texture.
+- `withinRect` - An optional (can be null/undefined) field to limit the search area to a specific pixel region of the current frame.  The SDK will linearly tranform the supplied `rect` to fit the current resolution using the `screenSize` as the initial reference resolution.
+    - `screenSize` - The reference resolution in pixels which defines the screen space that `rect` is defined within.
+    - `rect` - The position (x=0, y=0 is bottom left) and size (width, height) of the rectangle that must contain the supplied image data.  The values are defined in pixels.
+- `actions` - The list of mouse actions to take at the center point of the returned `rect`.
+
+**Notes**
+
+The `CVImage` type is still in an experimental phase and may provide inconsistent or unexpected results in many situations.
+- The template image and screenshot to search within are **converted to grayscale**. If the object to search for exists in different colors, the algorithm cannot distinguish between them.
+- Multiple matches of the specified image within a frame may provide incorrect or inconsistent result bounds.
+- False positives or incorrect result bounds may occur if pixel regions similar to the specified image exist within a frame.
+
+**How to get the data for the `imageData` field as a base64 encoded string**
+
+1. Use a screenshot tool to capture the target area of your game and save this as a JPG file (PNG/BMP/etc are NOT supported at this time).
+2. Run one of the following commands to get the base64 encoded string of the image using the scripts in [this directory](https://github.com/Regression-Games/RGUnityBots/tree/main/user-tools).
+
+```shell
+CURRENT_PATH> python encode_jpg_base64.py sample_images/tree.jpg
+/9j/4AAQ...<rest of the base64 encoded image data>...VLj3ieS/9k=
+```
+or
+```shell
+CURRENT_PATH> ./encode_jpg_base64.sh sample_images/tree.jpg
+/9j/4AAQ...<rest of the base64 encoded image data>...VLj3ieS/9k=
+```
+
+**Example: Using base64 byte[]**
+```json
+{
+    "name": "CV Image Action: Click Menu Change Profile Button",
+    "description": "Moves the mouse over the change profile button, then clicks and releases on the button. Criteria waits for the action to complete.",
+    "endCriteria": [...],
+    "botAction":{    
+        "type":"Mouse_CVImage",
+        "data": {
+            "imageData":"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",
+            "withinRect": null,
+            "actions": [
+                {"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0},"duration":2.0 },
+                {"leftButton":true,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0} },
+                {"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0} }
+            ]
+        }
+    }
+}
+```
+
+**Example: Using resoure:// path (note that the `sample_images` folder must be under a Resources folder in your project)**
+```json
+{
+    "name": "CV Image Action: Click Menu Change Profile Button",
+    "description":"Moves the mouse over the change profile button, then clicks and releases on the button. Criteria waits for the action to complete.",
+    "endCriteria": [...],
+    "botAction":{    
+        "type":"Mouse_CVImage",
+        "data": {
+            "imageData":"resource://sample_images/change_profile_button",
+            "withinRect": null,
+            "actions": [
+                {"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0},"duration":2.0 },
+                {"leftButton":true,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0} },
+                {"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0} }
+            ]
+        }
+    }
+}
+```
+
+### Mouse_CVText
+
+This action type clicks on a region of the screen based on where the specified text is found. This is useful for
+clicking on certain buttons or fields that may have dynamic positions or are changing often during development.
+
+**Data Format**
+
+`type` is set to `Mouse_CVText`.
+
+- `text` - The text to find.  Note that this algorithm will treat this as a set of words to find, NOT a sentence.  Thus if you have 'Create New Profile' on a single line on one button, but have 'Create' 'New' 'Profile' each on a separate line in different screen area, the algorithm has to choose which one to select.  The current method is to select the smallest bounding area containing all required words that is also `withinRect` (if specified).
+- `textMatchingRule` - One of `Matches` or `Contains`
+    - `Matches` - Each word in the provided `text` must be found as a whole word in the results.  This is a very exact matching rule and can sometimes lead to inconsistent results in frames with poor in game lighting on the text or low text contrast.
+    - `Contains` - Each word in the provided `text` must be found as a part of a word in the results.  This is a looser matching rule and if often used instead of `Matches` for more stable results.  For example "Time" would match to "Timer", "Time", "Times", "Timed", etc in the frame.  This may not seem ideal, but in most game situations, the contrast or text layout isn't always clearly identifiable and extra or incorrect letters may consistently be found for the text you are looking for in a specific frame of the game.  When you encounter those situations, you can adjust your game to give better text clarity/contrast to your users and/or you can utilize `Contains` instead of `Matches`.
+- `textCaseRule` - One of `Matches` or `Ignore`
+    - `Matches` - (NOT CURRENTLY SUPPORTED - See the Notes section below for details.) The result must match the case of the specified text exactly.
+    - `Ignore` - The specified text is matched without considering capitalization.  This option should be used always.
+- `withinRect` - An optional (can be null/undefined) field to limit the search area to a specific pixel region of the current frame.  The SDK will linearly tranform the supplied `rect` to fit the current resolution using the `screenSize` as the initial reference resolution.
+    - `screenSize` - The reference resolution in pixels which defines the screen space that `rect` is defined within.
+    - `rect` - The position (x=0, y=0 is bottom left) and size (width, height) of the rectangle that must contain the supplied text data.  The values are defined in pixels.
+- `actions` - The list of mouse actions to take at the center point of the returned `rect`.
+
+**Notes**
+
+The `CVText` type is still in an experimental phase and may provide inconsistent or unexpected results in many situations.
+- `textCaseRule` must always be set to `Ignore`. This method does not currently consider capitalization in its results.
+- Text with low contrast relative to its background may not be detected or may detect incorrect characters
+- Very small or very large text may not be detected or may detect incorrect characters
+- Less common fonts may not be detected or may detect incorrect characters
+
+**Example: Click the Create New Profile button**
+
+```json
+{
+    "name": "CV Text Action: Click Create New Profile Button",
+    "description":"Moves the mouse over the Create New Profile button text, then clicks and releases on the button. Criteria waits for the action to complete.",
+    "endCriteria": [...],
+    "botAction":{    
+        "type":"Mouse_CVText",
+        "data": {
+            "type":"CVText",
+            "transient":true,
+            "data":{
+                "text":"CREATE NEW PROFILE",
+                "textMatchingRule":"Contains",
+                "textCaseRule":"Ignore"
+                "withinRect": {
+                    "screenSize":{"x": 1656, "y": 724},
+                    "rect":{"x": 900, "y": 110, "width": 350, "height": 50}
+                } 
+            }
+            "actions": [
+                {"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0},"duration":2.0 },
+                {"leftButton":true,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0} },
+                {"leftButton":false,"middleButton":false,"rightButton":false,"forwardButton":false,"backButton":false,"scroll":{"x":0.0,"y":0.0} }
+            ]
+        }
+    }
+}
+```
+
+### Mouse_ObjectDetection
+
+This action type clicks on a region of the screen based on where a queried object is detected, based on an image or text query. This is useful for
+clicking on certain objects that may not only have dynamic positions or are changing often during development, but whose visual appearance may also change often. 
+
+**Data Format**
+
+`type` is set to `Mouse_ObjectDetection`.
+
+**Either imageQuery or textQuery can be specified, you can not use both.**
+
+- `imageQuery` - The image describing the object to search for in the current frame.  The image data must be in one of the following formats...
+    - The base64 encoded string of the JPG image data - This must be the entire JPG image file, not just the visible bytes.
+    - A file:// path to a JPG or PNG image - Be careful when using relative paths as these will be interpreted differently in the Editor vs Runtime builds.
+    - A resource:// path to a READABLE Texture2D in one of your project's Resources folders.
+    - A resource:// path to a .bytes TextAsset in one of your project's Resources folders that is a JPG or PNG saved with a .bytes file extension.  This can be used if you do not want Unity to import your image as a Texture.
+- `textQuery` - The string describing the object to search for in the current frame.
+- `threshold` - An optional (can be null/undefined) field to accept a returned match from the object detection model. Returned matches with a confidence score less than this threshold are ignored. Currently, this is only supported for usage with `textQuery`.
+- `withinRect` - An optional (can be null/undefined) field to limit the search area to a specific pixel region of the current frame.  The SDK will linearly transform the supplied `rect` to fit the current resolution using the `screenSize` as the initial reference resolution.
+    - `screenSize` - The reference resolution in pixels which defines the screen space that `rect` is defined within.
+    - `rect` - The position (x=0, y=0 is bottom left) and size (width, height) of the rectangle that must contain the supplied image data.  The values are defined in pixels.
+- `actions` - The list of mouse actions to take at the center point of the returned `rect`.
+
+**How to get the data for the `imageData` field as a base64 encoded string**
+
+1. Find the image you want to use as your query and save it as a JPG file (PNG/BMP/etc are NOT supported at this time).
+
+2. Use the `encode_jpg_base64.py` or `encode_jpg_base64.sh` script in [this directory](https://github.com/Regression-Games/RGUnityBots/tree/main/user-tools) to encode the JPG as a base64 string.  The output will be written to STDOUT.
+```shell
+ CURRENT_PATH> python encode_jpg_base64.py sample_images/tree.jpg
+/9j/4AAQ...<rest of the base64 encoded image data>...VLj3ieS/9k=
+```
+or
+```shell
+ CURRENT_PATH> ./encode_jpg_base64.sh sample_images/tree.jpg
+/9j/4AAQ...<rest of the base64 encoded image data>...VLj3ieS/9k=
+```
+
+3. Create a new bot segment json file and copy the base64 encoded output as the `imageQuery` of your CVObjectDetection criteria.
+
+**Notes**
+The `CVObjectDetection` type is still in an experimental phase and may provide inconsistent or unexpected results in many situations.
+- Multiple matches of the specified object within a frame will only return one at random.
+- CVObjectDetection via ImageQuery has a very high false positive rate. We are continuing to evaluate and tune this type.
+- CVObjectDetection via ImageQuery selects the most common object in the query image. If the query image contains multiple objects, (such as a cat and a dog) it will only select one--whichever is more prominent.
+
+**Example: Image query example**
+
+```json
+{
+    "name": "CV Object Detection Action: Click on a tree using an image query",
+    "description":"Moves the mouse over the tree, then clicks and releases on the tree. Criteria waits for the action to complete.",
+    "endCriteria": [...],
+    "botAction":{    
+        "type":"Mouse_ObjectDetection",
+        "data": {
+            "imageQuery":"/9j/4AAQ...<rest of the base64 encoded image data>...VLj3ieS/9k=",
+            or
+            "imageQuery":"file://???/sample_images/tree.jpg",
+            or  
+            "imageQuery":"resource://sample_images/tree",
+            "actions": [
+                {"leftButton":false, "duration":0.1}, // Move the mouse to the center of the tree
+                {"leftButton":true, "duration":0.1},  // Click the left mouse button
+                {"leftButton":false, "duration":0.1}  // Release the left mouse button
+            ]
+        }
+    }
+}
+```
+- Using file:// path (??? represents the path to this folder on your system)
+- Using resoure:// path (note that the `sample_images` folder must be under a Resources folder in your project)
+
+**Example: Text query example**
+
+```json
+{
+    "name": "CV Object Detection Action: Click on a tree using a text query",
+    "description":"Moves the mouse over the tree, then clicks and releases on the tree. Criteria waits for the action to complete.",
+    "endCriteria": [...],
+    "botAction":{    
+        "type":"Mouse_ObjectDetection",
+        "data": {
+            "textQuery": "Tree",
+            "threshold": 0.4,
+            "actions": [
+                {"leftButton":false, "duration":0.1},  // Move the mouse to the center of the tree
+                {"leftButton":true, "duration":0.1},   // Click the left mouse button
+                {"leftButton":false, "duration":0.1}   // Release the left mouse button
+            ]
+        }
+    }
+}
+```
+
+### RestartGame
+
+This action type restarts the game. This should only be used as the 'last' segment in your sequence or segment list, and is useful for getting your game
+ready for another test.
+
+There is an interface you can implement to override the default behaviour of restarting the game. If this interface is not implemented when 
+the `RestartGame` Bot Action is used in a build of your game **outside the UnityEditor**, then the default action will be to destroy all `DontDestroyOnLoad` objects and call 
+`SceneManager.LoadScene(sceneBuildIndex: 0, mode: LoadSceneMode.Single)`.  **In the UnityEditor**, the action will **always** be to stop and re-enter play mode;
+any override will not be used.
+
+Implement the following interface to override the default behaviour:
+
+```csharp
+namespace StateRecorder.BotSegments.Models
+{
+    public interface IRGRestartGameAction
+    {
+        /**
+         * <summary>Implement this interface to provide an implementation of how to safely cleanup and restart your game.  If this interface is not implemented when RestartGame Bot Action is used in a build of your game outside the UnityEditor, then the default action will be to call SceneManager.LoadScene(sceneBuildIndex: 0, mode: LoadSceneMode.Single).  In the UnityEditor, the action will always be to stop and re-enter play mode; this interface will not be used.</summary>
+         */
+        public void RestartGame();
+    }
+}
+```
+
+**Data Format**
+
+There is no additional format for this action type.
+
+**Example: Restart the game**
+
+```json
+{
+    "name": "Restart the game",
+    "description": "Restarts the game.",
+    "endCriteria": [...],
+    "botAction": {
+        "type":"RestartGame"
+    }
+}
+```
+
+### QuitGame
+
+This action type quits the game. This should only be used as the 'last' segment in your sequence or segment list, and is useful for cleaning up after a test.
+
+**Data Format**
+
+There is no additional format for this action type.
+
+**Example: Quit the game**
+
+```json
+{
+    "name": "Quit the game",
+    "description": "Quits the game.",
+    "endCriteria": [...],
+    "botAction": {
+        "type":"QuitGame"
+    }
+}
+```
