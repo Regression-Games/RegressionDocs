@@ -125,7 +125,7 @@ replaying a sequence of static actions that were previously recorded as part of 
 
 - You can use the `startTime` and `endTime` fields to control the timing of actions. For instance, you can hold shift and press a key to result in a capital letter.
 - If two actions have the same `startTime`, the action that appears earlier in the list will be performed first.
-- You can omit an `endTime` of a keyboard action to have the action continue until it is disabled using using an action that only sets the `endTime`.
+- You can omit an `endTime` of a keyboard action to have that action continue until it is disabled by a future action which only sets the `endTime`.
 - The available keys to press in keyboard actions can be found [here](https://github.com/Regression-Games/RGUnityBots/blob/cd68ed0f4b10567eb652477717338d92b4f4571e/src/gg.regression.unity.bots/Runtime/Scripts/StateRecorder/KeyboardInputActionObserver.cs#L25-L151). The bindings should take the format of `<Keyboard>/keyname`.
 - It is best practice to move the mouse to the desired position before clicking. Without this, Unity's input handling can cause unexpected behaviour with the click, especially when the prior mouse position was over a different input component in the UI.
 
